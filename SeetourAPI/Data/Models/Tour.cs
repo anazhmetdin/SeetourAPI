@@ -28,6 +28,12 @@ namespace SeetourAPI.Data.Models
         public bool HasTransportation { get; set; }
         [FutureDateRange(0, dateBefore: "DateFrom")] // at most 0 days before after datefrom
         public DateTime LastDateToCancel { get; set; }
-        public IEnumerable<string> Photos { get; set; } = Enumerable.Empty<string>();
+        [Range(1, 100)]
+        public int Capacity { get; set; }
+        [DataType(DataType.ImageUrl)]
+        [StringLength(512)]
+        public ICollection<string> Photos { get; set; } = new List<string>();
+        public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
+        public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
     }
 }
