@@ -45,5 +45,6 @@ namespace SeetourAPI.Data.Models
         public virtual TourGuide? TourGuide { get; set; }
         public TourPostingStatus TourPostingStatus { get; set; }
         public virtual ICollection<EditRequest> EditRequests { get; set; } = new HashSet<EditRequest>();
+        public virtual ICollection<TourQuestion> Questions { get; set; } = new HashSet<TourQuestion>();
     }
 }
