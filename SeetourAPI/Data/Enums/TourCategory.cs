@@ -3,21 +3,22 @@
     public enum TourCategory
     {
         // Active adventure tours that connect travelers to nature and culture
-        ACTIVE_ADVENTURE,
+        Adventure,
         // Family tours that engage travelers of all ages
-        FAMILY,
+        Family,
         // National parks tours that showcase the natural beauty of the U.S.
-        NATIONAL_PARKS,
+        Parks,
         // Religious tours that focus on the holy sites and shrines of different faiths
-        RELIGIOUS,
+        Religious,
         // Themed tours that center around a special interest such as wine, music, history, etc.
-        THEMED,
+        Themed,
         // Snorkeling tours that explore the underwater world
-        SNORKELING,
+        Snorkeling,
         // Safari tours that observe wildlife in their natural habitats
-        SAFARI,
-        CRUISE,
-        FOOD,
+        Safari,
+        Cruise,
+        Food,
+        Historical,
         // Other categories that do not fit into the above ones
         OTHER
     }
