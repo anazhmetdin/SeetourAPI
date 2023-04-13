@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Services;
 
 namespace SeetourAPI
 {
@@ -23,6 +24,9 @@ namespace SeetourAPI
                 options.UseSqlServer(connectionString));
             #endregion
 
+            #region Azure
+            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+            #endregion
 
             var app = builder.Build();
 
