@@ -5,6 +5,7 @@ namespace SeetourAPI.Data.Models.Users
 {
     public class SeetourUser : IdentityUser
     {
+        // TODO: add admin claim for authorization
         [DataType(DataType.ImageUrl)]
         [StringLength(512)]
         public string? ProfilePic { get; set; }

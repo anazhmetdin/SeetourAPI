@@ -34,6 +34,7 @@ namespace SeetourAPI.Data.Models
         public int Capacity { get; set; }
         [DataType(DataType.ImageUrl)]
         [StringLength(512)]
+        // TODO: use all photos in thumbnail gallery
         public ICollection<string> Photos { get; set; } = new List<string>();
         public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
@@ -42,5 +43,7 @@ namespace SeetourAPI.Data.Models
         public int BookingsCount { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked).Count(); }
         public string TourGuideId { get; set; } = string.Empty;
         public virtual TourGuide? TourGuide { get; set; }
+        public TourPostingStatus TourPostingStatus { get; set; }
+        public virtual ICollection<EditRequest> EditRequests { get; set; } = new HashSet<EditRequest>();
     }
 }

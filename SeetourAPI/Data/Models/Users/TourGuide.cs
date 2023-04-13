@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SeetourAPI.Data.Enums;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SeetourAPI.Data.Models.Users
@@ -29,5 +30,7 @@ namespace SeetourAPI.Data.Models.Users
         [DataType(DataType.ImageUrl)]
         [StringLength(512)]
         public string IDCardPhoto { get; set; } = string.Empty;
+        // TODO: add it to claims for authorization
+        public TourGuideStatus Status { get; set; }
     }
 }

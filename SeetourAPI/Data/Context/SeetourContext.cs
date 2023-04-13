@@ -11,5 +11,7 @@ namespace SeetourAPI.Data.Context
         {
 
         }
+
+        // TODO: add data seeding, onmodelcreating
     }
 }
