@@ -12,5 +12,6 @@ namespace SeetourAPI.Data.Models
         public virtual Tour? Tour { get; set; }
         public virtual TourAnswer? TourAnswer { get; set; }
         public int? TourAnswerId { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -16,5 +16,6 @@ namespace SeetourAPI.Data.Models
         public int Seats { get; set; }
         public int TourBookingPaymentId { get; set; }
         public virtual TourBookingPayment? TourBookingPayment { get; set; }
+        public DateTime LastEditedAt { get; set; } = DateTime.UtcNow;
     }
 }

@@ -6,7 +6,7 @@ namespace SeetourAPI.Data.Models
     {
         public int Id { get; set; }
         public int BoodedTourId { get; set; }
-        public virtual BookedTour BookedTour { get; set; }
+        public virtual BookedTour? BookedTour { get; set; }
         [Range(1,5)]
         public int Rating { get; set; }
         [StringLength(512, MinimumLength = 32)]
@@ -14,5 +14,6 @@ namespace SeetourAPI.Data.Models
         [DataType(DataType.ImageUrl)]
         [StringLength(512)]
         public ICollection<string> Photos { get; set; } = new List<string>();
+        public DateTime LastEditedAt { get; set; } = DateTime.UtcNow;
     }
 }
