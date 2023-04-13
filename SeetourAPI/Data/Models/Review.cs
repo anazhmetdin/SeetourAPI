@@ -11,9 +11,7 @@ namespace SeetourAPI.Data.Models
         public int Rating { get; set; }
         [StringLength(512, MinimumLength = 32)]
         public string Comment { get; set; } = string.Empty;
-        [DataType(DataType.ImageUrl)]
-        [StringLength(512)]
-        public ICollection<string> Photos { get; set; } = new List<string>();
+        public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
         public DateTime LastEditedAt { get; set; } = DateTime.UtcNow;
     }
 }

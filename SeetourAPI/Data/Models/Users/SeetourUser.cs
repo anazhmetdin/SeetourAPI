@@ -14,5 +14,6 @@ namespace SeetourAPI.Data.Models.Users
         [StringLength(maximumLength: 50, MinimumLength = 4)]
         public string FullName { get; set; } = string.Empty;
         public virtual Customer? Customer { get; set; }
+        public virtual TourGuide? TourGuide { get; set; }
     }
 }

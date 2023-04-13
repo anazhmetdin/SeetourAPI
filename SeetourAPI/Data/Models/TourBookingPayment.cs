@@ -9,6 +9,7 @@ namespace SeetourAPI.Data.Models
         public int Id { get; set; }
         public virtual BookedTour? BookedTour { get; set; }
         public int BookedTourId { get; set; }
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Total { get; set; }
         
         [StringLength(3)]

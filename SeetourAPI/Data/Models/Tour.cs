@@ -19,12 +19,17 @@ namespace SeetourAPI.Data.Models
         public DateTime DateTo { get; set; }
         [Range(0, (double)decimal.MaxValue)]
         [DataType(DataType.Currency)]
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Price { get; set; }
         [DataType(DataType.Url)]
         [StringLength(512)]
+        public string LocationFromUrl { get; set; } = string.Empty;
+        [StringLength(128, MinimumLength = 4)]
         public string LocationFrom { get; set; } = string.Empty;
         [DataType(DataType.Url)]
         [StringLength(512)]
+        public string LocationToUrl { get; set; } = string.Empty;
+        [StringLength(128, MinimumLength = 4)]
         public string LocationTo { get; set; } = string.Empty;
         public TourCategory Category { get; set; } = TourCategory.OTHER;
         public bool HasTransportation { get; set; }
@@ -32,10 +37,8 @@ namespace SeetourAPI.Data.Models
         public DateTime LastDateToCancel { get; set; }
         [Range(1, 100)]
         public int Capacity { get; set; }
-        [DataType(DataType.ImageUrl)]
-        [StringLength(512)]
         // TODO: use all photos in thumbnail gallery
-        public ICollection<string> Photos { get; set; } = new List<string>();
+        public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
         public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
         public virtual ICollection<BookedTour> Bookings { get; set; } = new HashSet<BookedTour>();
