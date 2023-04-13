@@ -1,6 +1,8 @@
 ﻿using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Validation;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SeetourAPI.Data.Models
 {
@@ -35,5 +37,10 @@ namespace SeetourAPI.Data.Models
         public ICollection<string> Photos { get; set; } = new List<string>();
         public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
+        public virtual ICollection<BookedTour> Bookings { get; set; } = new HashSet<BookedTour>();
+        [NotMapped]
+        public int BookingsCount { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked).Count(); }
+        public string TourGuideId { get; set; } = string.Empty;
+        public virtual TourGuide? TourGuide { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 
-namespace SeetourAPI.Data.Models
+namespace SeetourAPI.Data.Models.Users
 {
     public class Customer
     {
@@ -9,5 +9,6 @@ namespace SeetourAPI.Data.Models
         public virtual SeetourUser? User { get; set; }
         public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
+        public virtual ICollection<BookedTour> BookedTours { get; set; } = new HashSet<BookedTour>();
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace SeetourAPI.Data.Models
+﻿using SeetourAPI.Data.Models.Users;
+
+namespace SeetourAPI.Data.Models
 {
     public class CustomerWishlist
     {

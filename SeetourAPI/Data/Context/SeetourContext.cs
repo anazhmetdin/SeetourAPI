@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.Data.Context
 {

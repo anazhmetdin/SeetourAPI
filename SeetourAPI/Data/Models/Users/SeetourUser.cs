@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 
-namespace SeetourAPI.Data.Models
+namespace SeetourAPI.Data.Models.Users
 {
-    public class SeetourUser: IdentityUser
+    public class SeetourUser : IdentityUser
     {
         [DataType(DataType.ImageUrl)]
         [StringLength(512)]
