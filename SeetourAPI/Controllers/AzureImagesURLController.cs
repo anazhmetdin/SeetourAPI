@@ -17,7 +17,7 @@ namespace SeetourAPI.Controllers
         private readonly IAzureBlobStorageService _azureBlobStorage;
         private readonly SeetourContext _context;
 
-        public AzureImagesURLController(IAzureBlobStorageService azureBlobStorage , SeetourContext context)
+        public AzureImagesURLController(IAzureBlobStorageService azureBlobStorage, SeetourContext context)
         {
             _azureBlobStorage = azureBlobStorage;
             _context = context;
@@ -28,22 +28,28 @@ namespace SeetourAPI.Controllers
         [Route("UploadImage")]
         public async Task<ActionResult> UploadImage(IFormFile file)
         {
-            
-          // string uri= _azureBlobStorage.UploadBlobAsync(file).ToString();
+            string url;
+            try
+            {
+                url = await _azureBlobStorage.UploadBlobAsync(file);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+
             var imageInfo = new Photo
             {
-                
-            Url = await _azureBlobStorage.UploadBlobAsync(file)
+                Url = url
             };
-            
+
             //Getting decoded URl
-           imageInfo.Url= Uri.UnescapeDataString(imageInfo.Url);
+            imageInfo.Url = Uri.UnescapeDataString(imageInfo.Url);
             _context.Photos.Add(imageInfo);
-                _context.SaveChanges();
-            
+            _context.SaveChanges();
 
             // Return a response indicating the image was uploaded successfully
-            return Ok();
+            return Ok(imageInfo);
         }
         #endregion
 
@@ -63,17 +69,12 @@ namespace SeetourAPI.Controllers
         [Route("DeleteImage")]
         public async Task<ActionResult> DeleteImage(string url)
         {
-          
-            //Get the last segment in the URL
-            Uri uri = new Uri(url);
-            string lastSegment = uri.Segments.LastOrDefault()!;
+            var deleted = await _azureBlobStorage.DeleteBlobAsync(url);
 
-            //Encoding The Spaces in the Last segment
-            string lastSegmentDecoded = Uri.UnescapeDataString(lastSegment);
-           // Console.WriteLine(lastSegmentDecoded);
+            if (deleted)
+                return Ok();
 
-            await  _azureBlobStorage.DeleteBlobAsync(lastSegmentDecoded);
-             return Ok();
+            return NotFound();
             //System.Web.HttpUtility.UrlDecode(url);
 
         }
@@ -84,20 +85,25 @@ namespace SeetourAPI.Controllers
         [Route("UploadImages")]
         public async Task<IActionResult> Upload(List<IFormFile> files)
         {
-            var blobUrls = await _azureBlobStorage.UploadBlobAsyncImgs(files);
+            List<string> blobUrls;
+
+            try
+            {
+                blobUrls = await _azureBlobStorage.UploadBlobAsyncImgs(files);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest($"{ex.Message}");
+            }
 
             // Save Urls to database
-            foreach (var blobUrl in blobUrls)
-            {
-                var photo = new Photo { Url = blobUrl };
-                _context.Photos.Add(photo);
-            }
+            var photos = blobUrls.Select(url => new Photo() { Url = url });
+
+            await _context.AddRangeAsync(photos);
             await _context.SaveChangesAsync();
 
-            return Ok(blobUrls);
+            return Ok(photos);
         }
-
         #endregion
-
     }
 }
