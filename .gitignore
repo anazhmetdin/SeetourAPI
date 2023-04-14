@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 /SeetourAPI/appsettings.secret.json
 /SeetourAPI/Migrations/SeetourContextModelSnapshot.cs
+/SeetourAPI/Migrations/SeetourContextModelSnapshot.cs

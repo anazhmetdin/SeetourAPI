@@ -17,15 +17,6 @@ namespace SeetourAPI.Data.Context
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
 
-        public DbSet<Customer> Customers { get; set; }
-        public DbSet<TourGuide> TourGuides { get; set; }
-        public DbSet<Tour> Tours { get; set; }
-        public DbSet<Review> Reviews { get; set; }
-        public DbSet<TourQuestion> TourQuestions { get; set; }
-        public DbSet<BookedTour> BookedTours { get; set; }
-        public DbSet<CustomerLikes> CustomerLikes { get; set; }
-        public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
-
         public SeetourContext(DbContextOptions<SeetourContext> options)
         : base(options)
         {
