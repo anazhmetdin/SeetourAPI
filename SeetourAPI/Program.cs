@@ -10,7 +10,6 @@ namespace SeetourAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -19,6 +18,7 @@ namespace SeetourAPI
             builder.Services.AddSwaggerGen();
 
             #region Database
+            builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
             var connectionString = builder.Configuration.GetConnectionString("SeetourConn");
             builder.Services.AddDbContext<SeetourContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -27,6 +27,7 @@ namespace SeetourAPI
             #region Azure
             builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
             #endregion
+
 
             var app = builder.Build();
 

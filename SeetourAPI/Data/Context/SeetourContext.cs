@@ -8,6 +8,7 @@ namespace SeetourAPI.Data.Context
     public class SeetourContext: IdentityDbContext<SeetourUser>
     {
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Photo> Photos { get; set; }
         public DbSet<TourGuide> TourGuides { get; set; }
         public DbSet<Tour> Tours { get; set; }
         public DbSet<Review> Reviews { get; set; }
