@@ -19,7 +19,11 @@
         Cruise,
         Food,
         Historical,
+        Hiking,
+        Camping,
+        Sightseeing,
+        Beach,
         // Other categories that do not fit into the above ones
-        OTHER
+        Other
     }
 }

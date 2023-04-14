@@ -396,3 +396,6 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/SeetourAPI/appsettings.secret.json
+/SeetourAPI/Migrations/SeetourContextModelSnapshot.cs
+/SeetourAPI/Migrations/SeetourContextModelSnapshot.cs

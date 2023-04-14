@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.Data.Context
 {
@@ -66,6 +67,9 @@ namespace SeetourAPI.Data.Context
                     .WithOne(b => b.TourGuide)
                     .HasForeignKey(b => b.TourGuideId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                //b.Property(tg => tg.Status)
+                //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
             });
             #endregion
             #region Tour
@@ -106,6 +110,12 @@ namespace SeetourAPI.Data.Context
                 b.HasIndex(t => t.HasTransportation);
                 b.HasIndex(t => t.LocationFrom);
                 b.HasIndex(t => t.LocationTo);
+
+                //b.Property(t => t.TourPostingStatus)
+                //    .HasConversion(new EnumToStringConverter<TourPostingStatus>());
+
+                //b.Property(t => t.Category)
+                //    .HasConversion(new EnumToStringConverter<TourCategory>());
             });
             #endregion
             #region Likes
@@ -130,6 +140,9 @@ namespace SeetourAPI.Data.Context
                 b.HasOne(bt => bt.TourBookingPayment)
                     .WithOne(p => p.BookedTour)
                     .HasForeignKey<BookedTour>(bt => bt.TourBookingPaymentId);
+
+                //b.Property(bt => bt.Status)
+                //    .HasConversion(new EnumToStringConverter<BookedTourStatus>());
             });
             #endregion
             #region Questions

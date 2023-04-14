@@ -31,7 +31,7 @@ namespace SeetourAPI.Data.Models
         public string LocationToUrl { get; set; } = string.Empty;
         [StringLength(128, MinimumLength = 4)]
         public string LocationTo { get; set; } = string.Empty;
-        public TourCategory Category { get; set; } = TourCategory.OTHER;
+        public TourCategory Category { get; set; } = TourCategory.Other;
         public bool HasTransportation { get; set; }
         [FutureDateRange(0, dateBefore: "DateFrom")] // at most 0 days before after datefrom
         public DateTime LastDateToCancel { get; set; }

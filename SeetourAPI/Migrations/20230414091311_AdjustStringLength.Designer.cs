@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeetourAPI.Data.Context;
 
@@ -11,9 +12,11 @@ using SeetourAPI.Data.Context;
 namespace SeetourAPI.Migrations
 {
     [DbContext(typeof(SeetourContext))]
-    partial class SeetourContextModelSnapshot : ModelSnapshot
+    [Migration("20230414091311_AdjustStringLength")]
+    partial class AdjustStringLength
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -426,7 +429,8 @@ namespace SeetourAPI.Migrations
 
                     b.Property<string>("Answer")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -505,7 +509,8 @@ namespace SeetourAPI.Migrations
 
                     b.Property<string>("Question")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<int?>("TourAnswerId")
                         .HasColumnType("int");
