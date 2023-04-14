@@ -28,8 +28,16 @@ namespace SeetourAPI.Controllers
         [Route("UploadImage")]
         public async Task<ActionResult> UploadImage(IFormFile file)
         {
+            string url;
+            try
+            {
+                url = await _azureBlobStorage.UploadBlobAsync(file);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
             
-          // string uri= _azureBlobStorage.UploadBlobAsync(file).ToString();
             var imageInfo = new Photo
             {
                 
@@ -37,7 +45,6 @@ namespace SeetourAPI.Controllers
             };
             
             //Getting decoded URl
-           imageInfo.Url= Uri.UnescapeDataString(imageInfo.Url);
             _context.Photos.Add(imageInfo);
                 _context.SaveChanges();
             
@@ -72,10 +79,10 @@ namespace SeetourAPI.Controllers
             string lastSegmentDecoded = Uri.UnescapeDataString(lastSegment);
            // Console.WriteLine(lastSegmentDecoded);
 
-            await  _azureBlobStorage.DeleteBlobAsync(lastSegmentDecoded);
-             return Ok();
-            //System.Web.HttpUtility.UrlDecode(url);
+            if (deleted)
+                return Ok();
 
+            return NotFound();
         }
         #endregion
 
@@ -87,13 +94,14 @@ namespace SeetourAPI.Controllers
             var blobUrls = await _azureBlobStorage.UploadBlobAsyncImgs(files);
 
             // Save Urls to database
-            foreach (var blobUrl in blobUrls)
+            List<Photo> photos = new();
+            blobUrls.ForEach(async url =>
             {
-                var photo = new Photo { Url = blobUrl };
-                photo.Url = Uri.UnescapeDataString(photo.Url);
+                var photo = new Photo() { Url = url };
+                photos.Add(photo);
+                await _context.AddAsync(photo);
+            });
 
-                _context.Photos.Add(photo);
-            }
             await _context.SaveChangesAsync();
 
             return Ok(blobUrls);
