@@ -40,7 +40,7 @@ namespace SeetourAPI.Services
                 throw new Exception($"Couldn't upload {file.Name}, please try again later");
             }
 
-            return blobClient.Uri.ToString();
+            return Uri.UnescapeDataString(blobClient.Uri.ToString());
         }
         #endregion
 
@@ -105,7 +105,7 @@ namespace SeetourAPI.Services
         private void CheckIsImage(IFormFile file)
         {
             if (!file.ContentType.StartsWith("image/") || AllowedExtensions?.Contains(Path.GetExtension(file.Name)) == true)
-                throw new Exception($"File {file.FileName} has an unsupported extension. Supported files are: {string.Join(', ', AllowedExtensions)}");
+                throw new Exception($"File {file.FileName} has an unsupported extension. Supported files are: {string.Join(", ", AllowedExtensions)}");
         }
     }
 }

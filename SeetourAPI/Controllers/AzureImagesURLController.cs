@@ -37,14 +37,13 @@ namespace SeetourAPI.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
+            
             var imageInfo = new Photo
             {
                 Url = url
             };
 
             //Getting decoded URl
-            imageInfo.Url = Uri.UnescapeDataString(imageInfo.Url);
             _context.Photos.Add(imageInfo);
             _context.SaveChanges();
 
@@ -75,8 +74,6 @@ namespace SeetourAPI.Controllers
                 return Ok();
 
             return NotFound();
-            //System.Web.HttpUtility.UrlDecode(url);
-
         }
         #endregion
 
@@ -97,9 +94,14 @@ namespace SeetourAPI.Controllers
             }
 
             // Save Urls to database
-            var photos = blobUrls.Select(url => new Photo() { Url = url });
+            List<Photo> photos = new();
+            blobUrls.ForEach(async url =>
+            {
+                var photo = new Photo() { Url = url };
+                photos.Add(photo);
+                await _context.AddAsync(photo);
+            });
 
-            await _context.AddRangeAsync(photos);
             await _context.SaveChangesAsync();
 
             return Ok(photos);
