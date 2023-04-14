@@ -1,4 +1,6 @@
-﻿using SeetourAPI.DAL.Repos;
+﻿using Microsoft.EntityFrameworkCore;
+using SeetourAPI.DAL.DTO;
+using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.BL.TourManger
@@ -40,6 +42,24 @@ namespace SeetourAPI.BL.TourManger
         public Tour? GetTourById(int id)
         {
             return TourRepo.GetTourById(id);
+        }
+        public TourDetailsDto? Details(int id)
+        {
+            var tour = TourRepo.GetTourById(id);
+            if (tour != null)
+            {
+                var tourDetails = TourRepo.GetAll()
+                .Where(t => t.Id == tour.Id)
+                .Select(t => new TourDetailsDto
+                {
+                    Likes = t.Likes,
+                    Wishlist = t.Wishlist,
+                    Bookings = t.Bookings
+                })
+                .FirstOrDefault();
+                return tourDetails;
+            }
+            return new TourDetailsDto();
         }
     }
 }

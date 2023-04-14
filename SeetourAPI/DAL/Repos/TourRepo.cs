@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Context;
+﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.DAL.Repos
@@ -19,13 +20,13 @@ namespace SeetourAPI.DAL.Repos
 
         public void DeleteTour(int id)
         {
-          
-           var tour= _Context.Tours.Find(id);
-            if(tour != null)
+
+            var tour = _Context.Tours.Find(id);
+            if (tour != null)
             {
-              if(tour.TourPostingStatus==Data.Enums.TourPostingStatus.Acceptd)
+                if (tour.TourPostingStatus == Data.Enums.TourPostingStatus.Acceptd)
                 {
-                        return;
+                    return;
                 }
                 _Context.Tours.Remove(tour);
 
@@ -33,28 +34,30 @@ namespace SeetourAPI.DAL.Repos
             }
         }
 
+        
+
         public Tour? EditTour(int id, Tour tour)
         {
             if (tour.Id == id)
             {
-               var t= _Context.Tours.Find(id);
-                if(t!=null)
+                var t = _Context.Tours.Find(id);
+                if (t != null)
                 {
-                    t.Title= tour.Title;
-                    t.Description= tour.Description;
-                    t.DateFrom= tour.DateFrom;
-                    t.DateTo= tour.DateTo;
+                    t.Title = tour.Title;
+                    t.Description = tour.Description;
+                    t.DateFrom = tour.DateFrom;
+                    t.DateTo = tour.DateTo;
                     t.Price = tour.Price;
-                    t.LocationFrom= tour.LocationFrom;
-                    t.LocationTo= tour.LocationTo;
-                    t.LocationToUrl= tour.LocationToUrl;
-                    t.LocationFromUrl= tour.LocationFromUrl;
-                    t.Category= tour.Category;
-                    t.HasTransportation= tour.HasTransportation;
-                    t.LastDateToCancel= tour.LastDateToCancel; 
-                    t.Capacity= tour.Capacity;
-                    t.TourGuideId= tour.TourGuideId;
-         
+                    t.LocationFrom = tour.LocationFrom;
+                    t.LocationTo = tour.LocationTo;
+                    t.LocationToUrl = tour.LocationToUrl;
+                    t.LocationFromUrl = tour.LocationFromUrl;
+                    t.Category = tour.Category;
+                    t.HasTransportation = tour.HasTransportation;
+                    t.LastDateToCancel = tour.LastDateToCancel;
+                    t.Capacity = tour.Capacity;
+                    t.TourGuideId = tour.TourGuideId;
+
                 }
             }
             return tour;
@@ -67,27 +70,27 @@ namespace SeetourAPI.DAL.Repos
                 var t = _Context.Tours.Find(id);
                 if (t != null)
                 {
-                    t.TourPostingStatus= tour.TourPostingStatus;
+                    t.TourPostingStatus = tour.TourPostingStatus;
                 }
             }
         }
         public IEnumerable<Tour> GetAll()
         {
-         var tours=  _Context.Tours.ToList();
+            var tours = _Context.Tours.ToList();
             return tours;
         }
 
         public Tour? GetTourById(int id)
         {
-            var tour= _Context.Tours.Find(id);
-            if(tour != null)
-            { 
-            return tour;
-            
+            var tour = _Context.Tours.Find(id);
+            if (tour != null)
+            {
+                return tour;
+
             }
             else return new Tour();
         }
 
-        
+
     }
 }
