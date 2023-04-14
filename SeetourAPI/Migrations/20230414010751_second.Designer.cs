@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SeetourAPI.Data.Context;
 
@@ -11,9 +12,11 @@ using SeetourAPI.Data.Context;
 namespace SeetourAPI.Migrations
 {
     [DbContext(typeof(SeetourContext))]
-    partial class SeetourContextModelSnapshot : ModelSnapshot
+    [Migration("20230414010751_second")]
+    partial class second
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
