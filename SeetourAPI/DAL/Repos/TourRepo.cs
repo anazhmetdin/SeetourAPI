@@ -54,10 +54,10 @@ namespace SeetourAPI.DAL.Repos
                     t.LastDateToCancel= tour.LastDateToCancel; 
                     t.Capacity= tour.Capacity;
                     t.TourGuideId= tour.TourGuideId;
-         
+                    return tour;        
                 }
             }
-            return tour;
+            return new Tour();
         }
 
         public void EditTourBYAdmin(int id, Tour tour)
