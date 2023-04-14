@@ -15,5 +15,6 @@ namespace SeetourAPI.Data.Models.Users
         public string FullName { get; set; } = string.Empty;
         public virtual Customer? Customer { get; set; }
         public virtual TourGuide? TourGuide { get; set; }
+        public string SecurityLevel { get; set; }=string.Empty;
     }
 }
