@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.TourManger;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.Controllers
@@ -16,10 +17,10 @@ namespace SeetourAPI.Controllers
             this.ITourManger = ITourManger;
         }
         [HttpPost]
-        public ActionResult CreateTour(Tour tour)
+        public ActionResult CreateTour(AddTourDto addTourDto)
         {
-              ITourManger.AddTour(tour);
-                return Created("", tour);    
+              ITourManger.AddTour(addTourDto);
+                return Created("", addTourDto);    
         }
         [HttpPut]
         public ActionResult EditTour(int id,Tour tour)

@@ -1,23 +1,52 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Models.Users;
+using System.Security.Claims;
 
 namespace SeetourAPI.BL.TourManger
 {
     public class TourManger : ITourManger
     {
+        private readonly UserManager<SeetourUser> _userManager;
+
         public ITourRepo TourRepo { get; }
-        public TourManger(ITourRepo tourRepo)
+        public TourManger(ITourRepo tourRepo, UserManager<SeetourUser> userManager)
         {
             TourRepo = tourRepo;
+            _userManager = userManager;
         }
 
 
-        public void AddTour(Tour tour)
+        public void AddTour( AddTourDto AddTourDto)
         {
+            var userId = _userManager.GetUserId(ClaimsPrincipal.Current)?? "default";
+            var tour = new Tour
+            {
+                Title = AddTourDto.Title,
+                Description = AddTourDto.Description,
+                DateFrom = AddTourDto.DateFrom,
+                DateTo = AddTourDto.DateTo,
+                Price = AddTourDto.Price,
+                LocationFromUrl = AddTourDto.LocationFromUrl,
+                LocationFrom = AddTourDto.LocationFrom,
+                LocationToUrl = AddTourDto.LocationToUrl,
+                LocationTo = AddTourDto.LocationTo,
+                Category = AddTourDto.Category,
+                HasTransportation = AddTourDto.HasTransportation,
+                LastDateToCancel = AddTourDto.LastDateToCancel,
+                Capacity = AddTourDto.Capacity,
+                TourPostingStatus = AddTourDto.TourPostingStatus,
+                CreatedAt = AddTourDto.CreatedAt,
+                PostedAt = AddTourDto.PostedAt,
+                TourGuideId = userId??"default"
+        };
+
             TourRepo.AddTour(tour);
         }
+
 
         public void DeleteTour(int id)
         {
