@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.DAL.Repos
@@ -54,6 +55,7 @@ namespace SeetourAPI.DAL.Repos
                     t.LastDateToCancel= tour.LastDateToCancel; 
                     t.Capacity= tour.Capacity;
                     t.TourGuideId= tour.TourGuideId;
+                    _Context.SaveChanges();
                     return tour;        
                 }
             }
@@ -68,6 +70,7 @@ namespace SeetourAPI.DAL.Repos
                 if (t != null)
                 {
                     t.TourPostingStatus= tour.TourPostingStatus;
+                    _Context.SaveChanges();
                 }
             }
         }
@@ -82,8 +85,8 @@ namespace SeetourAPI.DAL.Repos
             var tour= _Context.Tours.Find(id);
             if(tour != null)
             { 
-            return tour;
-            
+                return tour;
+
             }
             else return new Tour();
         }

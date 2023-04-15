@@ -126,7 +126,7 @@ namespace SeetourAPI.Data.Context
             {
                 b.HasOne(bt => bt.Review)
                     .WithOne(r => r.BookedTour)
-                    .HasForeignKey<Review>(r => r.BoodedTourId);
+                    .HasForeignKey<Review>(r => r.BookedTourId);
 
                 b.HasOne(bt => bt.TourBookingPayment)
                     .WithOne(p => p.BookedTour)

@@ -9,8 +9,8 @@ using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
-
+using SeetourAPI.BL.TourAnswerManager;
+using SeetourAPI.BL.ReviewManager;
 
 namespace SeetourAPI
 {
@@ -34,9 +34,11 @@ namespace SeetourAPI
             #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
+            builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
+            builder.Services.AddScoped<IReviewManager, ReviewManager> ();
             #endregion
             #region IdentityManger
             builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 

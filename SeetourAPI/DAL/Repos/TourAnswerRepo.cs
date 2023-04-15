@@ -33,6 +33,7 @@ namespace SeetourAPI.DAL.Repos
             if (answer != null)
             {
                 answer.Answer = tourAnswer.Answer;
+                _context.SaveChanges();
                 return tourAnswer;
             }
             return new TourAnswer();
