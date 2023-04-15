@@ -41,6 +41,8 @@ namespace SeetourAPI.Controllers
                 ProfilePic = registrationDto.profilepic,
                 SSN = registrationDto.SSN,
                 FullName = registrationDto.FullName,
+                Email= registrationDto.Email,
+                PhoneNumber = registrationDto.PhoneNumber
             };
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
@@ -81,8 +83,9 @@ namespace SeetourAPI.Controllers
                 RecipientBankSwiftCode=registrationDto.RecipientBankSwiftCode,
                 RecipientNameAndAddress=registrationDto.RecipientNameAndAddress,
                 TaxRegistrationNumber=registrationDto.TaxRegistrationNumber,
-                IDCardPhoto=registrationDto.IDCardPhoto
-
+                IDCardPhoto=registrationDto.IDCardPhoto,
+                Email=registrationDto.Email,
+                PhoneNumber=registrationDto.PhoneNumber
             };
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
