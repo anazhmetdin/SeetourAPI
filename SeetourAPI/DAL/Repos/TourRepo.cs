@@ -20,13 +20,13 @@ namespace SeetourAPI.DAL.Repos
 
         public void DeleteTour(int id)
         {
-          
-           var tour= _Context.Tours.Find(id);
-            if(tour != null)
+
+            var tour = _Context.Tours.Find(id);
+            if (tour != null)
             {
-              if(tour.TourPostingStatus==Data.Enums.TourPostingStatus.Acceptd)
+                if (tour.TourPostingStatus == Data.Enums.TourPostingStatus.Acceptd)
                 {
-                        return;
+                    return;
                 }
                 _Context.Tours.Remove(tour);
 
@@ -34,17 +34,19 @@ namespace SeetourAPI.DAL.Repos
             }
         }
 
+        
+
         public Tour? EditTour(int id, Tour tour)
         {
             if (tour.Id == id)
             {
-               var t= _Context.Tours.Find(id);
-                if(t!=null)
+                var t = _Context.Tours.Find(id);
+                if (t != null)
                 {
-                    t.Title= tour.Title;
-                    t.Description= tour.Description;
-                    t.DateFrom= tour.DateFrom;
-                    t.DateTo= tour.DateTo;
+                    t.Title = tour.Title;
+                    t.Description = tour.Description;
+                    t.DateFrom = tour.DateFrom;
+                    t.DateTo = tour.DateTo;
                     t.Price = tour.Price;
                     t.LocationFrom= tour.LocationFrom;
                     t.LocationTo= tour.LocationTo;
@@ -76,7 +78,7 @@ namespace SeetourAPI.DAL.Repos
         }
         public IEnumerable<Tour> GetAll()
         {
-         var tours=  _Context.Tours.ToList();
+            var tours = _Context.Tours.ToList();
             return tours;
         }
 
@@ -91,6 +93,6 @@ namespace SeetourAPI.DAL.Repos
             else return new Tour();
         }
 
-        
+
     }
 }

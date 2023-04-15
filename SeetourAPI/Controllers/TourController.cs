@@ -62,5 +62,17 @@ namespace SeetourAPI.Controllers
             }
             return Ok(ITourManger.GetAll());
         }
+        [HttpGet]
+        [Route("TourDetails")]
+        public ActionResult Details(int id)
+        {
+            var tour = ITourManger.GetTourById(id);
+            if (tour?.Id == id)
+            {
+                return Ok( ITourManger.Details(id));
+
+            }
+            return NotFound();
+        }
     }
 }
