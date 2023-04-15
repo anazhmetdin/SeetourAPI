@@ -2,12 +2,18 @@
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
-using SeetourAPI.Data.Models.Users;
+using System.Text.Json;
+using System;
+using Microsoft.AspNetCore.Identity;
+using SeetourAPI.Data.Models.Photos;
 
 namespace SeetourAPI.Data.Context
 {
     public class SeetourContext: IdentityDbContext<SeetourUser>
     {
+        private readonly IWebHostEnvironment _env;
+        private readonly PasswordHasher<SeetourUser> _passwordHasher;
+
         public DbSet<Customer> Customers { get; set; }
         public DbSet<TourGuide> TourGuides { get; set; }
         public DbSet<Tour> Tours { get; set; }
@@ -17,10 +23,11 @@ namespace SeetourAPI.Data.Context
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
 
-        public SeetourContext(DbContextOptions<SeetourContext> options)
+        public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)
         {
-
+            _env = env;
+            _passwordHasher = new PasswordHasher<SeetourUser>();
         }
 
         // TODO: add data seeding, onmodelcreating
@@ -38,6 +45,9 @@ namespace SeetourAPI.Data.Context
                 b.HasOne(u => u.Customer)
                     .WithOne(c => c.User)
                     .HasForeignKey<Customer>(c => c.Id);
+
+                SeetourUser[] seetourUsers = GetUsers("jsons/seetourusers.json");
+                b.HasData(seetourUsers);
             });
             #endregion
             #region Customer
@@ -56,6 +66,9 @@ namespace SeetourAPI.Data.Context
                 b.HasMany(c => c.BookedTours)
                     .WithOne(w => w.Customer)
                     .HasForeignKey(c => c.CustomerId);
+
+                Customer[] customers = GetData<Customer>("jsons/customers.json");
+                b.HasData(customers);
             });
             #endregion
             #region TourGuide
@@ -70,6 +83,9 @@ namespace SeetourAPI.Data.Context
 
                 //b.Property(tg => tg.Status)
                 //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
+
+                TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
+                b.HasData(customers);
             });
             #endregion
             #region Tour
@@ -85,7 +101,9 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey(l => l.TourId)
                     .OnDelete(DeleteBehavior.Restrict);
 
-                b.HasMany(t => t.Photos);
+                b.HasMany(t => t.Photos)
+                    .WithOne(p => p.Tour)
+                    .HasForeignKey(p => p.TourId);
 
                 b.HasMany(t => t.Bookings)
                     .WithOne(b => b.Tour)
@@ -101,7 +119,9 @@ namespace SeetourAPI.Data.Context
                     .WithOne(l => l.Tour)
                     .HasForeignKey(l => l.TourId);
 
-                b.HasMany(t => t.Photos);
+                b.HasMany(t => t.Photos)
+                    .WithOne(p => p.Tour)
+                    .HasForeignKey(p => p.TourId);
 
                 b.HasIndex(t => t.TourGuideId);
                 b.HasIndex(t => t.Category);
@@ -116,18 +136,27 @@ namespace SeetourAPI.Data.Context
 
                 //b.Property(t => t.Category)
                 //    .HasConversion(new EnumToStringConverter<TourCategory>());
+
+                Tour[] customers = GetData<Tour>("jsons/tours.json");
+                b.HasData(customers);
             });
             #endregion
             #region Likes
             builder.Entity<CustomerLikes>(b =>
             {
                 b.HasIndex(l => l.CustomerId);
+
+                CustomerLikes[] customers = GetData<CustomerLikes>("jsons/likes.json");
+                b.HasData(customers);
             });
             #endregion
             #region Wishlist
             builder.Entity<CustomerWishlist>(b =>
             {
                 b.HasIndex(wl => wl.CustomerId);
+
+                CustomerWishlist[] customers = GetData<CustomerWishlist>("jsons/wishlists.json");
+                b.HasData(customers);
             });
             #endregion
             #region Bookings
@@ -143,6 +172,9 @@ namespace SeetourAPI.Data.Context
 
                 //b.Property(bt => bt.Status)
                 //    .HasConversion(new EnumToStringConverter<BookedTourStatus>());
+
+                BookedTour[] customers = GetData<BookedTour>("jsons/bookings.json");
+                b.HasData(customers);
             });
             #endregion
             #region Questions
@@ -151,14 +183,137 @@ namespace SeetourAPI.Data.Context
                 b.HasOne(q => q.TourAnswer)
                     .WithOne(a => a.TourQuestion)
                     .HasForeignKey<TourQuestion>(q => q.TourAnswerId);
+
+                TourQuestion[] customers = GetData<TourQuestion>("jsons/questions.json");
+                b.HasData(customers);
+            });
+            #endregion
+            #region Answers
+            builder.Entity<TourAnswer>(b =>
+            {
+                b.HasOne(q => q.TourQuestion)
+                    .WithOne(a => a.TourAnswer)
+                    .HasForeignKey<TourAnswer>(q => q.TourQuestionId);
+
+                TourAnswer[] customers = GetData<TourAnswer>("jsons/answers.json");
+                b.HasData(customers);
             });
             #endregion
             #region Reviews
             builder.Entity<Review>(b =>
             {
                 b.HasMany(r => r.Photos);
+
+                b.HasMany(t => t.Photos)
+                    .WithOne(p => p.Review)
+                    .HasForeignKey(p => p.ReviewId);
+
+                Review[] customers = GetData<Review>("jsons/reviews.json");
+                b.HasData(customers);
             });
             #endregion
+            #region Photos
+            builder.Entity<Photo>(b =>
+            {
+                Photo[] customers = GetData<Photo>("jsons/photos.json");
+                b.HasData(customers);
+            });
+            #endregion
+            #region TourPhotos
+            builder.Entity<TourPhoto>(b =>
+            {
+                b.HasOne(p => p.Photo);
+
+                b.Navigation(b => b.Photo)
+                    .AutoInclude(true);
+
+                TourPhoto[] customers = GetData<TourPhoto>("jsons/tourphotos.json");
+                b.HasData(customers);
+            });
+            #endregion
+            #region ReviewPhoto
+            builder.Entity<ReviewPhoto>(b =>
+            {
+                b.HasOne(p => p.Photo);
+
+                b.Navigation(b => b.Photo)
+                    .AutoInclude(true);
+
+                ReviewPhoto[] customers = GetData<ReviewPhoto>("jsons/reviewphotos.json");
+                b.HasData(customers);
+            });
+            #endregion
+            #region Payments
+            builder.Entity<TourBookingPayment>(b =>
+            {
+                b.HasOne(p => p.BookedTour)
+                    .WithOne(bt => bt.TourBookingPayment)
+                    .HasForeignKey<BookedTour>(p => p.TourBookingPaymentId);
+
+                TourBookingPayment[] customers = GetData<TourBookingPayment>("jsons/payments.json");
+                b.HasData(customers);
+            });
+            #endregion
+            #region EditRequests
+            builder.Entity<EditRequest>(b =>
+            {
+                b.HasOne(p => p.Tour)
+                    .WithMany(bt => bt.EditRequests)
+                    .HasForeignKey(bt => bt.TourId);
+
+                EditRequest[] customers = GetData<EditRequest>("jsons/editrequests.json");
+                b.HasData(customers);
+            });
+            #endregion
+        }
+
+        private T[] GetData<T> (string jsonfile)
+        {
+            // Get the content root path of the application
+            string contentRootPath = _env.ContentRootPath;
+
+            // Build the path to the people.json file
+            string filePath = Path.Combine(contentRootPath, jsonfile);
+
+            // Read the contents of the JSON file into a string
+            string json = File.ReadAllText(filePath);
+
+            // Deserialize the JSON string into an array of Person objects using the JsonSerializer class
+            T[]? TList = JsonSerializer.Deserialize<T[]>(json);
+
+            return TList ?? Array.Empty<T>();
+        }
+
+        private SeetourUser[] GetUsers(string jsonfile)
+        {
+
+            // Get the content root path of the application
+            string contentRootPath = _env.ContentRootPath;
+
+            // Build the path to the people.json file
+            string filePath = Path.Combine(contentRootPath, jsonfile);
+
+            // Read the contents of the JSON file into a string
+            string json = File.ReadAllText(filePath);
+
+            // Deserialize the JSON string into an array of Person objects using the JsonSerializer class
+            JsonElement[] TList = JsonSerializer.Deserialize<JsonElement[]>(json) ?? Array.Empty<JsonElement>();
+            // Deserialize the JSON string into an array of Person objects using the JsonSerializer class
+            SeetourUser[]? seetourUsers = JsonSerializer.Deserialize<SeetourUser[]>(json) ?? Array.Empty<SeetourUser>();
+
+            for (int i = 0; i < TList.Length; i++)
+            {
+                SeetourUser seetourUser = seetourUsers[i];
+                JsonElement user = TList[i];
+
+                // Hash the user's password
+                string hashedPassword = _passwordHasher.HashPassword(seetourUser, user.GetProperty("Password").GetString()!);
+
+                // Set the user's password hash
+                seetourUser.PasswordHash = hashedPassword;
+            }
+
+            return seetourUsers;
         }
     }
 }

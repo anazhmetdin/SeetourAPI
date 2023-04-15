@@ -1,6 +1,7 @@
 
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI
 {
@@ -23,6 +24,10 @@ namespace SeetourAPI
                 options.UseSqlServer(connectionString));
             #endregion
 
+            #region Identity
+            builder.Services.AddIdentityCore<SeetourUser>()
+                .AddEntityFrameworkStores<SeetourContext>();
+            #endregion
 
             var app = builder.Build();
 

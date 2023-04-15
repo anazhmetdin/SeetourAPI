@@ -1,7 +1,10 @@
-﻿namespace SeetourAPI.Data.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace SeetourAPI.Data.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TourPostingStatus
     {
-        Pending, Acceptd, Rejected, EditRequested
+        Pending, Accepted, Rejected, EditRequested
     }
 }
