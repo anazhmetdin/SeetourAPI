@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models.Users;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.Intrinsics.X86;
 using System.Security.Claims;
 using System.Text;
 
@@ -25,14 +26,62 @@ namespace SeetourAPI.Controllers
         }
 
 
+
+
+
         [HttpPost]
-        public async Task<ActionResult<TokenDto>> Register(RegistrationDto registrationDto)
+        [Route("CustomerRegistration")]
+        public async Task<ActionResult<TokenDto>> Register(CustomerRegistrationDto registrationDto)
         {
 
             var UserToAdd = new SeetourUser()
             {
                 UserName = registrationDto.UserName,
-                SecurityLevel = registrationDto.SecurityLevel
+                SecurityLevel = registrationDto.SecurityLevel,
+                ProfilePic = registrationDto.profilepic,
+                SSN = registrationDto.SSN,
+                FullName = registrationDto.FullName,
+            };
+            var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
+            if (!result.Succeeded)
+            {
+                return BadRequest();
+            }
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
+                new Claim(ClaimTypes.Role,registrationDto.SecurityLevel)
+            };
+            await Usermanger.AddClaimsAsync(UserToAdd, claims);
+            return NoContent();
+
+        }
+
+
+
+
+
+
+
+
+        [HttpPost]
+        [Route("TourRegistration")]
+        public async Task<ActionResult<TokenDto>> Register(TourGuideRegistrationDto registrationDto)
+        {
+
+            var UserToAdd = new SeetourUser()
+            {
+                UserName = registrationDto.UserName,
+                SecurityLevel = registrationDto.SecurityLevel,
+                ProfilePic=registrationDto.profilepic,
+                SSN=registrationDto.SSN,
+                FullName=registrationDto.FullName,
+                RecipientAccountNumberOrIBAN=registrationDto.RecipientAccountNumberOrIBAN,
+                RecipientBankNameAndAddress=registrationDto.RecipientBankNameAndAddress,
+                RecipientBankSwiftCode=registrationDto.RecipientBankSwiftCode,
+                RecipientNameAndAddress=registrationDto.RecipientNameAndAddress,
+                TaxRegistrationNumber=registrationDto.TaxRegistrationNumber,
+                IDCardPhoto=registrationDto.IDCardPhoto
 
             };
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
@@ -50,6 +99,10 @@ namespace SeetourAPI.Controllers
 
         }
    
+
+
+
+
         
         [HttpPost]
     [Route("Login")]

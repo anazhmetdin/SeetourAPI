@@ -14,12 +14,18 @@ namespace SeetourAPI.DAL.Repos
         }
         public void AddReview(Review review)
         {
+
             var bookedTour = _context.BookedTours.FirstOrDefault(bt => bt.Id == review.BookedTourId);
             if (bookedTour != null && bookedTour.Status == Data.Enums.BookedTourStatus.Completed)
             {
                 _context.Reviews.Add(review);
                 _context.SaveChanges();
             }
+
+           
+            _context.Reviews.Add(review);
+            _context.SaveChanges();
+
         }
 
         public void DeleteReview(int id)
