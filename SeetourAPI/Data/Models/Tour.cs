@@ -1,4 +1,5 @@
 ﻿using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Validation;
 using System.ComponentModel.DataAnnotations;
@@ -38,7 +39,7 @@ namespace SeetourAPI.Data.Models
         [Range(1, 100)]
         public int Capacity { get; set; }
         // TODO: use all photos in thumbnail gallery
-        public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
+        public virtual ICollection<TourPhoto> Photos { get; set; } = new HashSet<TourPhoto>();
         public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
         public virtual ICollection<BookedTour> Bookings { get; set; } = new HashSet<BookedTour>();
