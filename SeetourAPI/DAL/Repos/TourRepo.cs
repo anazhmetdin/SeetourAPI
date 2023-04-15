@@ -1,4 +1,4 @@
-﻿using SeetourAPI.DAL.DTO;
+﻿using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 
@@ -48,19 +48,20 @@ namespace SeetourAPI.DAL.Repos
                     t.DateFrom = tour.DateFrom;
                     t.DateTo = tour.DateTo;
                     t.Price = tour.Price;
-                    t.LocationFrom = tour.LocationFrom;
-                    t.LocationTo = tour.LocationTo;
-                    t.LocationToUrl = tour.LocationToUrl;
-                    t.LocationFromUrl = tour.LocationFromUrl;
-                    t.Category = tour.Category;
-                    t.HasTransportation = tour.HasTransportation;
-                    t.LastDateToCancel = tour.LastDateToCancel;
-                    t.Capacity = tour.Capacity;
-                    t.TourGuideId = tour.TourGuideId;
-
+                    t.LocationFrom= tour.LocationFrom;
+                    t.LocationTo= tour.LocationTo;
+                    t.LocationToUrl= tour.LocationToUrl;
+                    t.LocationFromUrl= tour.LocationFromUrl;
+                    t.Category= tour.Category;
+                    t.HasTransportation= tour.HasTransportation;
+                    t.LastDateToCancel= tour.LastDateToCancel; 
+                    t.Capacity= tour.Capacity;
+                    t.TourGuideId= tour.TourGuideId;
+                    _Context.SaveChanges();
+                    return tour;        
                 }
             }
-            return tour;
+            return new Tour();
         }
 
         public void EditTourBYAdmin(int id, Tour tour)
@@ -70,7 +71,8 @@ namespace SeetourAPI.DAL.Repos
                 var t = _Context.Tours.Find(id);
                 if (t != null)
                 {
-                    t.TourPostingStatus = tour.TourPostingStatus;
+                    t.TourPostingStatus= tour.TourPostingStatus;
+                    _Context.SaveChanges();
                 }
             }
         }
@@ -82,9 +84,9 @@ namespace SeetourAPI.DAL.Repos
 
         public Tour? GetTourById(int id)
         {
-            var tour = _Context.Tours.Find(id);
-            if (tour != null)
-            {
+            var tour= _Context.Tours.Find(id);
+            if(tour != null)
+            { 
                 return tour;
 
             }
