@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SeetourAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class InitCreate : Migration
+    public partial class initialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -33,6 +33,7 @@ namespace SeetourAPI.Migrations
                     ProfilePic = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: true),
                     SSN = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
+                    SecurityLevel = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -54,7 +55,7 @@ namespace SeetourAPI.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TourAnswer",
+                name: "TourAnswers",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
@@ -65,7 +66,7 @@ namespace SeetourAPI.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_TourAnswer", x => x.Id);
+                    table.PrimaryKey("PK_TourAnswers", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -403,9 +404,9 @@ namespace SeetourAPI.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_TourQuestions_TourAnswer_TourAnswerId",
+                        name: "FK_TourQuestions_TourAnswers_TourAnswerId",
                         column: x => x.TourAnswerId,
-                        principalTable: "TourAnswer",
+                        principalTable: "TourAnswers",
                         principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_TourQuestions_Tours_TourId",
@@ -421,7 +422,7 @@ namespace SeetourAPI.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    BoodedTourId = table.Column<int>(type: "int", nullable: false),
+                    BookedTourId = table.Column<int>(type: "int", nullable: false),
                     Rating = table.Column<int>(type: "int", nullable: false),
                     Comment = table.Column<string>(type: "nvarchar(512)", maxLength: 512, nullable: false),
                     LastEditedAt = table.Column<DateTime>(type: "datetime2", nullable: false)
@@ -430,8 +431,8 @@ namespace SeetourAPI.Migrations
                 {
                     table.PrimaryKey("PK_Reviews", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Reviews_BookedTours_BoodedTourId",
-                        column: x => x.BoodedTourId,
+                        name: "FK_Reviews_BookedTours_BookedTourId",
+                        column: x => x.BookedTourId,
                         principalTable: "BookedTours",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -553,9 +554,9 @@ namespace SeetourAPI.Migrations
                 column: "TourId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Reviews_BoodedTourId",
+                name: "IX_Reviews_BookedTourId",
                 table: "Reviews",
-                column: "BoodedTourId",
+                column: "BookedTourId",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -651,7 +652,7 @@ namespace SeetourAPI.Migrations
                 name: "Reviews");
 
             migrationBuilder.DropTable(
-                name: "TourAnswer");
+                name: "TourAnswers");
 
             migrationBuilder.DropTable(
                 name: "BookedTours");

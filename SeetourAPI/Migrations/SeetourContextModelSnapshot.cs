@@ -304,7 +304,7 @@ namespace SeetourAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BoodedTourId")
+                    b.Property<int>("BookedTourId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -320,7 +320,7 @@ namespace SeetourAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoodedTourId")
+                    b.HasIndex("BookedTourId")
                         .IsUnique();
 
                     b.ToTable("Reviews");
@@ -436,7 +436,7 @@ namespace SeetourAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TourAnswer");
+                    b.ToTable("TourAnswers");
                 });
 
             modelBuilder.Entity("SeetourAPI.Data.Models.TourBookingPayment", b =>
@@ -807,7 +807,7 @@ namespace SeetourAPI.Migrations
                 {
                     b.HasOne("SeetourAPI.Data.Models.BookedTour", "BookedTour")
                         .WithOne("Review")
-                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BoodedTourId")
+                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BookedTourId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

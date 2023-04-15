@@ -5,7 +5,7 @@ namespace SeetourAPI.Data.Models
     public class Review
     {
         public int Id { get; set; }
-        public int BoodedTourId { get; set; }
+        public int BookedTourId { get; set; }
         public virtual BookedTour? BookedTour { get; set; }
         [Range(1,5)]
         public int Rating { get; set; }

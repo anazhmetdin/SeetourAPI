@@ -12,8 +12,8 @@ using SeetourAPI.Data.Context;
 namespace SeetourAPI.Migrations
 {
     [DbContext(typeof(SeetourContext))]
-    [Migration("20230413205420_first")]
-    partial class first
+    [Migration("20230415000853_initialCreate")]
+    partial class initialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -307,7 +307,7 @@ namespace SeetourAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BoodedTourId")
+                    b.Property<int>("BookedTourId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -323,7 +323,7 @@ namespace SeetourAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoodedTourId")
+                    b.HasIndex("BookedTourId")
                         .IsUnique();
 
                     b.ToTable("Reviews");
@@ -439,7 +439,7 @@ namespace SeetourAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TourAnswer");
+                    b.ToTable("TourAnswers");
                 });
 
             modelBuilder.Entity("SeetourAPI.Data.Models.TourBookingPayment", b =>
@@ -597,6 +597,10 @@ namespace SeetourAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
+
+                    b.Property<string>("SecurityLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
@@ -806,7 +810,7 @@ namespace SeetourAPI.Migrations
                 {
                     b.HasOne("SeetourAPI.Data.Models.BookedTour", "BookedTour")
                         .WithOne("Review")
-                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BoodedTourId")
+                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BookedTourId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
