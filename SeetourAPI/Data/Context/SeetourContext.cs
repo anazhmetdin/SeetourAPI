@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 using System.Text.Json;
-using System;
 using Microsoft.AspNetCore.Identity;
 using SeetourAPI.Data.Models.Photos;
 
