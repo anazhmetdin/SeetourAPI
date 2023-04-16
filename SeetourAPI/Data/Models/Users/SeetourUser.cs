@@ -16,11 +16,7 @@ namespace SeetourAPI.Data.Models.Users
         public virtual Customer? Customer { get; set; }
         public virtual TourGuide? TourGuide { get; set; }
         public string SecurityLevel { get; set; }=string.Empty;
-        public string RecipientBankNameAndAddress { get; set; } = string.Empty;
-        public string RecipientAccountNumberOrIBAN { get; set; } = string.Empty;
-        public string RecipientBankSwiftCode { get; set; } = string.Empty;
-        public string RecipientNameAndAddress{ get; set; }=string.Empty;
-        public string TaxRegistrationNumber { get; set; } = string.Empty;
+        
       public string IDCardPhoto { get; set; } = string.Empty;
     }
 }

@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.Intrinsics.X86;
@@ -17,12 +19,15 @@ namespace SeetourAPI.Controllers
     public class UserController : ControllerBase
     {
         private readonly IConfiguration _configuration;
+        private readonly SeetourContext context;
+
         public UserManager<SeetourUser> Usermanger { get; }
 
-        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration)
+        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration,SeetourContext context)
         {
             Usermanger = _Usermanger;
             _configuration = configuration;
+            this.context = context;
         }
 
 
@@ -43,7 +48,9 @@ namespace SeetourAPI.Controllers
                 FullName = registrationDto.FullName,
                 Email= registrationDto.Email,
                 PhoneNumber = registrationDto.PhoneNumber
+
             };
+            
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
             {
@@ -55,6 +62,15 @@ namespace SeetourAPI.Controllers
                 new Claim(ClaimTypes.Role,registrationDto.SecurityLevel)
             };
             await Usermanger.AddClaimsAsync(UserToAdd, claims);
+
+            var customerToAdd = new Customer()
+            {
+                Id = UserToAdd.Id,
+                IsBlocked = false,
+                // add any other properties you want to set for the customer object here
+            };
+            context.Customers.Add(customerToAdd);
+            await context.SaveChangesAsync();
             return NoContent();
 
         }
@@ -67,7 +83,7 @@ namespace SeetourAPI.Controllers
 
 
         [HttpPost]
-        [Route("TourRegistration")]
+        [Route("TourGuideRegistration")]
         public async Task<ActionResult<TokenDto>> Register(TourGuideRegistrationDto registrationDto)
         {
 
@@ -78,12 +94,6 @@ namespace SeetourAPI.Controllers
                 ProfilePic=registrationDto.profilepic,
                 SSN=registrationDto.SSN,
                 FullName=registrationDto.FullName,
-                RecipientAccountNumberOrIBAN=registrationDto.RecipientAccountNumberOrIBAN,
-                RecipientBankNameAndAddress=registrationDto.RecipientBankNameAndAddress,
-                RecipientBankSwiftCode=registrationDto.RecipientBankSwiftCode,
-                RecipientNameAndAddress=registrationDto.RecipientNameAndAddress,
-                TaxRegistrationNumber=registrationDto.TaxRegistrationNumber,
-                IDCardPhoto=registrationDto.IDCardPhoto,
                 Email=registrationDto.Email,
                 PhoneNumber=registrationDto.PhoneNumber
             };
@@ -98,6 +108,21 @@ namespace SeetourAPI.Controllers
                 new Claim(ClaimTypes.Role,registrationDto.SecurityLevel)
             };
             await Usermanger.AddClaimsAsync(UserToAdd, claims);
+            var customerToAdd = new TourGuide()
+            {
+                Id = UserToAdd.Id,
+                RecipientAccountNumberOrIBAN = registrationDto.RecipientAccountNumberOrIBAN,
+                RecipientBankNameAndAddress = registrationDto.RecipientBankNameAndAddress,
+                RecipientBankSwiftCode = registrationDto.RecipientBankSwiftCode,
+                RecipientNameAndAddress = registrationDto.RecipientNameAndAddress,
+                TaxRegistrationNumber = registrationDto.TaxRegistrationNumber,
+                IDCardPhoto = registrationDto.IDCardPhoto,
+                // add any other properties you want to set for the customer object here
+            };
+            context.TourGuides.Add(customerToAdd);
+            await context.SaveChangesAsync();
+
+
             return NoContent();
 
         }

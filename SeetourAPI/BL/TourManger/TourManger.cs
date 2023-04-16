@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
@@ -22,7 +23,7 @@ namespace SeetourAPI.BL.TourManger
 
         public void AddTour( AddTourDto AddTourDto)
         {
-            var userId = _userManager.GetUserId(ClaimsPrincipal.Current)?? "default";
+            var userId = (_userManager.GetUserId(ClaimsPrincipal.Current))?? "default";
             var tour = new Tour
             {
                 Title = AddTourDto.Title,
@@ -89,6 +90,27 @@ namespace SeetourAPI.BL.TourManger
                 return tourDetails;
             }
             return new TourDetailsDto();
+        }
+
+        public  TourCardDto? DetailsCard(int id)
+        {
+            var tour =  TourRepo.GetTourById(id);
+      
+
+            if (tour == null)
+            {
+                return null;
+            }
+
+            return new TourCardDto
+            {
+                Url = tour.Photos.FirstOrDefault(i=>i.Id==0).Url,
+                LocationTo = tour.LocationTo,
+                Price = tour.Price,
+                Likes = tour.Likes.ToList().Count(),
+                Bookings = tour.BookingsCount,
+                TourGuide = tour.TourGuide,
+            };
         }
     }
 }

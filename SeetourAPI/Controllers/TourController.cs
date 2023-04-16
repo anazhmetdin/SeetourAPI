@@ -75,5 +75,20 @@ namespace SeetourAPI.Controllers
             }
             return NotFound();
         }
+        [HttpGet]
+        [Route("CardDetails")]
+        public ActionResult DetailsCard(int id)
+        {
+
+          var tour=  ITourManger.DetailsCard(id);
+            if (tour==null)
+            {
+            return NotFound();
+
+            }
+            else
+                return Ok(tour);
+
+        }
     }
 }

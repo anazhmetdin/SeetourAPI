@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SeetourAPI.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,6 +34,12 @@ namespace SeetourAPI.Migrations
                     SSN = table.Column<string>(type: "nvarchar(14)", maxLength: 14, nullable: false),
                     FullName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
                     SecurityLevel = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecipientBankNameAndAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecipientAccountNumberOrIBAN = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecipientBankSwiftCode = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecipientNameAndAddress = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    TaxRegistrationNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    IDCardPhoto = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),

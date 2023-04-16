@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
 
+
 namespace SeetourAPI
 {
     public class Program
@@ -35,10 +36,12 @@ namespace SeetourAPI
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
+           
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
             builder.Services.AddScoped<IReviewManager, ReviewManager> ();
+         
             #endregion
             #region IdentityManger
             builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 
