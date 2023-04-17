@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using SeetourAPI.Data.Models.Photos;
 
 namespace SeetourAPI.Data.Models
 {
@@ -11,7 +12,7 @@ namespace SeetourAPI.Data.Models
         public int Rating { get; set; }
         [StringLength(512, MinimumLength = 32)]
         public string Comment { get; set; } = string.Empty;
-        public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
+        public virtual ICollection<ReviewPhoto> Photos { get; set; } = new HashSet<ReviewPhoto>();
         public DateTime LastEditedAt { get; set; } = DateTime.UtcNow;
     }
 }
