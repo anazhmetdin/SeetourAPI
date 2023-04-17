@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
@@ -9,6 +10,7 @@ namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(TourGuideFilter))]
     public class TourController : ControllerBase
     {
         public ITourManger ITourManger { get; }

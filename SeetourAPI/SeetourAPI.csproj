@@ -31,7 +31,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="BL\AdminManger\" />
     <Folder Include="Data\DTOs\" />
   </ItemGroup>
 
