@@ -101,6 +101,8 @@ namespace SeetourAPI.Services
         #region UploadingImages
         public async Task<List<string>> UploadBlobAsyncImgs(List<IFormFile> files)
         {
+          //  CheckFileAllowed(files);
+
             var blobUrls = new List<string>();
 
             foreach (var file in files)
@@ -127,7 +129,7 @@ namespace SeetourAPI.Services
 
         private void CheckFileSize(IFormFile file)
         {
-            if (file.Length >024L * 1024 * maxFileSize)
+            if (file.Length >1024L * 1024 * maxFileSize)
                 throw new Exception($"File {file.FileName} exceeds size limit of {maxFileSize} MB");
         }
 

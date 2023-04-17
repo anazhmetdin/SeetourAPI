@@ -43,6 +43,7 @@ namespace SeetourAPI.Controllers
             var imageInfo = new Photo
             {
                 Url = url
+
             };
 
             //Getting decoded URl
