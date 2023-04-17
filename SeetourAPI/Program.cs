@@ -95,7 +95,7 @@ namespace SeetourAPI
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
