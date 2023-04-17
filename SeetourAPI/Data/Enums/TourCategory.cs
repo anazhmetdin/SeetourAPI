@@ -1,5 +1,8 @@
-﻿namespace SeetourAPI.Data.Enums
+﻿using System.Text.Json.Serialization;
+
+namespace SeetourAPI.Data.Enums
 {
+    [JsonConverter(typeof(JsonStringEnumConverter))]
     public enum TourCategory
     {
         // Active adventure tours that connect travelers to nature and culture
@@ -19,7 +22,11 @@
         Cruise,
         Food,
         Historical,
+        Hiking,
+        Camping,
+        Sightseeing,
+        Beach,
         // Other categories that do not fit into the above ones
-        OTHER
+        Other
     }
 }

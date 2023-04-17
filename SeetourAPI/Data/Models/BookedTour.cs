@@ -14,7 +14,7 @@ namespace SeetourAPI.Data.Models
         public int? ReviewId { get; set; }
         public virtual Review? Review { get; set; }
         public int Seats { get; set; }
-        public int TourBookingPaymentId { get; set; }
+        public int? TourBookingPaymentId { get; set; }
         public virtual TourBookingPayment? TourBookingPayment { get; set; }
         public DateTime LastEditedAt { get; set; } = DateTime.UtcNow;
     }

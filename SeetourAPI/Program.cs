@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SeetourAPI.BL.TourAnswerManager;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI
 {
@@ -41,6 +42,10 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
 
+            #region Identity
+            builder.Services.AddIdentityCore<SeetourUser>()
+                .AddEntityFrameworkStores<SeetourContext>();
+            #endregion
 
             #endregion
             #region IdentityManger
