@@ -48,7 +48,8 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourManger, TourManger>();
             builder.Services.AddScoped<IReviewManager, ReviewManager> ();
             builder.Services.AddScoped<IAdminManger, AdminManger>();
-         
+           builder.Services.AddScoped<HttpContextAccessor>();
+
             #endregion
             #region IdentityManger
             builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 

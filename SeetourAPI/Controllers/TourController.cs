@@ -1,10 +1,12 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.Controllers
 {
@@ -13,10 +15,13 @@ namespace SeetourAPI.Controllers
     [TypeFilter(typeof(TourGuideFilter))]
     public class TourController : ControllerBase
     {
+        private readonly UserManager<SeetourUser> manger;
+
         public ITourManger ITourManger { get; }
-        public TourController(ITourManger ITourManger)
+        public TourController(ITourManger ITourManger,UserManager<SeetourUser>Manger)
         {
             this.ITourManger = ITourManger;
+            manger = Manger;
         }
         [HttpPost]
         public ActionResult CreateTour(AddTourDto addTourDto)
