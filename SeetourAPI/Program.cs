@@ -29,10 +29,15 @@ namespace SeetourAPI
             builder.Services.AddSwaggerGen();
 
             #region Database
+            builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
             var connectionString = builder.Configuration.GetConnectionString("SeetourConn");
             builder.Services.AddDbContext<SeetourContext>(options =>
-                options.UseSqlServer(connectionString));
-            #endregion
+            options.UseSqlServer(connectionString));
+            #endregion
+            #region Identity
+            builder.Services.AddIdentityCore<SeetourUser>()
+            .AddEntityFrameworkStores<SeetourContext>();
+            #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();

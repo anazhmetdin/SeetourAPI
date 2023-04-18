@@ -28,7 +28,7 @@ namespace SeetourAPI.DAL.DTO
         public string LocationToUrl { get; set; } = string.Empty;
      
         public string LocationTo { get; set; } = string.Empty;
-        public TourCategory Category { get; set; } = TourCategory.OTHER;
+        public TourCategory Category { get; set; } = TourCategory.Other;
         public bool HasTransportation { get; set; }
        
         public DateTime LastDateToCancel { get; set; }
