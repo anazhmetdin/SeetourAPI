@@ -7,7 +7,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
-
+using SeetourAPI.BL.AdminManger;
 
 namespace SeetourAPI
 {
@@ -30,17 +30,22 @@ namespace SeetourAPI
             builder.Services.AddDbContext<SeetourContext>(options =>
             options.UseSqlServer(connectionString));
             #endregion
-                options.UseSqlServer(connectionString));
-            #endregion
+            #region Identity
+            builder.Services.AddIdentityCore<SeetourUser>()
+            .AddEntityFrameworkStores<SeetourContext>();
+            #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
+            builder.Services.AddScoped<IAdminRepo, AdminRepo>();
            
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
             builder.Services.AddScoped<IReviewManager, ReviewManager> ();
-         
+            builder.Services.AddScoped<IAdminManger, AdminManger>();
+           builder.Services.AddScoped<HttpContextAccessor>();
+
             #endregion
             #region IdentityManger
             builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 

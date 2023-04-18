@@ -12,38 +12,39 @@ namespace SeetourAPI.BL.TourManger
     public class TourManger : ITourManger
     {
         private readonly UserManager<SeetourUser> _userManager;
+        private readonly HttpContextAccessor _HttpContextAccessor;
 
         public ITourRepo TourRepo { get; }
-        public TourManger(ITourRepo tourRepo, UserManager<SeetourUser> userManager)
+        public TourManger(ITourRepo tourRepo, 
+            UserManager<SeetourUser> userManager,HttpContextAccessor _httpContextAccessor)
         {
             TourRepo = tourRepo;
             _userManager = userManager;
+            _HttpContextAccessor = _httpContextAccessor;
+        }
+        public string GetCurrentUserId()
+        {
+            var userId = _HttpContextAccessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return userId?? "82712fd4-3d4c-4569-bbb7-a29e65de36ec";
         }
 
 
-        public void AddTour( AddTourDto AddTourDto)
+        public void AddTour(AddTourDto AddTourDto)
         {
-            var userId = (_userManager.GetUserId(ClaimsPrincipal.Current))?? "default";
+            var id = GetCurrentUserId();
+
             var tour = new Tour
             {
-                Title = AddTourDto.Title,
                 Description = AddTourDto.Description,
                 DateFrom = AddTourDto.DateFrom,
-                DateTo = AddTourDto.DateTo,
                 Price = AddTourDto.Price,
-                LocationFromUrl = AddTourDto.LocationFromUrl,
                 LocationFrom = AddTourDto.LocationFrom,
-                LocationToUrl = AddTourDto.LocationToUrl,
                 LocationTo = AddTourDto.LocationTo,
-                Category = AddTourDto.Category,
                 HasTransportation = AddTourDto.HasTransportation,
                 LastDateToCancel = AddTourDto.LastDateToCancel,
                 Capacity = AddTourDto.Capacity,
-                TourPostingStatus = AddTourDto.TourPostingStatus,
-                CreatedAt = AddTourDto.CreatedAt,
-                PostedAt = AddTourDto.PostedAt,
-                TourGuideId = userId??"default"
-        };
+                TourGuideId = id 
+            };
 
             TourRepo.AddTour(tour);
         }
@@ -51,12 +52,12 @@ namespace SeetourAPI.BL.TourManger
 
         public void DeleteTour(int id)
         {
-           TourRepo.DeleteTour(id);
+            TourRepo.DeleteTour(id);
         }
 
         public Tour? EditTour(int id, Tour tour)
         {
-          return TourRepo.EditTour(id, tour);
+            return TourRepo.EditTour(id, tour);
         }
 
         public void EditTourBYAdmin(int id, Tour tour)
@@ -66,7 +67,7 @@ namespace SeetourAPI.BL.TourManger
 
         public IEnumerable<Tour> GetAll()
         {
-          return TourRepo.GetAll();
+            return TourRepo.GetAll();
         }
 
         public Tour? GetTourById(int id)
@@ -92,10 +93,10 @@ namespace SeetourAPI.BL.TourManger
             return new TourDetailsDto();
         }
 
-        public  TourCardDto? DetailsCard(int id)
+        public TourCardDto? DetailsCard(int id)
         {
-            var tour =  TourRepo.GetTourById(id);
-      
+            var tour = TourRepo.GetTourById(id);
+
 
             if (tour == null)
             {
@@ -104,7 +105,7 @@ namespace SeetourAPI.BL.TourManger
 
             return new TourCardDto
             {
-                Url = tour.Photos.FirstOrDefault(i=>i.Id==0).Url,
+                Url = tour.Photos.FirstOrDefault(i => i.Id == 0).Url,
                 LocationTo = tour.LocationTo,
                 Price = tour.Price,
                 Likes = tour.Likes.ToList().Count(),
