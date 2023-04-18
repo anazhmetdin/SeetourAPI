@@ -23,7 +23,7 @@ namespace SeetourAPI.DAL.Repos
            var tour= _Context.Tours.Find(id);
             if(tour != null)
             {
-              if(tour.TourPostingStatus==Data.Enums.TourPostingStatus.Acceptd)
+              if(tour.TourPostingStatus==Data.Enums.TourPostingStatus.Accepted)
                 {
                         return;
                 }
