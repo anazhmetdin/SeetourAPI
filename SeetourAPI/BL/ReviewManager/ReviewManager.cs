@@ -36,7 +36,7 @@ namespace SeetourAPI.BL.ReviewManager
             return _reviewRepo.GetAll();
         }
 
-        public ICollection<Review> GetReviewById(int id)
+        public Review GetReviewById(int id)
         {
             return _reviewRepo.GetReviewById(id);
         }

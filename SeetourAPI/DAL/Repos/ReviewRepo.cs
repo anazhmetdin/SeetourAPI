@@ -53,13 +53,13 @@ namespace SeetourAPI.DAL.Repos
 
         public IEnumerable<Review> GetAll()
         {
-            return _context.Reviews.ToList();
+            return _context.Reviews.Include(r => r.BookedTour).ToList();
         }
 
-        public ICollection<Review> GetReviewById(int id)
+        public Review GetReviewById(int id)
         {
-            var reviews = _context.Reviews.Where(r => r.BookedTourId == id).ToList();
-            return reviews;
+            var review = _context.Reviews.Include(r => r.BookedTour).FirstOrDefault(r => r.Id == id);
+            return review;
         }
     }
 }

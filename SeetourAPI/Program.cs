@@ -1,13 +1,15 @@
-
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using SeetourAPI.BL.TourManger;
+using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
 using System.Text;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
+using Newtonsoft.Json;
 
 namespace SeetourAPI
 {
@@ -24,32 +26,35 @@ namespace SeetourAPI
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
+            builder.Services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+
             #region Database
             builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
             var connectionString = builder.Configuration.GetConnectionString("SeetourConn");
             builder.Services.AddDbContext<SeetourContext>(options =>
             options.UseSqlServer(connectionString));
-            #endregion
+            #endregion
             #region Identity
-            builder.Services.AddIdentityCore<SeetourUser>()
+            builder.Services.AddIdentityCore<SeetourUser>()
             .AddEntityFrameworkStores<SeetourContext>();
             #endregion
             #region repos
-            builder.Services.AddScoped<ITourRepo,TourRepo>();
+            builder.Services.AddScoped<ITourRepo, TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
-           
+
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
-            builder.Services.AddScoped<IReviewManager, ReviewManager> ();
+            builder.Services.AddScoped<IReviewManager, ReviewManager>();
             builder.Services.AddScoped<IAdminManger, AdminManger>();
-           builder.Services.AddScoped<HttpContextAccessor>();
+            builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
             #region IdentityManger
-            builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 
-            { o.Password.RequireLowercase = true;
+            builder.Services.AddIdentity<SeetourUser, IdentityRole>(o =>
+            {
+                o.Password.RequireLowercase = true;
                 o.Password.RequireUppercase = true;
                 o.Password.RequiredUniqueChars = 1;
                 o.Password.RequiredLength = 8;
@@ -61,10 +66,6 @@ namespace SeetourAPI
                 o.DefaultAuthenticateScheme = "SeeTour";
                 o.DefaultChallengeScheme = "SeeTour";
 
-            #region Identity
-            builder.Services.AddIdentityCore<SeetourUser>()
-                .AddEntityFrameworkStores<SeetourContext>();
-            #endregion
             }).AddJwtBearer("SeeTour", o =>
             {
                 var secretKeyString = builder.Configuration.GetValue<string>("SecretKey") ?? string.Empty;
@@ -92,6 +93,7 @@ namespace SeetourAPI
                          .RequireClaim(ClaimTypes.NameIdentifier));
             });
 
+            #endregion
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

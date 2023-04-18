@@ -18,6 +18,7 @@
 	  <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="7.0.5" />
 	  <PackageReference Include="microsoft.aspnetcore.identity" Version="2.2.0" />
 	  <PackageReference Include="microsoft.aspnetcore.identity.EntityFrameworkCore" Version="7.0.4" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0-preview1.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
@@ -26,6 +27,7 @@
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	  </PackageReference>
 	  <PackageReference Include="microsoft.identitymodel.tokens" Version="6.28.1" />
+	  <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
   </ItemGroup>
