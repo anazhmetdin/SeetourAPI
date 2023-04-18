@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
+using Newtonsoft.Json;
 
 namespace SeetourAPI
 {
@@ -27,27 +28,40 @@ namespace SeetourAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            #region Cors
 
+            var corsPolicy = "AllowAll";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(corsPolicy, p => p.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+            });
+
+            #endregion
             #region Database
-            builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
+            builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
             var connectionString = builder.Configuration.GetConnectionString("SeetourConn");
             builder.Services.AddDbContext<SeetourContext>(options =>
-            options.UseSqlServer(connectionString));
-            #endregion
+            options.UseSqlServer(connectionString));//.UseLazyLoadingProxies());
+            builder.Services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            #endregion
             #region Identity
-            builder.Services.AddIdentityCore<SeetourUser>()
+            builder.Services.AddIdentityCore<SeetourUser>()
             .AddEntityFrameworkStores<SeetourContext>();
             #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
+            builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
            
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
             builder.Services.AddScoped<IReviewManager, ReviewManager> ();
             builder.Services.AddScoped<IAdminManger, AdminManger>();
+            builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
            builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
@@ -102,6 +116,7 @@ namespace SeetourAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseCors(corsPolicy);
             app.UseHttpsRedirection();
 
 

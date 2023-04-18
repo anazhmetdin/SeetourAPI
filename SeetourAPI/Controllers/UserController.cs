@@ -42,7 +42,6 @@ namespace SeetourAPI.Controllers
             var UserToAdd = new SeetourUser()
             {
                 UserName = registrationDto.UserName,
-                SecurityLevel = registrationDto.SecurityLevel,
                 ProfilePic = registrationDto.profilepic,
                 SSN = registrationDto.SSN,
                 FullName = registrationDto.FullName,
@@ -59,7 +58,7 @@ namespace SeetourAPI.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
-                new Claim(ClaimTypes.Role,registrationDto.SecurityLevel)
+                new Claim(ClaimTypes.Role,UserToAdd.SecurityLevel="customer")
             };
             await Usermanger.AddClaimsAsync(UserToAdd, claims);
 
@@ -90,7 +89,6 @@ namespace SeetourAPI.Controllers
             var UserToAdd = new SeetourUser()
             {
                 UserName = registrationDto.UserName,
-                SecurityLevel = registrationDto.SecurityLevel,
                 ProfilePic=registrationDto.profilepic,
                 SSN=registrationDto.SSN,
                 FullName=registrationDto.FullName,
@@ -105,7 +103,7 @@ namespace SeetourAPI.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
-                new Claim(ClaimTypes.Role,registrationDto.SecurityLevel)
+                new Claim(ClaimTypes.Role,UserToAdd.SecurityLevel="TourGuide")
             };
             await Usermanger.AddClaimsAsync(UserToAdd, claims);
             var customerToAdd = new TourGuide()
@@ -126,57 +124,51 @@ namespace SeetourAPI.Controllers
             return NoContent();
 
         }
-   
 
 
 
 
-        
+
+
         [HttpPost]
-    [Route("Login")]
-    public async Task<ActionResult> Login(LoginDto loginDto)
-    {
+        [Route("Login")]
+        public async Task<ActionResult> Login(LoginDto loginDto)
+        {
             var user = await Usermanger.FindByNameAsync(loginDto.username);
             if (user == null)
             {
                 return NotFound();
             }
-            var isAuthenticated=await Usermanger.CheckPasswordAsync(user, loginDto.password);
-            if(!isAuthenticated)
+            var isAuthenticated = await Usermanger.CheckPasswordAsync(user, loginDto.password);
+            if (!isAuthenticated)
             {
                 return Unauthorized();
             }
-            var claimsList = new List<Claim>
-        {
-            new Claim("AnyKey","Some Value"),
-            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, "somemail@gmail.com"),
-        };
 
-            //Geenerate Sectet Key Object
+            // Generate Secret Key Object
             var secretKeyString = _configuration.GetValue<string>("SecretKey") ?? string.Empty;
             var secretKeyInBytes = Encoding.ASCII.GetBytes(secretKeyString);
             var secretKey = new SymmetricSecurityKey(secretKeyInBytes);
 
-            //Combination SecretKey, HashingAlgorithm
-            var siginingCreedentials = new SigningCredentials(secretKey,
-                SecurityAlgorithms.HmacSha256Signature);
+            // Combination SecretKey, HashingAlgorithm
+            var siginingCreedentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256Signature);
 
             var expiry = DateTime.Now.AddDays(1);
 
             var token = new JwtSecurityToken(
-                claims: claimsList,
+                claims: new List<Claim>(),
                 expires: expiry,
                 signingCredentials: siginingCreedentials);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok( new TokenDto(tokenString, expiry));
+            return Ok(new TokenDto(tokenString, expiry));
         }
 
-    }
 
     }
+
+}
 
 

@@ -39,17 +39,17 @@ namespace SeetourAPI.Data.Models
         [Range(1, 100)]
         public int Capacity { get; set; }
         // TODO: use all photos in thumbnail gallery
-        public virtual ICollection<TourPhoto> Photos { get; set; } = new HashSet<TourPhoto>();
-        public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
-        public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
-        public virtual ICollection<BookedTour> Bookings { get; set; } = new HashSet<BookedTour>();
+        public virtual ICollection<TourPhoto>? Photos { get; set; } = new HashSet<TourPhoto>();
+        public virtual ICollection<CustomerLikes>? Likes { get; set; } = new HashSet<CustomerLikes>();
+        public virtual ICollection<CustomerWishlist>? Wishlist { get; set; } = new HashSet<CustomerWishlist>();
+        public virtual ICollection<BookedTour>? Bookings { get; set; } = new HashSet<BookedTour>();
         [NotMapped]
         public int BookingsCount { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked).Count(); }
         public string TourGuideId { get; set; } = string.Empty;
         public virtual TourGuide? TourGuide { get; set; }
         public TourPostingStatus TourPostingStatus { get; set; }
-        public virtual ICollection<EditRequest> EditRequests { get; set; } = new HashSet<EditRequest>();
-        public virtual ICollection<TourQuestion> Questions { get; set; } = new HashSet<TourQuestion>();
+        public virtual ICollection<EditRequest>? EditRequests { get; set; } = new HashSet<EditRequest>();
+        public virtual ICollection<TourQuestion>? Questions { get; set; } = new HashSet<TourQuestion>();
         [NotMapped]
         public bool IsCompleted { get => DateFrom < DateTime.Now; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -43,6 +43,7 @@ namespace SeetourAPI.BL.TourManger
                 HasTransportation = AddTourDto.HasTransportation,
                 LastDateToCancel = AddTourDto.LastDateToCancel,
                 Capacity = AddTourDto.Capacity,
+                Photos= AddTourDto.Photos,
                 TourGuideId = id 
             };
 

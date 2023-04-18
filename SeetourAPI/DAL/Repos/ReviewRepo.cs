@@ -56,10 +56,10 @@ namespace SeetourAPI.DAL.Repos
             return _context.Reviews.ToList();
         }
 
-        public ICollection<Review> GetReviewById(int id)
+        public Review GetReviewById(int id)
         {
-            var reviews = _context.Reviews.Where(r => r.BookedTourId == id).ToList();
-            return reviews;
+            var review = _context.Reviews.Find(id);
+            return review;
         }
     }
 }

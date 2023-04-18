@@ -3,6 +3,7 @@ using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Validation;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using SeetourAPI.Data.Models.Photos;
 
 namespace SeetourAPI.DAL.DTO
 {
@@ -19,7 +20,8 @@ namespace SeetourAPI.DAL.DTO
     
         public string LocationTo { get; set; } = string.Empty;
         public bool HasTransportation { get; set; }
-       
-        
+        public virtual ICollection<TourPhoto> Photos { get; set; } = new HashSet<TourPhoto>();
+
+
     }
 }
