@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.DAL.Repos
@@ -19,13 +20,13 @@ namespace SeetourAPI.DAL.Repos
 
         public void DeleteTour(int id)
         {
-          
-           var tour= _Context.Tours.Find(id);
-            if(tour != null)
+
+            var tour = _Context.Tours.Find(id);
+            if (tour != null)
             {
               if(tour.TourPostingStatus==Data.Enums.TourPostingStatus.Accepted)
                 {
-                        return;
+                    return;
                 }
                 _Context.Tours.Remove(tour);
 
@@ -33,17 +34,19 @@ namespace SeetourAPI.DAL.Repos
             }
         }
 
+        
+
         public Tour? EditTour(int id, Tour tour)
         {
             if (tour.Id == id)
             {
-               var t= _Context.Tours.Find(id);
-                if(t!=null)
+                var t = _Context.Tours.Find(id);
+                if (t != null)
                 {
-                    t.Title= tour.Title;
-                    t.Description= tour.Description;
-                    t.DateFrom= tour.DateFrom;
-                    t.DateTo= tour.DateTo;
+                    t.Title = tour.Title;
+                    t.Description = tour.Description;
+                    t.DateFrom = tour.DateFrom;
+                    t.DateTo = tour.DateTo;
                     t.Price = tour.Price;
                     t.LocationFrom= tour.LocationFrom;
                     t.LocationTo= tour.LocationTo;
@@ -54,10 +57,11 @@ namespace SeetourAPI.DAL.Repos
                     t.LastDateToCancel= tour.LastDateToCancel; 
                     t.Capacity= tour.Capacity;
                     t.TourGuideId= tour.TourGuideId;
-         
+                    _Context.SaveChanges();
+                    return tour;        
                 }
             }
-            return tour;
+            return new Tour();
         }
 
         public void EditTourBYAdmin(int id, Tour tour)
@@ -68,12 +72,13 @@ namespace SeetourAPI.DAL.Repos
                 if (t != null)
                 {
                     t.TourPostingStatus= tour.TourPostingStatus;
+                    _Context.SaveChanges();
                 }
             }
         }
         public IEnumerable<Tour> GetAll()
         {
-         var tours=  _Context.Tours.ToList();
+            var tours = _Context.Tours.ToList();
             return tours;
         }
 
@@ -82,12 +87,12 @@ namespace SeetourAPI.DAL.Repos
             var tour= _Context.Tours.Find(id);
             if(tour != null)
             { 
-            return tour;
-            
+                return tour;
+
             }
             else return new Tour();
         }
 
-        
+
     }
 }

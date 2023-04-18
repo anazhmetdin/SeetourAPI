@@ -1,13 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.TourManger;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(TourGuideFilter))]
     public class TourController : ControllerBase
     {
         public ITourManger ITourManger { get; }
@@ -16,10 +19,10 @@ namespace SeetourAPI.Controllers
             this.ITourManger = ITourManger;
         }
         [HttpPost]
-        public ActionResult CreateTour(Tour tour)
+        public ActionResult CreateTour(AddTourDto addTourDto)
         {
-              ITourManger.AddTour(tour);
-                return Created("", tour);    
+              ITourManger.AddTour(addTourDto);
+                return Created("", addTourDto);    
         }
         [HttpPut]
         public ActionResult EditTour(int id,Tour tour)
@@ -61,6 +64,33 @@ namespace SeetourAPI.Controllers
                 return NotFound();
             }
             return Ok(ITourManger.GetAll());
+        }
+        [HttpGet]
+        [Route("TourDetails")]
+        public ActionResult Details(int id)
+        {
+            var tour = ITourManger.GetTourById(id);
+            if (tour?.Id == id)
+            {
+                return Ok( ITourManger.Details(id));
+
+            }
+            return NotFound();
+        }
+        [HttpGet]
+        [Route("CardDetails")]
+        public ActionResult DetailsCard(int id)
+        {
+
+          var tour=  ITourManger.DetailsCard(id);
+            if (tour==null)
+            {
+            return NotFound();
+
+            }
+            else
+                return Ok(tour);
+
         }
     }
 }

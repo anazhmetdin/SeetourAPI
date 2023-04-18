@@ -344,7 +344,7 @@ namespace SeetourAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BoodedTourId")
+                    b.Property<int>("BookedTourId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -360,7 +360,7 @@ namespace SeetourAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoodedTourId")
+                    b.HasIndex("BookedTourId")
                         .IsUnique();
 
                     b.ToTable("Reviews");
@@ -607,6 +607,10 @@ namespace SeetourAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("IDCardPhoto")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
 
@@ -634,12 +638,36 @@ namespace SeetourAPI.Migrations
                         .HasMaxLength(512)
                         .HasColumnType("nvarchar(512)");
 
+                    b.Property<string>("RecipientAccountNumberOrIBAN")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientBankNameAndAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientBankSwiftCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("RecipientNameAndAddress")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SSN")
                         .IsRequired()
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
 
+                    b.Property<string>("SecurityLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("TaxRegistrationNumber")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -872,7 +900,7 @@ namespace SeetourAPI.Migrations
                 {
                     b.HasOne("SeetourAPI.Data.Models.BookedTour", "BookedTour")
                         .WithOne("Review")
-                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BoodedTourId")
+                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BookedTourId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

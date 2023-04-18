@@ -18,6 +18,7 @@ namespace SeetourAPI.Data.Context
         public DbSet<Tour> Tours { get; set; }
         public DbSet<Review> Reviews { get; set; }
         public DbSet<TourQuestion> TourQuestions { get; set; }
+        public DbSet<TourAnswer> TourAnswers { get; set; }
         public DbSet<BookedTour> BookedTours { get; set; }
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
@@ -163,7 +164,7 @@ namespace SeetourAPI.Data.Context
             {
                 b.HasOne(bt => bt.Review)
                     .WithOne(r => r.BookedTour)
-                    .HasForeignKey<Review>(r => r.BoodedTourId);
+                    .HasForeignKey<Review>(r => r.BookedTourId);
 
                 b.HasOne(bt => bt.TourBookingPayment)
                     .WithOne(p => p.BookedTour)
