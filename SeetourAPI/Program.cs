@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SeetourAPI.BL.TourAnswerManager;
+using SeetourAPI.Data.Models.Users;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
 using Newtonsoft.Json;
@@ -120,9 +121,7 @@ namespace SeetourAPI
 
             app.UseCors(corsPolicy);
             app.UseHttpsRedirection();
-
-
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
