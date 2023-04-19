@@ -55,14 +55,16 @@ namespace SeetourAPI
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
-           
+            builder.Services.AddScoped<ITourQuestionRepo, TourQuestionRepo>();
+
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
             builder.Services.AddScoped<IReviewManager, ReviewManager> ();
             builder.Services.AddScoped<IAdminManger, AdminManger>();
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
-           builder.Services.AddScoped<HttpContextAccessor>();
+            builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
+            builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
             #region IdentityManger
