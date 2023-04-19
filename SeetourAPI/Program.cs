@@ -44,7 +44,7 @@ namespace SeetourAPI
             var connectionString = builder.Configuration.GetConnectionString("SeetourConn");
             builder.Services.AddDbContext<SeetourContext>(options =>
             options.UseSqlServer(connectionString));//.UseLazyLoadingProxies());
-            builder.Services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            //builder.Services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
             #endregion
             #region Identity
             builder.Services.AddIdentityCore<SeetourUser>()
@@ -55,6 +55,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
+            builder.Services.AddScoped<ITourQuestionRepo,TourQuestionRepo>();
            
             #endregion
             #region Manger
@@ -62,7 +63,8 @@ namespace SeetourAPI
             builder.Services.AddScoped<IReviewManager, ReviewManager> ();
             builder.Services.AddScoped<IAdminManger, AdminManger>();
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
-           builder.Services.AddScoped<HttpContextAccessor>();
+            builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
+            builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
             #region IdentityManger
