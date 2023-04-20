@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.Filters;
+using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models.Users;
@@ -14,13 +15,14 @@ namespace SeetourAPI.Controllers
     [TypeFilter(typeof(TourGuideFilter))]
     public class TourGuideController : ControllerBase
     {
-        private readonly UserManager<SeetourUser> _usermanager;
         private readonly ITourGuideManager _tourGuideManager;
+        private readonly IReviewManager _reviewManager;
 
-        public TourGuideController(ITourGuideManager tourGuideManager, UserManager<SeetourUser> usermanager)
+        public TourGuideController(ITourGuideManager tourGuideManager,
+            IReviewManager reviewManager)
         {
             _tourGuideManager = tourGuideManager;
-            _usermanager = usermanager;
+            _reviewManager = reviewManager;
         }
 
         [HttpGet("UpcomingTours/{id}")]
@@ -43,6 +45,13 @@ namespace SeetourAPI.Controllers
                 return NotFound();
             }
             return Ok(tours);
+        }
+
+        [HttpGet("Reviews/{id}")]
+        public IActionResult GetReviews(string Id)
+        {
+            var reviews = _reviewManager.GetAllTourGuideReviews(Id);
+            return Ok(reviews);
         }
     }
 }

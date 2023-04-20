@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.Filters;
+using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
@@ -16,12 +17,14 @@ namespace SeetourAPI.Controllers
     public class TourController : ControllerBase
     {
         private readonly UserManager<SeetourUser> manger;
+        private readonly IReviewManager _reviewManger;
 
         public ITourManger ITourManger { get; }
-        public TourController(ITourManger ITourManger,UserManager<SeetourUser>Manger)
+        public TourController(ITourManger ITourManger, UserManager<SeetourUser> Manger, IReviewManager reviewManger)
         {
             this.ITourManger = ITourManger;
             manger = Manger;
+            _reviewManger = reviewManger;
         }
         [HttpPost]
         public ActionResult CreateTour(AddTourDto addTourDto)
@@ -96,6 +99,13 @@ namespace SeetourAPI.Controllers
             else
                 return Ok(tour);
 
+        }
+
+        [HttpGet("Reviews/{id}")]
+        public IActionResult GetReviews(int Id)
+        {
+            var reviews = _reviewManger.GetAllTourReviews(Id);
+            return Ok(reviews);
         }
     }
 }
