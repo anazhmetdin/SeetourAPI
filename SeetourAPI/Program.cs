@@ -14,6 +14,7 @@ using SeetourAPI.Data.Models.Users;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
 using Newtonsoft.Json;
+using SeetourAPI.BL.TourGuideManager;
 
 namespace SeetourAPI
 {
@@ -57,6 +58,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
             builder.Services.AddScoped<ITourQuestionRepo, TourQuestionRepo>();
+            builder.Services.AddScoped<ITourGuideRepo, TourGuideRepo>();
 
             #endregion
             #region Manger
@@ -65,6 +67,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<IAdminManger, AdminManger>();
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
             builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
+            builder.Services.AddScoped<ITourGuideManager, TourGuideManager>();
             builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion

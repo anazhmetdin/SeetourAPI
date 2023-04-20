@@ -12,10 +12,8 @@ namespace SeetourAPI.BL.TourManger
         public void  AddTour( AddTourDto addTourDto);
         public void DeleteTour(int id);
         public TourDetailsDto? Details(int id);
-        public TourCardDto? DetailsCard(int id);
+        public TourCardDto DetailsCard(int id);
         public string GetCurrentUserId();
-
-
 
         public void EditTourBYAdmin(int id, Tour tour);
     }

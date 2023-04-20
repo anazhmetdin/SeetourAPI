@@ -84,13 +84,22 @@ namespace SeetourAPI.DAL.Repos
 
         public Tour? GetTourById(int id)
         {
-            var tour= _Context?.Tours?.Include(a=>a.Photos).Include(a=>a.Likes).Include(a=> a.Questions).Include(a=>a.Bookings).ThenInclude(a => a.Review).FirstOrDefault(a=>a.Id==id);
+            var tour= _Context.Tours
+                .Include(a=>a.Photos)
+                .Include(a=>a.Likes)
+                .Include(a=> a.Questions)
+                .Include(a=>a.Bookings)
+                .ThenInclude(a => a.Review)
+                .Include(a=>a.TourGuide)
+                .ThenInclude(a=>a.User)
+                .FirstOrDefault(a=>a.Id==id);
+
             if(tour != null)
             { 
                 return tour;
 
             }
-            else return new Tour();
+            else return null;
         }
 
 
