@@ -15,6 +15,9 @@ using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
 using Newtonsoft.Json;
 using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.Data.Claims;
+using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Policies;
 
 namespace SeetourAPI
 {
@@ -101,14 +104,23 @@ namespace SeetourAPI
             #region Authorization
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("AllowAdmin", policy =>
+                options.AddPolicy(Policies.AllowAdmins, policy =>
                     policy.RequireClaim(ClaimTypes.Role, "Admin")
                           .RequireClaim(ClaimTypes.NameIdentifier));
-                options.AddPolicy("AllowUser", policy =>
-                   policy.RequireClaim(ClaimTypes.Role, "User")
+
+                options.AddPolicy(Policies.AllowCustomers, policy =>
+                   policy.RequireClaim(ClaimTypes.Role, "Customer")
+                         .RequireAssertion(c => !c.User.Claims.Any(c => c.ValueType == ClaimType.Status && c.Value == "Blocked"))
                          .RequireClaim(ClaimTypes.NameIdentifier));
-                options.AddPolicy("AllowTourGuide", policy =>
+
+                options.AddPolicy(Policies.AllowTourGuide, policy =>
                    policy.RequireClaim(ClaimTypes.Role, "TourGuide")
+                         .RequireAssertion(c => !c.User.Claims.Any(c => c.ValueType == ClaimType.Status && c.Value == "Blocked"))
+                         .RequireClaim(ClaimTypes.NameIdentifier));
+
+                options.AddPolicy(Policies.AcceptedTourGuides, policy =>
+                   policy.RequireClaim(ClaimTypes.Role, "TourGuide")
+                         .RequireClaim(ClaimType.Status, TourGuideStatus.Accepted.ToString())
                          .RequireClaim(ClaimTypes.NameIdentifier));
             });
 

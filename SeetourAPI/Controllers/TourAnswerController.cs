@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Policies;
 
 namespace SeetourAPI.Controllers
 {
@@ -40,6 +42,7 @@ namespace SeetourAPI.Controllers
 
 
         [HttpPost]
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         public IActionResult createTourAnswer(TourAnswer tourAnswer)
         {
             ITourAnswerManager.AddAnswer(tourAnswer);
@@ -48,6 +51,7 @@ namespace SeetourAPI.Controllers
 
 
         [HttpPut]
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         public IActionResult EditAnswer(int id, TourAnswer tourAnswer)
         {
             if (tourAnswer.Id != id)
@@ -59,6 +63,7 @@ namespace SeetourAPI.Controllers
 
 
         [HttpDelete]
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         public IActionResult DeleteTourAnswer(int id)
         {
             ITourAnswerManager.DeleteAnswer(id);

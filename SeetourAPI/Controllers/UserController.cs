@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Claims;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 using System.IdentityModel.Tokens.Jwt;
@@ -55,12 +56,6 @@ namespace SeetourAPI.Controllers
             {
                 return BadRequest();
             }
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
-                new Claim(ClaimTypes.Role,UserToAdd.SecurityLevel="customer")
-            };
-            await Usermanger.AddClaimsAsync(UserToAdd, claims);
 
             var customerToAdd = new Customer()
             {
@@ -69,6 +64,15 @@ namespace SeetourAPI.Controllers
                 // add any other properties you want to set for the customer object here
             };
             context.Customers.Add(customerToAdd);
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
+                new Claim(ClaimTypes.Role,UserToAdd.SecurityLevel="customer"),
+                new Claim(ClaimType.Status, customerToAdd.IsBlocked ? "Blocked" : "Allowed")
+            };
+            await Usermanger.AddClaimsAsync(UserToAdd, claims);
+
             await context.SaveChangesAsync();
             return NoContent();
 
@@ -100,12 +104,7 @@ namespace SeetourAPI.Controllers
             {
                 return BadRequest();
             }
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
-                new Claim(ClaimTypes.Role,UserToAdd.SecurityLevel="TourGuide")
-            };
-            await Usermanger.AddClaimsAsync(UserToAdd, claims);
+
             var customerToAdd = new TourGuide()
             {
                 Id = UserToAdd.Id,
@@ -117,6 +116,16 @@ namespace SeetourAPI.Controllers
                 IDCardPhoto = registrationDto.IDCardPhoto,
                 // add any other properties you want to set for the customer object here
             };
+
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
+                new Claim(ClaimTypes.Role,UserToAdd.SecurityLevel="TourGuide"),
+                new Claim(ClaimType.Status, customerToAdd.Status.ToString())
+            };
+
+            await Usermanger.AddClaimsAsync(UserToAdd, claims);
+
             context.TourGuides.Add(customerToAdd);
             await context.SaveChangesAsync();
 

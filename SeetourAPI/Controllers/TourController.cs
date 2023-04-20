@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -8,12 +9,13 @@ using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Data.Policies;
 
 namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [TypeFilter(typeof(TourGuideFilter))]
+    //[TypeFilter(typeof(TourGuideFilter))]
     public class TourController : ControllerBase
     {
         private readonly UserManager<SeetourUser> manger;
@@ -26,12 +28,16 @@ namespace SeetourAPI.Controllers
             manger = Manger;
             _reviewManger = reviewManger;
         }
+        
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPost]
         public ActionResult CreateTour(AddTourDto addTourDto)
         {
               ITourManger.AddTour(addTourDto);
                 return Created("", addTourDto);    
         }
+
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPut]
         public ActionResult EditTour(int id,Tour tour)
         {
@@ -45,12 +51,15 @@ namespace SeetourAPI.Controllers
             return Ok();
             }
         }
+
+        [Authorize(Policy = Policies.AllowAdmins)]
         [HttpDelete]
         public ActionResult DeleteTour(int id)
         {
             ITourManger.DeleteTour(id);
             return  NoContent();
         }
+
         [HttpGet]
         [Route("GetById")]
         public ActionResult GetById(int id)
@@ -62,6 +71,7 @@ namespace SeetourAPI.Controllers
             }
             return Ok(t);
         }
+
         [HttpGet]
         [Route("GetAll")]
         public ActionResult GetAll()
@@ -73,6 +83,7 @@ namespace SeetourAPI.Controllers
             }
             return Ok(ITourManger.GetAll());
         }
+
         [HttpGet]
         [Route("TourDetails")]
         public ActionResult Details(int id)
@@ -85,6 +96,7 @@ namespace SeetourAPI.Controllers
             }
             return NotFound();
         }
+
         [HttpGet]
         [Route("CardDetails")]
         public ActionResult DetailsCard(int id)

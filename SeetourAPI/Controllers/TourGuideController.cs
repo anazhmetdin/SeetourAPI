@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.Filters;
@@ -6,13 +7,15 @@ using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Data.Policies;
 using System;
 
 namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [TypeFilter(typeof(TourGuideFilter))]
+
+    [Authorize(Policy = Policies.AcceptedTourGuides)]
     public class TourGuideController : ControllerBase
     {
         private readonly ITourGuideManager _tourGuideManager;
