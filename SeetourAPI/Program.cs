@@ -10,6 +10,7 @@ using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SeetourAPI.BL.TourAnswerManager;
+using SeetourAPI.Data.Models.Users;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
 using Newtonsoft.Json;
@@ -49,14 +50,16 @@ namespace SeetourAPI
             #region Identity
             builder.Services.AddIdentityCore<SeetourUser>()
             .AddEntityFrameworkStores<SeetourContext>();
-            #endregion
+ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
+
             builder.Services.AddScoped<ITourQuestionRepo,TourQuestionRepo>();
            
+
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
@@ -120,9 +123,7 @@ namespace SeetourAPI
 
             app.UseCors(corsPolicy);
             app.UseHttpsRedirection();
-
-
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

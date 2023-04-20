@@ -9,5 +9,6 @@ namespace SeetourAPI.BL.TourAnswerManager
         public TourAnswer? EditAnswer(int id, TourAnswer tourAnswer);
         public void AddAnswer(TourAnswer tourAnswer);
         public void DeleteAnswer(int id);
+        
     }
 }
