@@ -23,7 +23,7 @@ namespace SeetourAPI.Controllers
 
         public UserManager<SeetourUser> Usermanger { get; }
 
-        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration,SeetourContext context)
+        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration, SeetourContext context)
         {
             Usermanger = _Usermanger;
             _configuration = configuration;
@@ -46,11 +46,11 @@ namespace SeetourAPI.Controllers
                 ProfilePic = registrationDto.profilepic,
                 SSN = registrationDto.SSN,
                 FullName = registrationDto.FullName,
-                Email= registrationDto.Email,
+                Email = registrationDto.Email,
                 PhoneNumber = registrationDto.PhoneNumber
 
             };
-            
+
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
             {
@@ -77,11 +77,6 @@ namespace SeetourAPI.Controllers
 
 
 
-
-
-
-
-
         [HttpPost]
         [Route("TourGuideRegistration")]
         public async Task<ActionResult<TokenDto>> Register(TourGuideRegistrationDto registrationDto)
@@ -91,11 +86,11 @@ namespace SeetourAPI.Controllers
             {
                 UserName = registrationDto.UserName,
                 SecurityLevel = registrationDto.SecurityLevel,
-                ProfilePic=registrationDto.profilepic,
-                SSN=registrationDto.SSN,
-                FullName=registrationDto.FullName,
-                Email=registrationDto.Email,
-                PhoneNumber=registrationDto.PhoneNumber
+                ProfilePic = registrationDto.profilepic,
+                SSN = registrationDto.SSN,
+                FullName = registrationDto.FullName,
+                Email = registrationDto.Email,
+                PhoneNumber = registrationDto.PhoneNumber
             };
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
@@ -108,7 +103,7 @@ namespace SeetourAPI.Controllers
                 new Claim(ClaimTypes.Role,registrationDto.SecurityLevel)
             };
             await Usermanger.AddClaimsAsync(UserToAdd, claims);
-            var customerToAdd = new TourGuide()
+            var tourguideToAdd = new TourGuide()
             {
                 Id = UserToAdd.Id,
                 RecipientAccountNumberOrIBAN = registrationDto.RecipientAccountNumberOrIBAN,
@@ -119,39 +114,39 @@ namespace SeetourAPI.Controllers
                 IDCardPhoto = registrationDto.IDCardPhoto,
                 // add any other properties you want to set for the customer object here
             };
-            context.TourGuides.Add(customerToAdd);
+            context.TourGuides.Add(tourguideToAdd);
             await context.SaveChangesAsync();
 
 
             return NoContent();
 
         }
-   
 
 
 
 
-        
+
+
         [HttpPost]
-    [Route("Login")]
-    public async Task<ActionResult> Login(LoginDto loginDto)
-    {
+        [Route("Login")]
+        public async Task<ActionResult> Login(LoginDto loginDto)
+        {
             var user = await Usermanger.FindByNameAsync(loginDto.username);
             if (user == null)
             {
                 return NotFound();
             }
-            var isAuthenticated=await Usermanger.CheckPasswordAsync(user, loginDto.password);
-            if(!isAuthenticated)
+            var isAuthenticated = await Usermanger.CheckPasswordAsync(user, loginDto.password);
+            if (!isAuthenticated)
             {
                 return Unauthorized();
             }
             var claimsList = new List<Claim>
-        {
-            new Claim("AnyKey","Some Value"),
-            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, "somemail@gmail.com"),
-        };
+            {
+                new Claim("AnyKey","Some Value"),
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                    new Claim(ClaimTypes.Email, "somemail@gmail.com"),
+            };
 
             //Geenerate Sectet Key Object
             var secretKeyString = _configuration.GetValue<string>("SecretKey") ?? string.Empty;
@@ -172,11 +167,24 @@ namespace SeetourAPI.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok( new TokenDto(tokenString, expiry));
+            return Ok(new TokenDto(tokenString, expiry));
+
+        }
+
+        [HttpGet]
+        [Route("GetUser")]
+        public async Task<ActionResult> GetUser(string username)
+        {
+            var user = await Usermanger.FindByNameAsync(username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
 
     }
-
-    }
+}
 
 
