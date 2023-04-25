@@ -47,7 +47,7 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey<Customer>(c => c.Id);
 
                 SeetourUser[] seetourUsers = GetUsers("jsons/seetourusers.json");
-                b.HasData(seetourUsers);
+                //b.HasData(seetourUsers);
             });
             #endregion
             #region Customer
@@ -68,7 +68,7 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey(c => c.CustomerId);
 
                 Customer[] customers = GetData<Customer>("jsons/customers.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region TourGuide
@@ -85,7 +85,7 @@ namespace SeetourAPI.Data.Context
                 //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
 
                 TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Tour
@@ -138,7 +138,7 @@ namespace SeetourAPI.Data.Context
                 //    .HasConversion(new EnumToStringConverter<TourCategory>());
 
                 Tour[] customers = GetData<Tour>("jsons/tours.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Likes
@@ -147,7 +147,7 @@ namespace SeetourAPI.Data.Context
                 b.HasIndex(l => l.CustomerId);
 
                 CustomerLikes[] customers = GetData<CustomerLikes>("jsons/likes.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Wishlist
@@ -156,7 +156,7 @@ namespace SeetourAPI.Data.Context
                 b.HasIndex(wl => wl.CustomerId);
 
                 CustomerWishlist[] customers = GetData<CustomerWishlist>("jsons/wishlists.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Bookings
@@ -174,7 +174,7 @@ namespace SeetourAPI.Data.Context
                 //    .HasConversion(new EnumToStringConverter<BookedTourStatus>());
 
                 BookedTour[] customers = GetData<BookedTour>("jsons/bookings.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Questions
@@ -185,7 +185,7 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey<TourQuestion>(q => q.TourAnswerId);
 
                 TourQuestion[] customers = GetData<TourQuestion>("jsons/questions.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Answers
@@ -196,7 +196,7 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey<TourAnswer>(q => q.TourQuestionId);
 
                 TourAnswer[] customers = GetData<TourAnswer>("jsons/answers.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Reviews
@@ -209,14 +209,14 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey(p => p.ReviewId);
 
                 Review[] customers = GetData<Review>("jsons/reviews.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Photos
             builder.Entity<Photo>(b =>
             {
                 Photo[] customers = GetData<Photo>("jsons/photos.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region TourPhotos
@@ -228,7 +228,7 @@ namespace SeetourAPI.Data.Context
                     .AutoInclude(true);
 
                 TourPhoto[] customers = GetData<TourPhoto>("jsons/tourphotos.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region ReviewPhoto
@@ -240,7 +240,7 @@ namespace SeetourAPI.Data.Context
                     .AutoInclude(true);
 
                 ReviewPhoto[] customers = GetData<ReviewPhoto>("jsons/reviewphotos.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region Payments
@@ -251,7 +251,7 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey<BookedTour>(p => p.TourBookingPaymentId);
 
                 TourBookingPayment[] customers = GetData<TourBookingPayment>("jsons/payments.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
             #region EditRequests
@@ -262,7 +262,7 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey(bt => bt.TourId);
 
                 EditRequest[] customers = GetData<EditRequest>("jsons/editrequests.json");
-                b.HasData(customers);
+                //b.HasData(customers);
             });
             #endregion
         }
