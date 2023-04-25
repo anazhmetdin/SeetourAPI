@@ -13,7 +13,7 @@
         string RecipientAccountNumberOrIBAN,
         string RecipientBankSwiftCode,
         string RecipientNameAndAddress,
-        string TaxRegistrationNumber,
+        //string TaxRegistrationNumber,
         string IDCardPhoto,
         string PhoneNumber,
         string Email

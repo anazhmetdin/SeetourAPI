@@ -110,7 +110,7 @@ namespace SeetourAPI.Controllers
                 RecipientBankNameAndAddress = registrationDto.RecipientBankNameAndAddress,
                 RecipientBankSwiftCode = registrationDto.RecipientBankSwiftCode,
                 RecipientNameAndAddress = registrationDto.RecipientNameAndAddress,
-                TaxRegistrationNumber = registrationDto.TaxRegistrationNumber,
+                //TaxRegistrationNumber = registrationDto.TaxRegistrationNumber,
                 IDCardPhoto = registrationDto.IDCardPhoto,
                 // add any other properties you want to set for the customer object here
             };

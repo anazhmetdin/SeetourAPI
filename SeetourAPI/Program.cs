@@ -27,6 +27,10 @@ namespace SeetourAPI
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", p => p.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
+            });
 
             #region Database
             builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
@@ -54,10 +58,17 @@ namespace SeetourAPI
             #region IdentityManger
             builder.Services.AddIdentity<SeetourUser, IdentityRole>(o =>
             {
-                o.Password.RequireLowercase = true;
-                o.Password.RequireUppercase = true;
-                o.Password.RequiredUniqueChars = 1;
-                o.Password.RequiredLength = 8;
+                //o.Password.RequireLowercase = true;
+                //o.Password.RequireUppercase = true;
+                //o.Password.RequiredUniqueChars = 1;
+                //o.Password.RequiredLength = 8;
+
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequiredLength = 0;
+                o.Password.RequiredUniqueChars = 0;
             }).AddEntityFrameworkStores<SeetourContext>(); ;
             #endregion
             #region Authentication
@@ -106,9 +117,9 @@ namespace SeetourAPI
             app.UseHttpsRedirection();
 
 
-
             app.UseAuthorization();
 
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.MapControllers();
 
