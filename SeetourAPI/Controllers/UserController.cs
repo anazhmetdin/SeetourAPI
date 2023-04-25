@@ -124,9 +124,6 @@ namespace SeetourAPI.Controllers
 
 
 
-
-
-
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult> Login(LoginDto loginDto)
