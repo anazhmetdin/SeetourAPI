@@ -206,6 +206,9 @@ namespace SeetourAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -229,6 +232,9 @@ namespace SeetourAPI.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -477,7 +483,7 @@ namespace SeetourAPI.Migrations
                     b.HasIndex("TourQuestionId")
                         .IsUnique();
 
-                    b.ToTable("TourAnswer");
+                    b.ToTable("TourAnswers");
                 });
 
             modelBuilder.Entity("SeetourAPI.Data.Models.TourBookingPayment", b =>
@@ -635,6 +641,10 @@ namespace SeetourAPI.Migrations
                         .IsRequired()
                         .HasMaxLength(14)
                         .HasColumnType("nvarchar(14)");
+
+                    b.Property<string>("SecurityLevel")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("nvarchar(max)");
