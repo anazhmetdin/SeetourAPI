@@ -98,21 +98,31 @@ namespace SeetourAPI.BL.TourManger
         {
             var tour = TourRepo.GetTourById(id);
 
-
             if (tour == null)
             {
                 return null;
             }
 
             return new TourCardDto
-            {
-                Url = tour.Photos.FirstOrDefault(i => i.Id == 0).Url,
-                LocationTo = tour.LocationTo,
-                Price = tour.Price,
-                Likes = tour.Likes.ToList().Count(),
-                Bookings = tour.BookingsCount,
-                TourGuide = tour.TourGuide,
-            };
+            (
+                Id: tour.Id,
+                Photos: tour.Photos.Select(p => p.Url).ToArray(),
+                LocationTo: tour.LocationTo,
+                Price: tour.Price,
+                Likes: tour.Likes.Count,
+                isLiked: false,
+                Bookings: tour.BookingsCount,
+                Capacity: tour.Capacity,
+                TourGuideId: tour.TourGuideId,
+                TourGuideName: tour.TourGuide?.User?.FullName??"",
+                TourGuideRating: (int)tour.Rating,
+                TourGuideRatingCount: tour.RatingCount,
+                DateFrom: tour.DateFrom.Date.ToString(),
+                DateTo: tour.DateTo.Date.ToString(),
+                Category: tour.Category.ToString(),
+                Title: tour.Title,
+                AddedToWishList: false
+            );
         }
     }
 }

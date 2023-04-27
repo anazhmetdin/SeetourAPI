@@ -15,8 +15,6 @@ namespace SeetourAPI.BL.TourManger
         public TourCardDto? DetailsCard(int id);
         public string GetCurrentUserId();
 
-
-
         public void EditTourBYAdmin(int id, Tour tour);
     }
 }
