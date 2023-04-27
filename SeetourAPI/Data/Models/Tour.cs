@@ -44,7 +44,15 @@ namespace SeetourAPI.Data.Models
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
         public virtual ICollection<BookedTour> Bookings { get; set; } = new HashSet<BookedTour>();
         [NotMapped]
-        public int BookingsCount { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked).Count(); }
+        public ICollection<BookedTour> PaidBookings { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked || b.Status == BookedTourStatus.Completed).ToList(); }
+        [NotMapped]
+        public double Rating { get => Reviews.Average(a => a.Rating); }
+        [NotMapped]
+        public int RatingCount { get => Reviews.Count; }
+        [NotMapped]
+        public ICollection<Review> Reviews { get => PaidBookings.Where(a => a.Review != null).Select(a=>a.Review!).ToList(); }
+        [NotMapped]
+        public int BookingsCount { get => PaidBookings.Count(); }
         public string TourGuideId { get; set; } = string.Empty;
         public virtual TourGuide? TourGuide { get; set; }
         public TourPostingStatus TourPostingStatus { get; set; }
