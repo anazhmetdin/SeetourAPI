@@ -179,7 +179,7 @@ namespace SeetourAPI.Migrations
                     b.Property<int>("Status")
                         .HasColumnType("int");
 
-                    b.Property<int>("TourBookingPaymentId")
+                    b.Property<int?>("TourBookingPaymentId")
                         .HasColumnType("int");
 
                     b.Property<int>("TourId")
@@ -190,7 +190,8 @@ namespace SeetourAPI.Migrations
                     b.HasIndex("CustomerId");
 
                     b.HasIndex("TourBookingPaymentId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[TourBookingPaymentId] IS NOT NULL");
 
                     b.HasIndex("TourId");
 
@@ -268,19 +269,13 @@ namespace SeetourAPI.Migrations
                     b.ToTable("EditRequest");
                 });
 
-            modelBuilder.Entity("SeetourAPI.Data.Models.Photo", b =>
+            modelBuilder.Entity("SeetourAPI.Data.Models.Photos.Photo", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int?>("ReviewId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("TourId")
-                        .HasColumnType("int");
 
                     b.Property<string>("Url")
                         .IsRequired()
@@ -289,11 +284,53 @@ namespace SeetourAPI.Migrations
 
                     b.HasKey("Id");
 
+                    b.ToTable("Photos");
+                });
+
+            modelBuilder.Entity("SeetourAPI.Data.Models.Photos.ReviewPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PhotoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReviewId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhotoId");
+
                     b.HasIndex("ReviewId");
+
+                    b.ToTable("ReviewPhoto");
+                });
+
+            modelBuilder.Entity("SeetourAPI.Data.Models.Photos.TourPhoto", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PhotoId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TourId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhotoId");
 
                     b.HasIndex("TourId");
 
-                    b.ToTable("Photos");
+                    b.ToTable("TourPhoto");
                 });
 
             modelBuilder.Entity("SeetourAPI.Data.Models.Review", b =>
@@ -304,7 +341,7 @@ namespace SeetourAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("BoodedTourId")
+                    b.Property<int>("BookedTourId")
                         .HasColumnType("int");
 
                     b.Property<string>("Comment")
@@ -320,7 +357,7 @@ namespace SeetourAPI.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("BoodedTourId")
+                    b.HasIndex("BookedTourId")
                         .IsUnique();
 
                     b.ToTable("Reviews");
@@ -426,7 +463,8 @@ namespace SeetourAPI.Migrations
 
                     b.Property<string>("Answer")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(512)
+                        .HasColumnType("nvarchar(512)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -435,6 +473,9 @@ namespace SeetourAPI.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("TourQuestionId")
+                        .IsUnique();
 
                     b.ToTable("TourAnswer");
                 });
@@ -452,7 +493,8 @@ namespace SeetourAPI.Migrations
 
                     b.Property<string>("CardNumber")
                         .IsRequired()
-                        .HasColumnType("varchar(19)");
+                        .HasMaxLength(19)
+                        .HasColumnType("nvarchar(19)");
 
                     b.Property<string>("CardholderName")
                         .IsRequired()
@@ -469,11 +511,13 @@ namespace SeetourAPI.Migrations
 
                     b.Property<string>("Cvc")
                         .IsRequired()
-                        .HasColumnType("varchar(3)");
+                        .HasMaxLength(3)
+                        .HasColumnType("nvarchar(3)");
 
                     b.Property<string>("ExpirationDate")
                         .IsRequired()
-                        .HasColumnType("varchar(5)");
+                        .HasMaxLength(5)
+                        .HasColumnType("nvarchar(5)");
 
                     b.Property<string>("PaymentMethod")
                         .IsRequired()
@@ -505,7 +549,8 @@ namespace SeetourAPI.Migrations
 
                     b.Property<string>("Question")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(128)
+                        .HasColumnType("nvarchar(128)");
 
                     b.Property<int?>("TourAnswerId")
                         .HasColumnType("int");
@@ -516,10 +561,6 @@ namespace SeetourAPI.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("CustomerId");
-
-                    b.HasIndex("TourAnswerId")
-                        .IsUnique()
-                        .HasFilter("[TourAnswerId] IS NOT NULL");
 
                     b.HasIndex("TourId");
 
@@ -726,9 +767,7 @@ namespace SeetourAPI.Migrations
 
                     b.HasOne("SeetourAPI.Data.Models.TourBookingPayment", "TourBookingPayment")
                         .WithOne("BookedTour")
-                        .HasForeignKey("SeetourAPI.Data.Models.BookedTour", "TourBookingPaymentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("SeetourAPI.Data.Models.BookedTour", "TourBookingPaymentId");
 
                     b.HasOne("SeetourAPI.Data.Models.Tour", "Tour")
                         .WithMany("Bookings")
@@ -792,22 +831,49 @@ namespace SeetourAPI.Migrations
                     b.Navigation("Tour");
                 });
 
-            modelBuilder.Entity("SeetourAPI.Data.Models.Photo", b =>
+            modelBuilder.Entity("SeetourAPI.Data.Models.Photos.ReviewPhoto", b =>
                 {
-                    b.HasOne("SeetourAPI.Data.Models.Review", null)
-                        .WithMany("Photos")
-                        .HasForeignKey("ReviewId");
+                    b.HasOne("SeetourAPI.Data.Models.Photos.Photo", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.HasOne("SeetourAPI.Data.Models.Tour", null)
+                    b.HasOne("SeetourAPI.Data.Models.Review", "Review")
                         .WithMany("Photos")
-                        .HasForeignKey("TourId");
+                        .HasForeignKey("ReviewId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Photo");
+
+                    b.Navigation("Review");
+                });
+
+            modelBuilder.Entity("SeetourAPI.Data.Models.Photos.TourPhoto", b =>
+                {
+                    b.HasOne("SeetourAPI.Data.Models.Photos.Photo", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("SeetourAPI.Data.Models.Tour", "Tour")
+                        .WithMany("Photos")
+                        .HasForeignKey("TourId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Photo");
+
+                    b.Navigation("Tour");
                 });
 
             modelBuilder.Entity("SeetourAPI.Data.Models.Review", b =>
                 {
                     b.HasOne("SeetourAPI.Data.Models.BookedTour", "BookedTour")
                         .WithOne("Review")
-                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BoodedTourId")
+                        .HasForeignKey("SeetourAPI.Data.Models.Review", "BookedTourId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -825,6 +891,17 @@ namespace SeetourAPI.Migrations
                     b.Navigation("TourGuide");
                 });
 
+            modelBuilder.Entity("SeetourAPI.Data.Models.TourAnswer", b =>
+                {
+                    b.HasOne("SeetourAPI.Data.Models.TourQuestion", "TourQuestion")
+                        .WithOne("TourAnswer")
+                        .HasForeignKey("SeetourAPI.Data.Models.TourAnswer", "TourQuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("TourQuestion");
+                });
+
             modelBuilder.Entity("SeetourAPI.Data.Models.TourQuestion", b =>
                 {
                     b.HasOne("SeetourAPI.Data.Models.Users.Customer", "Customer")
@@ -832,10 +909,6 @@ namespace SeetourAPI.Migrations
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("SeetourAPI.Data.Models.TourAnswer", "TourAnswer")
-                        .WithOne("TourQuestion")
-                        .HasForeignKey("SeetourAPI.Data.Models.TourQuestion", "TourAnswerId");
 
                     b.HasOne("SeetourAPI.Data.Models.Tour", "Tour")
                         .WithMany("Questions")
@@ -846,8 +919,6 @@ namespace SeetourAPI.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Tour");
-
-                    b.Navigation("TourAnswer");
                 });
 
             modelBuilder.Entity("SeetourAPI.Data.Models.Users.Customer", b =>
@@ -897,14 +968,14 @@ namespace SeetourAPI.Migrations
                     b.Navigation("Wishlist");
                 });
 
-            modelBuilder.Entity("SeetourAPI.Data.Models.TourAnswer", b =>
-                {
-                    b.Navigation("TourQuestion");
-                });
-
             modelBuilder.Entity("SeetourAPI.Data.Models.TourBookingPayment", b =>
                 {
                     b.Navigation("BookedTour");
+                });
+
+            modelBuilder.Entity("SeetourAPI.Data.Models.TourQuestion", b =>
+                {
+                    b.Navigation("TourAnswer");
                 });
 
             modelBuilder.Entity("SeetourAPI.Data.Models.Users.Customer", b =>

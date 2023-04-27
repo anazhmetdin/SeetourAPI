@@ -25,6 +25,8 @@
 
   <ItemGroup>
     <Folder Include="Data\DTOs\" />
+    <Folder Include="jsons\" />
+    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>

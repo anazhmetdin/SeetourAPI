@@ -20,15 +20,15 @@ namespace SeetourAPI.Data.Models
 
         // Additional properties for Visa card information
         [CreditCard]
-        [Column(TypeName = "varchar(19)")]
+        [StringLength(19, MinimumLength = 16)]
         public string CardNumber { get; set; } = string.Empty;
 
         [RegularExpression(@"^(0[1-9]|1[0-2])\/([0-9]{2})$")]
-        [Column(TypeName = "varchar(5)")]
+        [StringLength(5)]
         public string ExpirationDate { get; set; } = string.Empty;
         
         [RegularExpression(@"^[0-9]{3}$")]
-        [Column(TypeName = "varchar(3)")]
+        [StringLength(3)]
         public string Cvc { get; set; } = string.Empty;
         
         [StringLength(50)]

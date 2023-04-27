@@ -78,6 +78,10 @@ namespace SeetourAPI
                    policy.RequireClaim(ClaimTypes.Role, "TourGuide")
                          .RequireClaim(ClaimTypes.NameIdentifier));
             });
+            #region Identity
+            builder.Services.AddIdentityCore<SeetourUser>()
+                .AddEntityFrameworkStores<SeetourContext>();
+            #endregion
 
             #endregion
             var app = builder.Build();
