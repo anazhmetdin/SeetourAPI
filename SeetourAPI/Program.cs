@@ -50,7 +50,7 @@ namespace SeetourAPI
             #region Identity
             builder.Services.AddIdentityCore<SeetourUser>()
             .AddEntityFrameworkStores<SeetourContext>();
-����������� #endregion
+            #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
