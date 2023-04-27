@@ -7,11 +7,21 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="7.0.4" />
+    <Compile Remove="BL\Dtos\**" />
+    <Content Remove="BL\Dtos\**" />
+    <EmbeddedResource Remove="BL\Dtos\**" />
+    <None Remove="BL\Dtos\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+	  <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="7.0.5" />
 	  <PackageReference Include="microsoft.aspnetcore.identity" Version="2.2.0" />
 	  <PackageReference Include="microsoft.aspnetcore.identity.EntityFrameworkCore" Version="7.0.4" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0-preview1.0" />
 	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
 		  <PrivateAssets>all</PrivateAssets>
@@ -23,9 +33,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\DTOs\" />
     <Folder Include="jsons\" />
-    <Folder Include="Migrations\" />
   </ItemGroup>
 
 </Project>
