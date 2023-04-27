@@ -9,5 +9,6 @@ namespace SeetourAPI.Data.Models
         public virtual Customer? Customer { get; set; }
         public int TourId { get; set; }
         public virtual Tour? Tour { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }
