@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 
