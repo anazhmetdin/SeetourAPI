@@ -3,12 +3,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.AdminManger;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Data.Policies;
 
 namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
 
+    [Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
         private readonly IAdminManger _adminManager;

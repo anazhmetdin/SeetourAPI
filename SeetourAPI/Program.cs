@@ -14,6 +14,10 @@ using SeetourAPI.Data.Models.Users;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
 using Newtonsoft.Json;
+using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.Data.Claims;
+using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Policies;
 
 namespace SeetourAPI
 {
@@ -56,9 +60,8 @@ namespace SeetourAPI
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
-
-            builder.Services.AddScoped<ITourQuestionRepo,TourQuestionRepo>();
-           
+            builder.Services.AddScoped<ITourQuestionRepo, TourQuestionRepo>();
+            builder.Services.AddScoped<ITourGuideRepo, TourGuideRepo>();
 
             #endregion
             #region Manger
@@ -67,6 +70,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<IAdminManger, AdminManger>();
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
             builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
+            builder.Services.AddScoped<ITourGuideManager, TourGuideManager>();
             builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
@@ -100,14 +104,23 @@ namespace SeetourAPI
             #region Authorization
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("AllowAdmin", policy =>
+                options.AddPolicy(Policies.AllowAdmins, policy =>
                     policy.RequireClaim(ClaimTypes.Role, "Admin")
                           .RequireClaim(ClaimTypes.NameIdentifier));
-                options.AddPolicy("AllowUser", policy =>
-                   policy.RequireClaim(ClaimTypes.Role, "User")
+
+                options.AddPolicy(Policies.AllowCustomers, policy =>
+                   policy.RequireClaim(ClaimTypes.Role, "Customer")
+                         .RequireAssertion(c => !c.User.Claims.Any(c => c.ValueType == ClaimType.Status && c.Value == "Blocked"))
                          .RequireClaim(ClaimTypes.NameIdentifier));
-                options.AddPolicy("AllowTourGuide", policy =>
+
+                options.AddPolicy(Policies.AllowTourGuide, policy =>
                    policy.RequireClaim(ClaimTypes.Role, "TourGuide")
+                         .RequireAssertion(c => !c.User.Claims.Any(c => c.ValueType == ClaimType.Status && c.Value == "Blocked"))
+                         .RequireClaim(ClaimTypes.NameIdentifier));
+
+                options.AddPolicy(Policies.AcceptedTourGuides, policy =>
+                   policy.RequireClaim(ClaimTypes.Role, "TourGuide")
+                         .RequireClaim(ClaimType.Status, TourGuideStatus.Accepted.ToString())
                          .RequireClaim(ClaimTypes.NameIdentifier));
             });
 
