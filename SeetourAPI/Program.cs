@@ -9,8 +9,15 @@ using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-
-
+using SeetourAPI.BL.TourAnswerManager;
+using SeetourAPI.Data.Models.Users;
+using SeetourAPI.BL.ReviewManager;
+using SeetourAPI.BL.AdminManger;
+using Newtonsoft.Json;
+using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.Data.Claims;
+using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Policies;
 
 namespace SeetourAPI
 {
@@ -26,17 +33,46 @@ namespace SeetourAPI
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+            #region Cors
 
+            var corsPolicy = "AllowAll";
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(corsPolicy, p => p.AllowAnyOrigin()
+                .AllowAnyHeader()
+                .AllowAnyMethod());
+            });
+
+            #endregion
             #region Database
+            builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
             var connectionString = builder.Configuration.GetConnectionString("SeetourConn");
             builder.Services.AddDbContext<SeetourContext>(options =>
-                options.UseSqlServer(connectionString));
+            options.UseSqlServer(connectionString));//.UseLazyLoadingProxies());
+            //builder.Services.AddControllers().AddNewtonsoftJson(o => o.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore);
+            #endregion
+            #region Identity
+            builder.Services.AddIdentityCore<SeetourUser>()
+            .AddEntityFrameworkStores<SeetourContext>();
             #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
+            builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
+            builder.Services.AddScoped<IAdminRepo, AdminRepo>();
+            builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
+            builder.Services.AddScoped<ITourQuestionRepo, TourQuestionRepo>();
+            builder.Services.AddScoped<ITourGuideRepo, TourGuideRepo>();
+
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
+            builder.Services.AddScoped<IReviewManager, ReviewManager> ();
+            builder.Services.AddScoped<IAdminManger, AdminManger>();
+            builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
+            builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
+            builder.Services.AddScoped<ITourGuideManager, TourGuideManager>();
+            builder.Services.AddScoped<HttpContextAccessor>();
+
             #endregion
             #region IdentityManger
             builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 
@@ -68,20 +104,25 @@ namespace SeetourAPI
             #region Authorization
             builder.Services.AddAuthorization(options =>
             {
-                options.AddPolicy("AllowAdmin", policy =>
+                options.AddPolicy(Policies.AllowAdmins, policy =>
                     policy.RequireClaim(ClaimTypes.Role, "Admin")
                           .RequireClaim(ClaimTypes.NameIdentifier));
-                options.AddPolicy("AllowUser", policy =>
-                   policy.RequireClaim(ClaimTypes.Role, "User")
+
+                options.AddPolicy(Policies.AllowCustomers, policy =>
+                   policy.RequireClaim(ClaimTypes.Role, "Customer")
+                         .RequireAssertion(c => !c.User.Claims.Any(c => c.ValueType == ClaimType.Status && c.Value == "Blocked"))
                          .RequireClaim(ClaimTypes.NameIdentifier));
-                options.AddPolicy("AllowTourGuide", policy =>
+
+                options.AddPolicy(Policies.AllowTourGuide, policy =>
                    policy.RequireClaim(ClaimTypes.Role, "TourGuide")
+                         .RequireAssertion(c => !c.User.Claims.Any(c => c.ValueType == ClaimType.Status && c.Value == "Blocked"))
+                         .RequireClaim(ClaimTypes.NameIdentifier));
+
+                options.AddPolicy(Policies.AcceptedTourGuides, policy =>
+                   policy.RequireClaim(ClaimTypes.Role, "TourGuide")
+                         .RequireClaim(ClaimType.Status, TourGuideStatus.Accepted.ToString())
                          .RequireClaim(ClaimTypes.NameIdentifier));
             });
-            #region Identity
-            builder.Services.AddIdentityCore<SeetourUser>()
-                .AddEntityFrameworkStores<SeetourContext>();
-            #endregion
 
             #endregion
             var app = builder.Build();
@@ -93,8 +134,9 @@ namespace SeetourAPI
                 app.UseSwaggerUI();
             }
 
+            app.UseCors(corsPolicy);
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 

@@ -32,5 +32,7 @@ namespace SeetourAPI.Data.Models.Users
         public string IDCardPhoto { get; set; } = string.Empty;
         // TODO: add it to claims for authorization
         public TourGuideStatus Status { get; set; }
+
+       
     }
 }
