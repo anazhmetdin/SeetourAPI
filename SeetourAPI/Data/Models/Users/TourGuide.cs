@@ -33,6 +33,9 @@ namespace SeetourAPI.Data.Models.Users
         // TODO: add it to claims for authorization
         public TourGuideStatus Status { get; set; }
 
-       
+        [NotMapped]
+        public double Rating { get => Tours.SelectMany(t => t.Reviews.Select(r=>r.Rating)).DefaultIfEmpty(0).Average(); }
+        [NotMapped]
+        public int RatingCount { get => Tours.Sum(t => t.Reviews.Count); }
     }
 }

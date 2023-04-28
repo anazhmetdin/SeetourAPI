@@ -16,6 +16,29 @@ namespace SeetourAPI.BL.TourGuideManager
             _tourguideRepo = tourguideRepo;
         }
 
+        public TourGuideInfoDto? GetInfo(string id)
+        {
+            var tourguide = _tourguideRepo.GetTourGuide(id);
+
+            if (tourguide == null)
+            {
+                return null;
+            }
+
+            return GetTourGuideInfoDto(tourguide);
+        }
+
+        private TourGuideInfoDto GetTourGuideInfoDto(TourGuide tourguide)
+        {
+            return new TourGuideInfoDto(
+                Id: tourguide.Id,
+                Name: tourguide.User?.FullName??"",
+                ProfilePic: tourguide.User?.ProfilePic??"",
+                Rating: (int)tourguide.Rating,
+                RatingCount: tourguide.RatingCount
+            );
+        }
+
         public ICollection<TourCardDto>? PastTourCards(string tourguideId)
         {
             var tourguide = _tourguideRepo.GetTourGuide(tourguideId);
