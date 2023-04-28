@@ -1,6 +1,7 @@
 ﻿using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Models.Users;
 using System.Linq;
 
 namespace SeetourAPI.BL.TourGuideManager
@@ -46,18 +47,6 @@ namespace SeetourAPI.BL.TourGuideManager
                 Rating: (int)ratings.DefaultIfEmpty(0).Average(),
                 RatingCount: ratings.Count()
             );
-        }
-
-        public TourGuideInfoDto? GetInfo(string id)
-        {
-            var tourguide = _tourguideRepo.GetTourGuide(id);
-
-            if (tourguide == null)
-            {
-                return null;
-            }
-
-            return GetTourGuideInfoDto(tourguide);
         }
 
         private TourGuideInfoDto GetTourGuideInfoDto(TourGuide tourguide)
