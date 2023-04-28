@@ -102,6 +102,13 @@ namespace SeetourAPI.DAL.Repos
             else return null;
         }
 
-
+        public IEnumerable<Tour> GetTourGuideTours(string id)
+        {
+            return _Context.Tours
+                .Include(t => t.Photos)
+                .Include(t => t.Likes)
+                .Include(t => t.Bookings)
+                .Where(t => t.TourGuideId == id);
+        }
     }
 }

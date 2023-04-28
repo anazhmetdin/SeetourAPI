@@ -13,6 +13,11 @@ namespace SeetourAPI.DAL.Repos
             _context = context;
         }
 
+        public bool CheckTourGuide(string id)
+        {
+            return _context.TourGuides.Any(tg => tg.Id == id);
+        }
+
         public TourGuide? GetTourGuide(string id)
         {
             return _context.TourGuides
@@ -29,6 +34,11 @@ namespace SeetourAPI.DAL.Repos
                 .ThenInclude(a => a.Bookings)
                 .ThenInclude(a => a.Review)
                 .Include(a => a.User).FirstOrDefault(t => t.Id == id);
+        }
+
+        public TourGuide? GetTourGuideLite(string id)
+        {
+            return _context.TourGuides.Find(id);
         }
     }
 }

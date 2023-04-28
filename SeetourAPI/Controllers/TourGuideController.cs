@@ -28,7 +28,7 @@ namespace SeetourAPI.Controllers
             _reviewManager = reviewManager;
         }
 
-        [HttpGet("{id}/UpcomingTours")]
+        [HttpGet("{Id}/UpcomingTours")]
         public IActionResult GetUpcomingTours(string Id)
         {
             var tours = _tourGuideManager.UpcomingTourCards(Id);
@@ -39,7 +39,7 @@ namespace SeetourAPI.Controllers
             return Ok(tours);
         }
 
-        [HttpGet("{id}/PastTours")]
+        [HttpGet("{Id}/PastTours")]
         public IActionResult GetPastTours(string Id)
         {
             var tours = _tourGuideManager.PastTourCards(Id);
@@ -50,14 +50,14 @@ namespace SeetourAPI.Controllers
             return Ok(tours);
         }
 
-        [HttpGet("{id}/Reviews")]
+        [HttpGet("{Id}/Reviews")]
         public IActionResult GetReviews(string Id)
         {
             var reviews = _reviewManager.GetAllTourGuideReviews(Id);
             return Ok(reviews);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{Id}")]
         public IActionResult GetInfo(string Id)
         {
             var info = _tourGuideManager.GetInfo(Id);

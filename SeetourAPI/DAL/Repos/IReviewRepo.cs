@@ -9,5 +9,7 @@ namespace SeetourAPI.DAL.Repos
         public Review? EditReview(int id, Review review);
         public void AddReview(Review review);
         public void DeleteReview(int id);
+        public IEnumerable<Review> GetTourGuideReviews(string Id);
+        public IEnumerable<int> GetTourGuideRatings(string id);
     }
 }
