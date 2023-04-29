@@ -15,7 +15,7 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    [Authorize(Policy = Policies.AcceptedTourGuides)]
+    //[Authorize(Policy = Policies.AcceptedTourGuides)]
     public class TourGuideController : ControllerBase
     {
         private readonly ITourGuideManager _tourGuideManager;
@@ -28,10 +28,17 @@ namespace SeetourAPI.Controllers
             _reviewManager = reviewManager;
         }
 
-        [HttpGet("UpcomingTours/{id}")]
-        public IActionResult GetUpcomingTours(string Id)
+        [HttpGet("{Id}/UpcomingTours")]
+        public IActionResult GetUpcomingTours(string Id,
+            [FromQuery] ToursFilterDto toursFilter)
         {
-            var tours = _tourGuideManager.UpcomingTourCards(Id);
+            return GetTours(Id, false, toursFilter);
+        }
+
+        [NonAction]
+        private IActionResult GetTours(string Id, bool isCompleted, ToursFilterDto toursFilter)
+        {
+            var tours = _tourGuideManager.CompletedTourCards(Id, isCompleted, toursFilter);
             if (tours == null)
             {
                 return NotFound();
@@ -39,22 +46,29 @@ namespace SeetourAPI.Controllers
             return Ok(tours);
         }
 
-        [HttpGet("PastTours/{id}")]
-        public IActionResult GetPastTours(string Id)
+        [HttpGet("{Id}/PastTours")]
+        public IActionResult GetPastTours(string Id,
+            [FromQuery] ToursFilterDto toursFilter)
         {
-            var tours = _tourGuideManager.PastTourCards(Id);
-            if (tours == null)
-            {
-                return NotFound();
-            }
-            return Ok(tours);
+            return GetTours(Id, true, toursFilter);
         }
 
-        [HttpGet("Reviews/{id}")]
+        [HttpGet("{Id}/Reviews")]
         public IActionResult GetReviews(string Id)
         {
             var reviews = _reviewManager.GetAllTourGuideReviews(Id);
             return Ok(reviews);
+        }
+
+        [HttpGet("{Id}")]
+        public IActionResult GetInfo(string Id)
+        {
+            var info = _tourGuideManager.GetInfo(Id);
+            if (info == null)
+            {
+                return NotFound();
+            }
+            return Ok(info);
         }
     }
 }

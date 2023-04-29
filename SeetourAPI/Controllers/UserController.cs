@@ -54,7 +54,7 @@ namespace SeetourAPI.Controllers
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
             {
-                return BadRequest();
+                return BadRequest(result.Errors);
             }
 
             var customerToAdd = new Customer()
@@ -170,8 +170,10 @@ namespace SeetourAPI.Controllers
 
             var expiry = DateTime.Now.AddDays(1);
 
+            var claimlist = await Usermanger.GetClaimsAsync(user);
+
             var token = new JwtSecurityToken(
-                claims: new List<Claim>(),
+                claims: claimlist,
                 expires: expiry,
                 signingCredentials: siginingCreedentials);
 

@@ -33,6 +33,11 @@ namespace SeetourAPI.Data.Models.Users
         // TODO: add it to claims for authorization
         public TourGuideStatus Status { get; set; }
 
-       
+        [NotMapped]
+        public int Rating { get => TourGuideRating?.Rating ?? 0; }
+        [NotMapped]
+        public int RatingCount { get => TourGuideRating?.RatingCount ?? 0; }
+
+        public virtual TourGuideRating? TourGuideRating { get; set; }
     }
 }

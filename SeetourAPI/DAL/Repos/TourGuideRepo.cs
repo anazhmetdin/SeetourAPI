@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 
@@ -11,6 +12,11 @@ namespace SeetourAPI.DAL.Repos
         public TourGuideRepo(SeetourContext context)
         {
             _context = context;
+        }
+
+        public bool CheckTourGuide(string id)
+        {
+            return _context.TourGuides.Any(tg => tg.Id == id);
         }
 
         public TourGuide? GetTourGuide(string id)
@@ -29,6 +35,13 @@ namespace SeetourAPI.DAL.Repos
                 .ThenInclude(a => a.Bookings)
                 .ThenInclude(a => a.Review)
                 .Include(a => a.User).FirstOrDefault(t => t.Id == id);
+        }
+
+        public TourGuide? GetTourGuideLite(string id)
+        {
+            return _context.TourGuides
+                .Include(t => t.User)
+                .FirstOrDefault(t => t.Id == id);
         }
     }
 }

@@ -5,6 +5,7 @@ using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Services;
 using System.Security.Claims;
 
 namespace SeetourAPI.BL.TourManger
@@ -13,14 +14,16 @@ namespace SeetourAPI.BL.TourManger
     {
         private readonly UserManager<SeetourUser> _userManager;
         private readonly HttpContextAccessor _HttpContextAccessor;
+        private readonly ToursHandler _handler;
 
         public ITourRepo TourRepo { get; }
-        public TourManger(ITourRepo tourRepo, 
-            UserManager<SeetourUser> userManager,HttpContextAccessor _httpContextAccessor)
+        public TourManger(ITourRepo tourRepo,
+            UserManager<SeetourUser> userManager, HttpContextAccessor _httpContextAccessor, ToursHandler filter)
         {
             TourRepo = tourRepo;
             _userManager = userManager;
             _HttpContextAccessor = _httpContextAccessor;
+            _handler = filter;
         }
         public string GetCurrentUserId()
         {
@@ -123,6 +126,20 @@ namespace SeetourAPI.BL.TourManger
                 Title: tour.Title,
                 AddedToWishList: false
             );
+        }
+
+        public ICollection<TourCardDto> GetAllCards(ToursFilterDto toursFilter)
+        {
+            var tours = TourRepo.GetAllLite().Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
+            tours = _handler.Filter(tours, toursFilter);
+            return _handler.GetTourCardDto(tours);
+        }
+
+        public ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted, ToursFilterDto toursFilter)
+        {
+            var tours = TourRepo.GetAllLite().Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
+            tours = _handler.Filter(tours, toursFilter);
+            return _handler.GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
         }
     }
 }

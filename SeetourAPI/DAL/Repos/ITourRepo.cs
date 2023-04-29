@@ -5,7 +5,8 @@ namespace SeetourAPI.DAL.Repos
 {
     public interface ITourRepo
     {
-       public IEnumerable<Tour> GetAll();
+        public IEnumerable<Tour> GetAll();
+        public IEnumerable<Tour> GetAllLite();
         public Tour? GetTourById(int id);
         public Tour? EditTour(int id,Tour tour);
         public void AddTour(Tour tour);
@@ -13,5 +14,6 @@ namespace SeetourAPI.DAL.Repos
       
 
         public void EditTourBYAdmin(int id, Tour tour);
+        IEnumerable<Tour> GetTourGuideTours(string id);
     }
 }
