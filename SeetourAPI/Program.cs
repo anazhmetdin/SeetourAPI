@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Services;
 using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
 using System.Text;
@@ -19,7 +20,6 @@ namespace SeetourAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -28,6 +28,7 @@ namespace SeetourAPI
             builder.Services.AddSwaggerGen();
 
             #region Database
+            builder.Configuration.AddJsonFile("appsettings.secret.json", false, false);
             var connectionString = builder.Configuration.GetConnectionString("SeetourConn");
             builder.Services.AddDbContext<SeetourContext>(options =>
                 options.UseSqlServer(connectionString));
@@ -51,6 +52,10 @@ namespace SeetourAPI
             {
                 o.DefaultAuthenticateScheme = "SeeTour";
                 o.DefaultChallengeScheme = "SeeTour";
+
+            #region Azure
+            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+            #endregion
 
             }).AddJwtBearer("SeeTour", o =>
             {
@@ -88,6 +93,7 @@ namespace SeetourAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseHttpsRedirection();
 
