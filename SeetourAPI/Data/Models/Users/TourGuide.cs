@@ -34,8 +34,10 @@ namespace SeetourAPI.Data.Models.Users
         public TourGuideStatus Status { get; set; }
 
         [NotMapped]
-        public double Rating { get => Tours.SelectMany(t => t.Reviews.Select(r=>r.Rating)).DefaultIfEmpty(0).Average(); }
+        public int Rating { get => TourGuideRating?.Rating ?? 0; }
         [NotMapped]
-        public int RatingCount { get => Tours.Sum(t => t.Reviews.Count); }
+        public int RatingCount { get => TourGuideRating?.RatingCount ?? 0; }
+
+        public virtual TourGuideRating? TourGuideRating { get; set; }
     }
 }

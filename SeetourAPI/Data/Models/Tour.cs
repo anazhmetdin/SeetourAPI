@@ -52,7 +52,7 @@ namespace SeetourAPI.Data.Models
         [NotMapped]
         public ICollection<Review> Reviews { get => PaidBookings.Where(a => a.Review != null).Select(a=>a.Review!).ToList(); }
         [NotMapped]
-        public int BookingsCount { get => PaidBookings.Count(); }
+        public int BookingsCount { get => TourBooking?.BookingsCount??0; }
         public string TourGuideId { get; set; } = string.Empty;
         public virtual TourGuide? TourGuide { get; set; }
         public TourPostingStatus TourPostingStatus { get; set; }
@@ -62,5 +62,7 @@ namespace SeetourAPI.Data.Models
         public bool IsCompleted { get => DateFrom < DateTime.Now; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime PostedAt { get; set; } = DateTime.UtcNow;
+
+        public virtual TourBooking? TourBooking { get; set; }
     }
 }

@@ -3,13 +3,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
+using System;
 
 namespace SeetourAPI.Controllers
 {
@@ -118,6 +121,52 @@ namespace SeetourAPI.Controllers
         {
             var reviews = _reviewManger.GetAllTourReviews(Id);
             return Ok(reviews);
+        }
+
+        [HttpGet]
+        public IActionResult GetAllCards([FromQuery] ToursFilterDto toursFilter)
+        {
+            var tours = ITourManger.GetAllCards(toursFilter);
+            if (tours == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tours);
+        }
+
+        [HttpGet("Upcoming")]
+        public IActionResult GetUpcomingCards([FromQuery] ToursFilterDto toursFilter)
+        {
+            var tours = ITourManger.GetIsCompletedCards(false, toursFilter);
+
+            if (tours == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tours);
+        }
+
+        [HttpGet("Past")]
+        public IActionResult GetPastCards([FromQuery] ToursFilterDto toursFilter)
+        {
+            var tours = ITourManger.GetIsCompletedCards(true, toursFilter);
+
+            if (tours == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tours);
+        }
+
+        [HttpGet("categories")]
+        [OutputCache(Duration = 60*60*24)]
+        [ResponseCache(Duration = 60*60*24)]
+        public IActionResult GetCategories()
+        {
+            return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
         }
     }
 }

@@ -143,24 +143,12 @@ namespace SeetourAPI.Controllers
         [Route("Login")]
         public async Task<ActionResult> Login(LoginDto loginDto)
         {
-            // Convert the string to a byte array
-            byte[] bytes = Encoding.UTF8.GetBytes(loginDto.password);
-
-            // Convert the byte array to a Base64 string
-            string base64String = Convert.ToBase64String(bytes);
-
-            // Convert the Base64 string back to a byte array
-            byte[] decodedBytes = Convert.FromBase64String(base64String);
-
-            // Convert the byte array back to a string
-            string decodedString = Encoding.UTF8.GetString(decodedBytes);
-
             var user = await Usermanger.FindByNameAsync(loginDto.username);
             if (user == null)
             {
                 return NotFound();
             }
-            var isAuthenticated = await Usermanger.CheckPasswordAsync(user, base64String);
+            var isAuthenticated = await Usermanger.CheckPasswordAsync(user, loginDto.password);
             if (!isAuthenticated)
             {
                 return Unauthorized();

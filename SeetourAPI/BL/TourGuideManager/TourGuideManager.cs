@@ -1,8 +1,11 @@
 ﻿using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Services;
 using System.Linq;
+using System.Security.Claims;
 
 namespace SeetourAPI.BL.TourGuideManager
 {
@@ -10,43 +13,27 @@ namespace SeetourAPI.BL.TourGuideManager
     {
         private readonly ITourGuideRepo _tourguideRepo;
         private readonly ITourRepo _tourRepo;
-        private readonly IUserRepo _userRepo;
-        private readonly IReviewRepo _reviewRepo;
+        private readonly ToursHandler _handler;
+        private readonly HttpContextAccessor _contextAccessor;
 
-        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo, IUserRepo userRepo, IReviewRepo reviewRepo)
+        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo, ToursHandler handler, HttpContextAccessor contextAccessor)
         {
             _tourRepo = tourRepo;
             _tourguideRepo = tourguideRepo;
-            _userRepo = userRepo;
-            _reviewRepo = reviewRepo;
+            _handler = handler;
+            _contextAccessor = contextAccessor;
         }
 
         public TourGuideInfoDto? GetInfo(string id)
         {
-            var exist = _tourguideRepo.CheckTourGuide(id);
+            var tourGuide = _tourguideRepo.GetTourGuideLite(id);
 
-            if (!exist)
+            if (tourGuide is null)
             {
                 return null;
             }
 
-            var user = _userRepo.GetUserBasicInfo(id)!;
-
-            var ratings = _reviewRepo.GetTourGuideRatings(id).ToArray();
-
-            return GetTourGuideInfoDto(user, ratings);
-        }
-
-        private TourGuideInfoDto GetTourGuideInfoDto(UserBasicInfoDto user,
-            IEnumerable<int> ratings)
-        {
-            return new TourGuideInfoDto(
-                Id: user.Id,
-                Name: user.Name,
-                ProfilePic: user.Picture??"",
-                Rating: (int)ratings.DefaultIfEmpty(0).Average(),
-                RatingCount: ratings.Count()
-            );
+            return GetTourGuideInfoDto(tourGuide);
         }
 
         private TourGuideInfoDto GetTourGuideInfoDto(TourGuide tourguide)
@@ -55,12 +42,12 @@ namespace SeetourAPI.BL.TourGuideManager
                 Id: tourguide.Id,
                 Name: tourguide.User?.FullName??"",
                 ProfilePic: tourguide.User?.ProfilePic??"",
-                Rating: (int)tourguide.Rating,
+                Rating: tourguide.Rating,
                 RatingCount: tourguide.RatingCount
             );
         }
 
-        public ICollection<TourCardDto>? PastTourCards(string tourguideId)
+        private TGToursDto? GetTours(string tourguideId)
         {
             var tourguide = GetInfo(tourguideId);
 
@@ -70,46 +57,47 @@ namespace SeetourAPI.BL.TourGuideManager
             }
 
             var tours = _tourRepo.GetTourGuideTours(tourguide.Id);
-
-            return GetTourCardDto(tourguide, tours.Where(t => t.IsCompleted));
+            return new TGToursDto(tourguide, tours.Where(t=>t.TourPostingStatus == TourPostingStatus.Accepted));
         }
 
-        public ICollection<TourCardDto>? UpcomingTourCards(string tourguideId)
+        public ICollection<TourCardDto>? CompletedTourCards(string tourguideId,
+            bool isCompleted)
         {
-            var tourguide = GetInfo(tourguideId);
+            var TGTours = GetTours(tourguideId);
 
-            if (tourguide == null)
-            {
+            if (TGTours == null)
                 return null;
-            }
 
-            var tours = _tourRepo.GetTourGuideTours(tourguide.Id);
-
-            return GetTourCardDto(tourguide, tours.Where(t => !t.IsCompleted));
+            return GetToursCompleted(TGTours.Tours, isCompleted);
         }
 
-        private ICollection<TourCardDto> GetTourCardDto(TourGuideInfoDto tourGuide,
-            IEnumerable<Tour> tours)
+        private ICollection<TourCardDto> GetToursCompleted(
+            IEnumerable<Tour> tours, bool isCompleted)
         {
-            return tours.Select(tour => new TourCardDto(
-                Id: tour.Id,
-                Photos: tour.Photos.Select(p => p.Url).ToArray(),
-                LocationTo: tour.LocationTo,
-                Price: tour.Price,
-                Likes: tour.Likes.Count,
-                isLiked: false,
-                Bookings: tour.BookingsCount,
-                Capacity: tour.Capacity,
-                TourGuideId: tourGuide.Id,
-                TourGuideName: tourGuide.Name,
-                TourGuideRating: tourGuide.Rating,
-                TourGuideRatingCount: tourGuide.RatingCount,
-                DateFrom: tour.DateFrom.Date.ToString(),
-                DateTo: tour.DateTo.Date.ToString(),
-                Category: tour.Category.ToString(),
-                Title: tour.Title,
-                AddedToWishList: false
-            )).ToList();
+            return _handler.GetTourCardDto(tours.Where(t => isCompleted == t.IsCompleted));
+        }
+
+        public ICollection<TourCardDto>? CompletedTourCards(
+            string tourguideId, bool isCompleted, ToursFilterDto toursFilter)
+        {
+            var TGTours = GetTours(tourguideId);
+
+            if (TGTours == null)
+                return null;
+
+            TGTours = FilterTours(toursFilter, TGTours);
+
+            return GetToursCompleted(TGTours.Tours, isCompleted);
+        }
+
+        private TGToursDto FilterTours(ToursFilterDto toursFilter, TGToursDto TGTours)
+        {
+            IEnumerable<Tour> tours = TGTours.Tours.ToList();
+
+            tours = _handler.Filter(tours, toursFilter);
+
+            TGTours = new TGToursDto(TGTours.TourGuide, tours);
+            return TGTours;
         }
     }
 }

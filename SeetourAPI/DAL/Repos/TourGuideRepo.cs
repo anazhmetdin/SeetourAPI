@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 
@@ -38,7 +39,9 @@ namespace SeetourAPI.DAL.Repos
 
         public TourGuide? GetTourGuideLite(string id)
         {
-            return _context.TourGuides.Find(id);
+            return _context.TourGuides
+                .Include(t => t.User)
+                .FirstOrDefault(t => t.Id == id);
         }
     }
 }
