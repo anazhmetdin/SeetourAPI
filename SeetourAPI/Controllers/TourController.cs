@@ -29,7 +29,7 @@ namespace SeetourAPI.Controllers
             _reviewManger = reviewManger;
         }
         
-        [Authorize(Policy = Policies.AcceptedTourGuides)]
+        //[Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPost]
         public ActionResult CreateTour(AddTourDto addTourDto)
         {
