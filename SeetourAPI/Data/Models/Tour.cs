@@ -46,7 +46,7 @@ namespace SeetourAPI.Data.Models
         [NotMapped]
         public ICollection<BookedTour> PaidBookings { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked || b.Status == BookedTourStatus.Completed).ToList(); }
         [NotMapped]
-        public double Rating { get => Reviews.Average(a => a.Rating); }
+        public double Rating { get => Reviews.DefaultIfEmpty<Review>(new Review()).Average(a => a.Rating); }
         [NotMapped]
         public int RatingCount { get => Reviews.Count; }
         [NotMapped]

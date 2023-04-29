@@ -62,6 +62,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
             builder.Services.AddScoped<ITourQuestionRepo, TourQuestionRepo>();
             builder.Services.AddScoped<ITourGuideRepo, TourGuideRepo>();
+            builder.Services.AddScoped<IUserRepo, UserRepo>();
 
             #endregion
             #region Manger

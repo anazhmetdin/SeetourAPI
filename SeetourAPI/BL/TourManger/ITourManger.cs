@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
 

@@ -15,7 +15,7 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    [Authorize(Policy = Policies.AcceptedTourGuides)]
+    //[Authorize(Policy = Policies.AcceptedTourGuides)]
     public class TourGuideController : ControllerBase
     {
         private readonly ITourGuideManager _tourGuideManager;
@@ -28,7 +28,7 @@ namespace SeetourAPI.Controllers
             _reviewManager = reviewManager;
         }
 
-        [HttpGet("UpcomingTours/{id}")]
+        [HttpGet("{Id}/UpcomingTours")]
         public IActionResult GetUpcomingTours(string Id)
         {
             var tours = _tourGuideManager.UpcomingTourCards(Id);
@@ -39,7 +39,7 @@ namespace SeetourAPI.Controllers
             return Ok(tours);
         }
 
-        [HttpGet("PastTours/{id}")]
+        [HttpGet("{Id}/PastTours")]
         public IActionResult GetPastTours(string Id)
         {
             var tours = _tourGuideManager.PastTourCards(Id);
@@ -50,11 +50,22 @@ namespace SeetourAPI.Controllers
             return Ok(tours);
         }
 
-        [HttpGet("Reviews/{id}")]
+        [HttpGet("{Id}/Reviews")]
         public IActionResult GetReviews(string Id)
         {
             var reviews = _reviewManager.GetAllTourGuideReviews(Id);
             return Ok(reviews);
+        }
+
+        [HttpGet("{Id}")]
+        public IActionResult GetInfo(string Id)
+        {
+            var info = _tourGuideManager.GetInfo(Id);
+            if (info == null)
+            {
+                return NotFound();
+            }
+            return Ok(info);
         }
     }
 }
