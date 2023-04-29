@@ -58,14 +58,14 @@ namespace SeetourAPI.Services
         public ICollection<TourCardDto> GetTourCardDto(
             IEnumerable<Tour> tours)
         {
-
-            return tours.Select(GetTourCardDto).ToList();
-        }
-
-        private TourCardDto GetTourCardDto(Tour tour)
-        {
             string userId = _contextAccessor.HttpContext?.User
                 .FindFirst(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
+
+            return tours.Select(t => GetTourCardDto(t, userId)).ToList();
+        }
+
+        private TourCardDto GetTourCardDto(Tour tour, string userId)
+        {
 
             return new TourCardDto(
                 Id: tour.Id,
