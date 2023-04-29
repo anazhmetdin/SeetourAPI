@@ -26,6 +26,7 @@ namespace SeetourAPI.Data.Context
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
         public DbSet<TourGuideRating> TourGuideRatings { get; set; }
+        public DbSet<TourBooking> TourBookings { get; set; }
 
         public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)
@@ -130,6 +131,9 @@ namespace SeetourAPI.Data.Context
                     .WithOne(p => p.Tour)
                     .HasForeignKey(p => p.TourId);
 
+                b.Navigation(t => t.TourBooking)
+                    .AutoInclude(true);
+
                 b.HasIndex(t => t.TourGuideId);
                 b.HasIndex(t => t.Category);
                 b.HasIndex(t => t.DateFrom);
@@ -177,6 +181,11 @@ namespace SeetourAPI.Data.Context
                     .WithOne(p => p.BookedTour)
                     .HasForeignKey<BookedTour>(bt => bt.TourBookingPaymentId);
 
+                b.HasIndex(b => b.CustomerId);
+                b.HasIndex(b => b.TourId);
+                b.HasIndex(b => b.Status);
+                b.HasIndex(b => b.ReviewId);
+
                 //b.Property(bt => bt.Status)
                 //    .HasConversion(new EnumToStringConverter<BookedTourStatus>());
 
@@ -214,6 +223,8 @@ namespace SeetourAPI.Data.Context
                 b.HasMany(t => t.Photos)
                     .WithOne(p => p.Review)
                     .HasForeignKey(p => p.ReviewId);
+
+                b.HasIndex(t => t.BookedTourId);
 
                 Review[] customers = GetData<Review>("jsons/reviews.json");
                 b.HasData(customers);
@@ -281,6 +292,15 @@ namespace SeetourAPI.Data.Context
                 b.HasOne(p => p.TourGuide)
                     .WithOne(bt => bt.TourGuideRating)
                     .HasForeignKey<TourGuideRating>(bt => bt.Id);
+            });
+            #endregion
+            #region TourBookings
+            builder.Entity<TourBooking>(b =>
+            {
+                b.HasKey(b => b.Id);
+                b.HasOne(b => b.Tour)
+                    .WithOne(b => b.TourBooking)
+                    .HasForeignKey<TourBooking>(bt => bt.Id);
             });
             #endregion
         }

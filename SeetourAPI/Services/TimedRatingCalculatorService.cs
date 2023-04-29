@@ -29,7 +29,26 @@ namespace SeetourAPI.Services
         {
             var count = Interlocked.Increment(ref executionCount);
             CalculateRatings(count);
+            CalculateBookings(count);
+        }
 
+        private void CalculateBookings(int count)
+        {
+            _logger.LogInformation(
+                            "Bookings Counter Service is working. Count: {Count}", count);
+
+            bool result_rating = false;
+
+            using (var scope = _serviceProvider.CreateScope())
+            {
+
+                var _TGRating = scope.ServiceProvider.GetRequiredService<TourBookingsRepo>();
+
+                result_rating = _TGRating.TryUpdateAll();
+            }
+
+            _logger.LogInformation(
+                "Bookings Counter Timed Hosted Service Result: {Result}", result_rating);
         }
 
         private void CalculateRatings(int count)

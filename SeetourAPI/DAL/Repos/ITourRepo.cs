@@ -6,6 +6,7 @@ namespace SeetourAPI.DAL.Repos
     public interface ITourRepo
     {
         public IEnumerable<Tour> GetAll();
+        public IEnumerable<Tour> GetAllLite();
         public Tour? GetTourById(int id);
         public Tour? EditTour(int id,Tour tour);
         public void AddTour(Tour tour);

@@ -3,13 +3,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OutputCaching;
 using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
+using System;
 
 namespace SeetourAPI.Controllers
 {
@@ -121,10 +124,9 @@ namespace SeetourAPI.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCards()
+        public IActionResult GetAllCards([FromQuery] ToursFilterDto toursFilter)
         {
-            var tours = ITourManger.GetAllCards();
-
+            var tours = ITourManger.GetAllCards(toursFilter);
             if (tours == null)
             {
                 return NotFound();
@@ -134,9 +136,9 @@ namespace SeetourAPI.Controllers
         }
 
         [HttpGet("Upcoming")]
-        public IActionResult GetUpcomingCards()
+        public IActionResult GetUpcomingCards([FromQuery] ToursFilterDto toursFilter)
         {
-            var tours = ITourManger.GetIsCompletedCards(false);
+            var tours = ITourManger.GetIsCompletedCards(false, toursFilter);
 
             if (tours == null)
             {
@@ -147,9 +149,9 @@ namespace SeetourAPI.Controllers
         }
 
         [HttpGet("Past")]
-        public IActionResult GetPastCards()
+        public IActionResult GetPastCards([FromQuery] ToursFilterDto toursFilter)
         {
-            var tours = ITourManger.GetIsCompletedCards(true);
+            var tours = ITourManger.GetIsCompletedCards(true, toursFilter);
 
             if (tours == null)
             {
@@ -157,6 +159,14 @@ namespace SeetourAPI.Controllers
             }
 
             return Ok(tours);
+        }
+
+        [HttpGet("categories")]
+        [OutputCache(Duration = 60*60*24)]
+        [ResponseCache(Duration = 60*60*24)]
+        public IActionResult GetCategories()
+        {
+            return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
         }
     }
 }
