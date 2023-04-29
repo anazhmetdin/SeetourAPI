@@ -18,6 +18,7 @@ using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.Data.Claims;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
+using SeetourAPI.Services;
 
 namespace SeetourAPI
 {
@@ -63,6 +64,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourQuestionRepo, TourQuestionRepo>();
             builder.Services.AddScoped<ITourGuideRepo, TourGuideRepo>();
             builder.Services.AddScoped<IUserRepo, UserRepo>();
+            builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
 
             #endregion
             #region Manger
@@ -126,6 +128,11 @@ namespace SeetourAPI
             });
 
             #endregion
+
+            #region Hosted Services
+            builder.Services.AddHostedService<TimedRatingCalculatorService>();
+            #endregion
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

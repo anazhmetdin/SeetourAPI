@@ -16,5 +16,7 @@ namespace SeetourAPI.BL.TourManger
         public string GetCurrentUserId();
 
         public void EditTourBYAdmin(int id, Tour tour);
+        ICollection<TourCardDto> GetAllCards();
+        ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted);
     }
 }

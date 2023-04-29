@@ -124,5 +124,40 @@ namespace SeetourAPI.BL.TourManger
                 AddedToWishList: false
             );
         }
+
+        public ICollection<TourCardDto> GetAllCards()
+        {
+            var tours = TourRepo.GetAll();
+            return GetTourCardDto(tours);
+        }
+
+        private ICollection<TourCardDto> GetTourCardDto(IEnumerable<Tour> tours)
+        {
+            return tours.Select(tour => new TourCardDto(
+                Id: tour.Id,
+                Photos: tour.Photos.Select(p => p.Url).ToArray(),
+                LocationTo: tour.LocationTo,
+                Price: tour.Price,
+                Likes: tour.Likes.Count,
+                isLiked: false,
+                Bookings: tour.BookingsCount,
+                Capacity: tour.Capacity,
+                TourGuideId: tour.TourGuideId,
+                TourGuideName: tour.TourGuide!.User!.FullName,
+                TourGuideRating: tour.TourGuide.Rating,
+                TourGuideRatingCount: tour.TourGuide.RatingCount,
+                DateFrom: tour.DateFrom.Date.ToString(),
+                DateTo: tour.DateTo.Date.ToString(),
+                Category: tour.Category.ToString(),
+                Title: tour.Title,
+                AddedToWishList: false
+            )).ToList();
+        }
+
+        public ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted)
+        {
+            var tours = TourRepo.GetAll();
+            return GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
+        }
     }
 }

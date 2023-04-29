@@ -78,7 +78,12 @@ namespace SeetourAPI.DAL.Repos
         }
         public IEnumerable<Tour> GetAll()
         {
-            var tours = _Context.Tours.ToList();
+            var tours = _Context.Tours
+                .Include(t => t.Photos)
+                .Include(t => t.Likes)
+                .Include(t => t.Bookings)
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t!.User);
             return tours;
         }
 

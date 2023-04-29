@@ -25,6 +25,7 @@ namespace SeetourAPI.Data.Context
         public DbSet<BookedTour> BookedTours { get; set; }
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
+        public DbSet<TourGuideRating> TourGuideRatings { get; set; }
 
         public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)
@@ -83,6 +84,9 @@ namespace SeetourAPI.Data.Context
                     .WithOne(b => b.TourGuide)
                     .HasForeignKey(b => b.TourGuideId)
                     .OnDelete(DeleteBehavior.Restrict);
+
+                b.Navigation(b => b.TourGuideRating)
+                    .AutoInclude(true);
 
                 //b.Property(tg => tg.Status)
                 //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
@@ -266,6 +270,17 @@ namespace SeetourAPI.Data.Context
 
                 EditRequest[] customers = GetData<EditRequest>("jsons/editrequests.json");
                 b.HasData(customers);
+            });
+            #endregion
+
+            #region TGRatings
+            builder.Entity<TourGuideRating>(b =>
+            {
+                b.HasKey(tg => tg.Id);
+
+                b.HasOne(p => p.TourGuide)
+                    .WithOne(bt => bt.TourGuideRating)
+                    .HasForeignKey<TourGuideRating>(bt => bt.Id);
             });
             #endregion
         }

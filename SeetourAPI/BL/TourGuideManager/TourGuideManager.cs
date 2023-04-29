@@ -10,43 +10,23 @@ namespace SeetourAPI.BL.TourGuideManager
     {
         private readonly ITourGuideRepo _tourguideRepo;
         private readonly ITourRepo _tourRepo;
-        private readonly IUserRepo _userRepo;
-        private readonly IReviewRepo _reviewRepo;
 
-        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo, IUserRepo userRepo, IReviewRepo reviewRepo)
+        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo)
         {
             _tourRepo = tourRepo;
             _tourguideRepo = tourguideRepo;
-            _userRepo = userRepo;
-            _reviewRepo = reviewRepo;
         }
 
         public TourGuideInfoDto? GetInfo(string id)
         {
-            var exist = _tourguideRepo.CheckTourGuide(id);
+            var tourGuide = _tourguideRepo.GetTourGuideLite(id);
 
-            if (!exist)
+            if (tourGuide is null)
             {
                 return null;
             }
 
-            var user = _userRepo.GetUserBasicInfo(id)!;
-
-            var ratings = _reviewRepo.GetTourGuideRatings(id).ToArray();
-
-            return GetTourGuideInfoDto(user, ratings);
-        }
-
-        private TourGuideInfoDto GetTourGuideInfoDto(UserBasicInfoDto user,
-            IEnumerable<int> ratings)
-        {
-            return new TourGuideInfoDto(
-                Id: user.Id,
-                Name: user.Name,
-                ProfilePic: user.Picture??"",
-                Rating: (int)ratings.DefaultIfEmpty(0).Average(),
-                RatingCount: ratings.Count()
-            );
+            return GetTourGuideInfoDto(tourGuide);
         }
 
         private TourGuideInfoDto GetTourGuideInfoDto(TourGuide tourguide)
@@ -55,7 +35,7 @@ namespace SeetourAPI.BL.TourGuideManager
                 Id: tourguide.Id,
                 Name: tourguide.User?.FullName??"",
                 ProfilePic: tourguide.User?.ProfilePic??"",
-                Rating: (int)tourguide.Rating,
+                Rating: tourguide.Rating,
                 RatingCount: tourguide.RatingCount
             );
         }
@@ -128,7 +108,7 @@ namespace SeetourAPI.BL.TourGuideManager
 
         private static TGToursDto FilterTours(ToursFilterDto toursFilter, TGToursDto TGTours)
         {
-            IEnumerable<Tour> tours = TGTours.Tours.ToList();
+            IEnumerable<Tour> tours = TGTours.Tours;
 
             if (toursFilter.HasSeats != null)
                 tours = tours.Where(t => toursFilter.HasSeats + t.BookingsCount <= t.Capacity);

@@ -119,5 +119,44 @@ namespace SeetourAPI.Controllers
             var reviews = _reviewManger.GetAllTourReviews(Id);
             return Ok(reviews);
         }
+
+        [HttpGet]
+        public IActionResult GetAllCards()
+        {
+            var tours = ITourManger.GetAllCards();
+
+            if (tours == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tours);
+        }
+
+        [HttpGet("Upcoming")]
+        public IActionResult GetUpcomingCards()
+        {
+            var tours = ITourManger.GetIsCompletedCards(false);
+
+            if (tours == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tours);
+        }
+
+        [HttpGet("Past")]
+        public IActionResult GetPastCards()
+        {
+            var tours = ITourManger.GetIsCompletedCards(true);
+
+            if (tours == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(tours);
+        }
     }
 }
