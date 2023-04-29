@@ -33,6 +33,9 @@ namespace SeetourAPI
             builder.Services.AddDbContext<SeetourContext>(options =>
                 options.UseSqlServer(connectionString));
             #endregion
+            #region Azure
+            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+            #endregion
             #region repos
             builder.Services.AddScoped<ITourRepo,TourRepo>();
             #endregion
@@ -52,10 +55,6 @@ namespace SeetourAPI
             {
                 o.DefaultAuthenticateScheme = "SeeTour";
                 o.DefaultChallengeScheme = "SeeTour";
-
-            #region Azure
-            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
-            #endregion
 
             }).AddJwtBearer("SeeTour", o =>
             {

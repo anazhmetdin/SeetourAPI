@@ -1,12 +1,7 @@
-﻿using Azure.Storage.Blobs.Models;
-using Azure.Storage.Blobs;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.Services;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Context;
-using System.Text;
 
 namespace SeetourAPI.Controllers
 {
@@ -68,8 +63,8 @@ namespace SeetourAPI.Controllers
 
         #region Delete Image
         [HttpDelete]
-        [Route("DeleteImage")]
-        public async Task<ActionResult> DeleteImage(string url)
+        [Route("deleteimage")]
+        public async Task<ActionResult> Deleteimage(string url)
         {
             var deleted = await _azureBlobStorage.DeleteBlobAsync(url);
 

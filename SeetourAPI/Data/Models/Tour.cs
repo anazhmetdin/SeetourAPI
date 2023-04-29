@@ -13,10 +13,14 @@ namespace SeetourAPI.Data.Models
         public string Title { get; set; } = string.Empty;
         [DataType(DataType.MultilineText)]
         public string Description { get; set; } = string.Empty;
+
+
         [FutureDateRange(1)] // 1 day in the future
         public DateTime DateFrom { get; set; }
         [FutureDateRange(0, "DateFrom")] // at least 0 days after DateFrom
         public DateTime DateTo { get; set; }
+
+
         [Range(0, (double)decimal.MaxValue)]
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(18,2)")]
