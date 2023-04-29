@@ -1,4 +1,4 @@
-﻿using SeetourAPI.DAL.DTO;
+﻿using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 
@@ -24,7 +24,7 @@ namespace SeetourAPI.DAL.Repos
             var tour = _Context.Tours.Find(id);
             if (tour != null)
             {
-                if (tour.TourPostingStatus == Data.Enums.TourPostingStatus.Acceptd)
+                if (tour.TourPostingStatus == Data.Enums.TourPostingStatus.Accepted)
                 {
                     return;
                 }
@@ -48,19 +48,20 @@ namespace SeetourAPI.DAL.Repos
                     t.DateFrom = tour.DateFrom;
                     t.DateTo = tour.DateTo;
                     t.Price = tour.Price;
-                    t.LocationFrom = tour.LocationFrom;
-                    t.LocationTo = tour.LocationTo;
-                    t.LocationToUrl = tour.LocationToUrl;
-                    t.LocationFromUrl = tour.LocationFromUrl;
-                    t.Category = tour.Category;
-                    t.HasTransportation = tour.HasTransportation;
-                    t.LastDateToCancel = tour.LastDateToCancel;
-                    t.Capacity = tour.Capacity;
-                    t.TourGuideId = tour.TourGuideId;
-
+                    t.LocationFrom= tour.LocationFrom;
+                    t.LocationTo= tour.LocationTo;
+                    t.LocationToUrl= tour.LocationToUrl;
+                    t.LocationFromUrl= tour.LocationFromUrl;
+                    t.Category= tour.Category;
+                    t.HasTransportation= tour.HasTransportation;
+                    t.LastDateToCancel= tour.LastDateToCancel; 
+                    t.Capacity= tour.Capacity;
+                    t.TourGuideId= tour.TourGuideId;
+                    _Context.SaveChanges();
+                    return tour;        
                 }
             }
-            return tour;
+            return new Tour();
         }
 
         public void EditTourBYAdmin(int id, Tour tour)
@@ -70,27 +71,49 @@ namespace SeetourAPI.DAL.Repos
                 var t = _Context.Tours.Find(id);
                 if (t != null)
                 {
-                    t.TourPostingStatus = tour.TourPostingStatus;
+                    t.TourPostingStatus= tour.TourPostingStatus;
+                    _Context.SaveChanges();
                 }
             }
         }
         public IEnumerable<Tour> GetAll()
         {
-            var tours = _Context.Tours.ToList();
+            var tours = _Context.Tours
+                .Include(t => t.Photos)
+                .Include(t => t.Likes)
+                .Include(t => t.Bookings)
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t!.User);
             return tours;
         }
 
         public Tour? GetTourById(int id)
         {
-            var tour = _Context.Tours.Find(id);
-            if (tour != null)
-            {
+            var tour= _Context.Tours
+                .Include(a=>a.Photos)
+                .Include(a=>a.Likes)
+                .Include(a=> a.Questions)
+                .Include(a=>a.Bookings)
+                .ThenInclude(a => a.Review)
+                .Include(a=>a.TourGuide)
+                .ThenInclude(a=>a.User)
+                .FirstOrDefault(a=>a.Id==id);
+
+            if(tour != null)
+            { 
                 return tour;
 
             }
-            else return new Tour();
+            else return null;
         }
 
-
+        public IEnumerable<Tour> GetTourGuideTours(string id)
+        {
+            return _Context.Tours
+                .Include(t => t.Photos)
+                .Include(t => t.Likes)
+                .Include(t => t.Bookings)
+                .Where(t => t.TourGuideId == id);
+        }
     }
 }

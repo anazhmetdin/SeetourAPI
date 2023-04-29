@@ -1,4 +1,5 @@
 ﻿using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Validation;
 using System.ComponentModel.DataAnnotations;
@@ -35,19 +36,27 @@ namespace SeetourAPI.Data.Models
         public string LocationToUrl { get; set; } = string.Empty;
         [StringLength(128, MinimumLength = 4)]
         public string LocationTo { get; set; } = string.Empty;
-        public TourCategory Category { get; set; } = TourCategory.OTHER;
+        public TourCategory Category { get; set; } = TourCategory.Other;
         public bool HasTransportation { get; set; }
         [FutureDateRange(0, dateBefore: "DateFrom")] // at most 0 days before after datefrom
         public DateTime LastDateToCancel { get; set; }
         [Range(1, 100)]
         public int Capacity { get; set; }
         // TODO: use all photos in thumbnail gallery
-        public virtual ICollection<Photo> Photos { get; set; } = new HashSet<Photo>();
+        public virtual ICollection<TourPhoto> Photos { get; set; } = new HashSet<TourPhoto>();
         public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
         public virtual ICollection<BookedTour> Bookings { get; set; } = new HashSet<BookedTour>();
         [NotMapped]
-        public int BookingsCount { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked).Count(); }
+        public ICollection<BookedTour> PaidBookings { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked || b.Status == BookedTourStatus.Completed).ToList(); }
+        [NotMapped]
+        public double Rating { get => Reviews.DefaultIfEmpty<Review>(new Review()).Average(a => a.Rating); }
+        [NotMapped]
+        public int RatingCount { get => Reviews.Count; }
+        [NotMapped]
+        public ICollection<Review> Reviews { get => PaidBookings.Where(a => a.Review != null).Select(a=>a.Review!).ToList(); }
+        [NotMapped]
+        public int BookingsCount { get => PaidBookings.Count(); }
         public string TourGuideId { get; set; } = string.Empty;
         public virtual TourGuide? TourGuide { get; set; }
         public TourPostingStatus TourPostingStatus { get; set; }

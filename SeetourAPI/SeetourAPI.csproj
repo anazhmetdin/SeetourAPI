@@ -7,24 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Contolllers\**" />
-    <Compile Remove="Data\DTOs\**" />
-    <Content Remove="Contolllers\**" />
-    <Content Remove="Data\DTOs\**" />
-    <EmbeddedResource Remove="Contolllers\**" />
-    <EmbeddedResource Remove="Data\DTOs\**" />
-    <None Remove="Contolllers\**" />
-    <None Remove="Data\DTOs\**" />
+    <Compile Remove="BL\Dtos\**" />
+    <Content Remove="BL\Dtos\**" />
+    <EmbeddedResource Remove="BL\Dtos\**" />
+    <None Remove="BL\Dtos\**" />
   </ItemGroup>
 
   <ItemGroup>
-	  <PackageReference Include="Azure.Storage.Blobs" Version="12.16.0" />
-	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
+	  <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
+	  <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="7.0.5" />
 	  <PackageReference Include="microsoft.aspnetcore.identity" Version="2.2.0" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.AspNetCore.Authentication" Version="2.2.0" />
 	  <PackageReference Include="microsoft.aspnetcore.authentication.jwtbearer" Version="7.0.5" />
 	  <PackageReference Include="microsoft.aspnetcore.identity.EntityFrameworkCore" Version="7.0.4" />
+	  <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="7.0.0-preview1.0" />
+	  <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="7.0.4" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.4" />
+	  <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.4" />
 	  <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.4">
 		  <PrivateAssets>all</PrivateAssets>
@@ -33,6 +33,10 @@
 	  <PackageReference Include="microsoft.identitymodel.tokens" Version="6.28.1" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
 	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.28.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="jsons\" />
   </ItemGroup>
 
 </Project>

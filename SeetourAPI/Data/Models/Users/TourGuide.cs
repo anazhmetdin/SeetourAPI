@@ -32,5 +32,12 @@ namespace SeetourAPI.Data.Models.Users
         public string IDCardPhoto { get; set; } = string.Empty;
         // TODO: add it to claims for authorization
         public TourGuideStatus Status { get; set; }
+
+        [NotMapped]
+        public int Rating { get => TourGuideRating?.Rating ?? 0; }
+        [NotMapped]
+        public int RatingCount { get => TourGuideRating?.RatingCount ?? 0; }
+
+        public virtual TourGuideRating? TourGuideRating { get; set; }
     }
 }
