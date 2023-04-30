@@ -174,7 +174,7 @@ namespace SeetourAPI.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new TokenDto(tokenString, expiry));
+            return Ok(new TokenDto(tokenString, expiry, user.SecurityLevel));
         }
 
 
