@@ -84,7 +84,8 @@ namespace SeetourAPI.Services
                 DateTo: tour.DateTo.Date.ToString(),
                 Category: tour.Category.ToString(),
                 Title: tour.Title,
-                AddedToWishList: tour.Wishlist.Any(l => l.CustomerId == userId)
+                AddedToWishList: tour.Wishlist.Any(l => l.CustomerId == userId),
+                hasTransportation: tour.HasTransportation
             );
         }
     }

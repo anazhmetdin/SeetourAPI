@@ -17,6 +17,7 @@
         string DateTo,
         string Category,
         string Title,
-        bool AddedToWishList
+        bool AddedToWishList,
+        bool hasTransportation
     );
 }
