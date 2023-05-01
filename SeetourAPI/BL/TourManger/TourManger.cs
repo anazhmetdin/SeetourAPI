@@ -4,6 +4,7 @@ using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Services;
 using System.Security.Claims;
@@ -46,7 +47,25 @@ namespace SeetourAPI.BL.TourManger
                 HasTransportation = AddTourDto.HasTransportation,
                 LastDateToCancel = AddTourDto.LastDateToCancel,
                 Capacity = AddTourDto.Capacity,
-                Photos= AddTourDto.Photos,
+                Category=AddTourDto.category,
+                LocationFromUrl= AddTourDto.LocationFromUrl,
+                LocationToUrl= AddTourDto.LocationToUrl,
+                DateTo=AddTourDto.dateTo,
+                Title=AddTourDto.Title,
+                Photos= AddTourDto.Photos.Select(a => new TourPhoto
+                {
+                  Id= a.Id,
+                  PhotoId= a.PhotoId,
+                   TourId= a.TourId,
+
+                }
+                
+                    
+                    
+                
+                
+                
+                ).ToList(),
                 TourGuideId = id 
             };
 

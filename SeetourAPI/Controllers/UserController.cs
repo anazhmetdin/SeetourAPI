@@ -1,8 +1,14 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Models.Users;
+using System.IdentityModel.Tokens.Jwt;
+=========
+using Microsoft.EntityFrameworkCore;
+using System.Runtime.Intrinsics.X86;
 using Microsoft.IdentityModel.Tokens;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Claims;
@@ -10,6 +16,7 @@ using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 using System.IdentityModel.Tokens.Jwt;
 using System.Runtime.Intrinsics.X86;
+>>>>>>>>> Temporary merge branch 2
 using System.Security.Claims;
 using System.Text;
 
@@ -96,7 +103,7 @@ namespace SeetourAPI.Controllers
                 ProfilePic=registrationDto.profilepic,
                 SSN=registrationDto.SSN,
                 FullName=registrationDto.FullName,
-                Email=registrationDto.Email,
+
                 PhoneNumber=registrationDto.PhoneNumber
             };
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
@@ -104,6 +111,23 @@ namespace SeetourAPI.Controllers
             {
                 return BadRequest();
             }
+<<<<<<<<< Temporary merge branch 1
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
+                new Claim(ClaimTypes.Role,registrationDto.SecurityLevel)
+            };
+            await Usermanger.AddClaimsAsync(UserToAdd, claims);
+            return NoContent();
+
+        }
+   
+        
+        [HttpPost]
+    [Route("Login")]
+    public async Task<ActionResult> Login(LoginDto loginDto)
+    {
+=========
 
             var customerToAdd = new TourGuide()
             {
@@ -118,36 +142,11 @@ namespace SeetourAPI.Controllers
             };
 
             var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.NameIdentifier,UserToAdd.Id),
-                new Claim(ClaimTypes.Role,UserToAdd.SecurityLevel="TourGuide"),
-                new Claim(ClaimType.Status, customerToAdd.Status.ToString())
-            };
-
-            await Usermanger.AddClaimsAsync(UserToAdd, claims);
-
-            context.TourGuides.Add(customerToAdd);
-            await context.SaveChangesAsync();
-
-
             return NoContent();
 
         }
 
 
-
-
-
-
-        [HttpPost]
-        [Route("Login")]
-        public async Task<ActionResult> Login(LoginDto loginDto)
-        {
-            var user = await Usermanger.FindByNameAsync(loginDto.username);
-            if (user == null)
-            {
-                return NotFound();
-            }
             var isAuthenticated = await Usermanger.CheckPasswordAsync(user, loginDto.password);
             if (!isAuthenticated)
             {
@@ -159,6 +158,41 @@ namespace SeetourAPI.Controllers
             new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
                 new Claim(ClaimTypes.Email, "somemail@gmail.com"),
         };
+
+            string base64String = Convert.ToBase64String(bytes);
+
+            // Convert the Base64 string back to a byte array
+            byte[] decodedBytes = Convert.FromBase64String(base64String);
+
+            // Convert the byte array back to a string
+            string decodedString = Encoding.UTF8.GetString(decodedBytes);
+
+>>>>>>>>> Temporary merge branch 2
+            var user = await Usermanger.FindByNameAsync(loginDto.username);
+            if (user == null)
+            {
+                return NotFound();
+            }
+<<<<<<<<< Temporary merge branch 1
+            var isAuthenticated=await Usermanger.CheckPasswordAsync(user, loginDto.password);
+            if(!isAuthenticated)
+            {
+                return Unauthorized();
+            }
+            var claimsList = new List<Claim>
+        {
+            new Claim("AnyKey","Some Value"),
+            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Email, "somemail@gmail.com"),
+        };
+
+            //Geenerate Sectet Key Object
+=========
+            var isAuthenticated = await Usermanger.CheckPasswordAsync(user, base64String);
+            if (!isAuthenticated)
+            {
+                return Unauthorized();
+            }
 
             // Generate Secret Key Object
             var secretKeyString = _configuration.GetValue<string>("SecretKey") ?? string.Empty;

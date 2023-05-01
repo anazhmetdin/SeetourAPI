@@ -11,17 +11,19 @@ namespace SeetourAPI.DAL.DTO
     {
        
         public string Description { get; set; } = string.Empty;
-
+        public string Title { get; set; } = string.Empty;
+        public DateTime dateTo { get; set; }
+        public string LocationFromUrl { get; set; } = string.Empty;
+        public string LocationToUrl { get; set; } = string.Empty;
         public int Capacity { get; set; }
         public decimal Price { get; set; }
         public DateTime DateFrom { get; set; }
         public DateTime LastDateToCancel { get; set; }
         public string LocationFrom { get; set; } = string.Empty;
-    
         public string LocationTo { get; set; } = string.Empty;
         public bool HasTransportation { get; set; }
-        public virtual ICollection<TourPhoto> Photos { get; set; } = new HashSet<TourPhoto>();
+        public virtual ICollection<photoDto> Photos { get; set; } = new HashSet<photoDto>();
 
-
+        public TourCategory category { get; set; } 
     }
 }
