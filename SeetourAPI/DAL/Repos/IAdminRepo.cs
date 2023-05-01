@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Models;
+﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.DAL.Repos
@@ -14,6 +15,7 @@ namespace SeetourAPI.DAL.Repos
         public void EditCustomer(string id, SeetourUser seetourUser);
         public void DeleteSeeTourUser(string id);
         public void updateRole(string id,string securitylevel);
-
-    }
+		bool EditRequest(AdminTourPostRequestDto postRequestDto);
+		bool SaveChanges();
+	}
 }
