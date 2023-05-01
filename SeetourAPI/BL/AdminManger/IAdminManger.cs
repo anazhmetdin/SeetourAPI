@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Models.Users;
+﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.BL.AdminManger
 {
@@ -12,5 +13,8 @@ namespace SeetourAPI.BL.AdminManger
         public void EditCustomer(string id, SeetourUser seetourUser);
         public void DeleteSeeTourUser(string id);
         public void updateRole(string id, string securitylevel);
-    }
+
+        public ICollection<TourCardDto> GetTourRequests();
+		bool UpdateTourStatus(AdminTourPostRequestDto postRequestDto);
+	}
 }

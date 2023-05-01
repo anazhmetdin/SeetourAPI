@@ -1,18 +1,25 @@
-﻿using SeetourAPI.DAL.Repos;
+﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.DAL.Repos;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Services;
 
 namespace SeetourAPI.BL.AdminManger
 {
     public class AdminManger:IAdminManger
     {
         private readonly IAdminRepo adminRepo;
+        private readonly ITourRepo _tourRepo;
+        private readonly ToursHandler _tourHandler;
 
-        public AdminManger(IAdminRepo adminRepo)
-        {
-            this.adminRepo = adminRepo;
-        }
+		public AdminManger(IAdminRepo adminRepo, ITourRepo tourRepo, ToursHandler tourHandler)
+		{
+			this.adminRepo = adminRepo;
+			_tourRepo = tourRepo;
+			_tourHandler = tourHandler;
+		}
 
-        public void DeleteSeeTourUser(string id)
+		public void DeleteSeeTourUser(string id)
         {
             adminRepo.DeleteSeeTourUser(id);
         }
@@ -42,7 +49,19 @@ namespace SeetourAPI.BL.AdminManger
            return adminRepo.GetTourGuides();
         }
 
-        public IEnumerable<SeetourUser> GetUsers()
+		public ICollection<TourCardDto> GetTourRequests()
+		{
+            var tours = _tourRepo.GetTourRequests();
+
+            tours = tours
+                .OrderBy(t => t.DateFrom)
+                .ThenBy(t => t.PostedAt)
+                .Where(t => !t.IsCompleted);
+
+			return _tourHandler.GetTourCardDto(tours);
+		}
+
+		public IEnumerable<SeetourUser> GetUsers()
         {
            return  adminRepo.GetUsers();
         }
@@ -51,5 +70,25 @@ namespace SeetourAPI.BL.AdminManger
         {
            adminRepo.updateRole(id, securitylevel);
         }
-    }
+
+		public bool UpdateTourStatus(AdminTourPostRequestDto postRequestDto)
+		{
+			if (Enum.TryParse(postRequestDto.Status, out TourPostingStatus status))
+            {
+                if (!_tourRepo.UpdatePostingStatus(postRequestDto.TourId, status))
+                {
+                    return false;
+                }
+
+                if (status == TourPostingStatus.EditRequested)
+                {
+                    return adminRepo.EditRequest(postRequestDto) && adminRepo.SaveChanges() && _tourRepo.SaveChanges();
+                }
+
+                return _tourRepo.SaveChanges();
+            }
+
+            return false;
+		}
+	}
 }
