@@ -13,6 +13,7 @@ namespace SeetourAPI.BL.TourManger
         public void DeleteTour(int id);
         public TourDetailsDto? Details(int id);
         public TourCardDto? DetailsCard(int id);
+        public TourDto? DetailsTour(int id);
         public string GetCurrentUserId();
 
         public void EditTourBYAdmin(int id, Tour tour);
