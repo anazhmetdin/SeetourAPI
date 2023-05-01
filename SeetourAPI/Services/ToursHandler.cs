@@ -90,7 +90,7 @@ namespace SeetourAPI.Services
         }
 
 
-        private TourDto GetTourDto(Tour tour, string userId)
+        public TourDto GetTourDto(Tour tour, string userId)
         {
 
             return new TourDto(
