@@ -77,6 +77,17 @@ namespace SeetourAPI.BL.TourGuideManager
             return _handler.GetTourCardDto(tours.Where(t => isCompleted == t.IsCompleted));
         }
 
+
+        //private TGToursDto FilterTours(ToursFilterDto toursFilter, TGToursDto TGTours)
+        //{
+        //    IEnumerable<Tour> tours = TGTours.Tours.ToList();
+
+        //    tours = _handler.Filter(tours, toursFilter);
+
+        //    TGTours = new TGToursDto(TGTours.TourGuide, tours);
+        //    return TGTours;
+        //}
+
         public ICollection<TourCardDto>? CompletedTourCards(
             string tourguideId, bool isCompleted, ToursFilterDto toursFilter)
         {
@@ -89,28 +100,17 @@ namespace SeetourAPI.BL.TourGuideManager
 
             return GetToursCompleted(TGTours.Tours, isCompleted);
         }
+        //public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted, ToursFilterDto toursFilter)
+        //{
+        //    var TGTours = GetTours(tourguideId);
 
-        private TGToursDto FilterTours(ToursFilterDto toursFilter, TGToursDto TGTours)
-        {
-            IEnumerable<Tour> tours = TGTours.Tours.ToList();
+        //    if (TGTours == null)
+        //        return null;
 
-            tours = _handler.Filter(tours, toursFilter);
+        //    TGTours = FilterTours(toursFilter, TGTours);
 
-            TGTours = new TGToursDto(TGTours.TourGuide, tours);
-            return TGTours;
-        }
-
-        public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted, ToursFilterDto toursFilter)
-        {
-            var TGTours = GetTours(tourguideId);
-
-            if (TGTours == null)
-                return null;
-
-            TGTours = FilterTours(toursFilter, TGTours);
-
-            return GetToursCompleted(TGTours, isCompleted);
-        }
+        //    return GetToursCompleted(TGTours, isCompleted);
+        //}
 
         private static TGToursDto FilterTours(ToursFilterDto toursFilter, TGToursDto TGTours)
         {
