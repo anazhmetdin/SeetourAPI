@@ -2,6 +2,7 @@
 using SeetourAPI.Services;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Models.Photos;
 
 namespace SeetourAPI.Controllers
 {

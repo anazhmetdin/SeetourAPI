@@ -101,39 +101,6 @@ namespace SeetourAPI.Controllers
         [Route("CardDetails")]
         public ActionResult DetailsCard(int id)
         {
-            // PastToursList
-            var PastToursList = _context.Tours.Where(x => x.Bookings.Any(b => b.Status == BookedTourStatus.Completed) && x.DateFrom < DateTime.Now).ToList();
-
-
-            //The Top10Tours Order By Rate
-            var Top10Tourss = _context.Tours
-                .OrderByDescending(t => t.Bookings.Where(b => b.Status == BookedTourStatus.Completed && t.DateFrom < DateTime.Now)
-                    .Average(b => b.Review != null ? b.Review.Rating : 0))
-                .Take(10)
-                .ToList();
-
-
-            //     //cancelledInPastTourscount
-            var cancelledInPastTours = _context.Tours
-       .Where(x => x.DateFrom < DateTime.Now && x.Bookings.Any(b => b.Status == BookedTourStatus.Cancelled))
-       .ToList().Count;
-
-            //FullyBookedPastToursCount
-            var fullyBookedPastToursCount = _context.Tours
-
-    .Select(t => t.DateFrom < DateTime.Now && t.Bookings.Any(b => b.Status == BookedTourStatus.Booked) && t.BookingsCount == t.Capacity).ToList().Count;
-
-
-
-            //UpComingTours
-
-            var UpComingToursList = _context.Tours.Where(x => x.Bookings.Any(b => b.Status != BookedTourStatus.Completed) && x.DateFrom > DateTime.Now).ToList();
-
-            //FullyBookedUpcomingToursCount
-            var fullyBookedupcomingToursCount = _context.Tours
-
-    .Select(t => t.Bookings.Any(b => b.Status == BookedTourStatus.Booked) && t.BookingsCount == t.Capacity && t.DateFrom > DateTime.Now).ToList().Count;
-
           var tour=  ITourManger.DetailsCard(id);
             if (tour==null)
             {

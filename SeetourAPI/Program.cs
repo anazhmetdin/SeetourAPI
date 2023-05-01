@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -20,8 +19,6 @@ using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
 using SeetourAPI.Services;
 
-
-
 namespace SeetourAPI
 {
     public class Program
@@ -29,6 +26,7 @@ namespace SeetourAPI
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+
             // Add services to the container.
 
             builder.Services.AddControllers();
@@ -58,7 +56,7 @@ namespace SeetourAPI
             .AddEntityFrameworkStores<SeetourContext>();
             #endregion
             #region repos
-            builder.Services.AddScoped<ITourRepo,TourRepo>();
+            builder.Services.AddScoped<ITourRepo, TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
@@ -66,11 +64,13 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourGuideRepo, TourGuideRepo>();
             builder.Services.AddScoped<IUserRepo, UserRepo>();
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
-
+            #region Azure
+            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+            #endregion
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
-            builder.Services.AddScoped<IReviewManager, ReviewManager> ();
+            builder.Services.AddScoped<IReviewManager, ReviewManager>();
             builder.Services.AddScoped<IAdminManger, AdminManger>();
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
             builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
@@ -79,8 +79,9 @@ namespace SeetourAPI
 
             #endregion
             #region IdentityManger
-            builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 
-            { o.Password.RequireLowercase = true;
+            builder.Services.AddIdentity<SeetourUser, IdentityRole>(o =>
+            {
+                o.Password.RequireLowercase = true;
                 o.Password.RequireUppercase = true;
                 o.Password.RequiredUniqueChars = 1;
                 o.Password.RequiredLength = 8;
@@ -129,34 +130,11 @@ namespace SeetourAPI
             });
 
             #endregion
-            #region Azure
-            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
-            #endregion
-            #region repos
-            builder.Services.AddScoped<ITourRepo,TourRepo>();
-            #endregion
-            #region Manger
-            builder.Services.AddScoped<ITourManger, TourManger>();
-            #endregion
-            #region IdentityManger
-            builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 
-            { o.Password.RequireLowercase = true;
-                o.Password.RequireUppercase = true;
-                o.Password.RequiredUniqueChars = 1;
-                o.Password.RequiredLength = 8;
-            }).AddEntityFrameworkStores<SeetourContext>(); ;
-            #endregion
-            #region Authentication
-            builder.Services.AddAuthentication(o =>
-            {
-                o.DefaultAuthenticateScheme = "SeeTour";
-                o.DefaultChallengeScheme = "SeeTour";
 
             #region Hosted Services
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
             #endregion
 
-            #endregion
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -165,7 +143,6 @@ namespace SeetourAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseCors(corsPolicy);
             app.UseHttpsRedirection();
@@ -179,3 +156,5 @@ namespace SeetourAPI
         }
     }
 }
+
+
