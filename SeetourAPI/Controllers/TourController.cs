@@ -168,5 +168,20 @@ namespace SeetourAPI.Controllers
         {
             return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
         }
+
+        [HttpGet]
+        [Route("tourDet")]
+        public ActionResult DetailsTour(int id)
+        {
+            var tour = ITourManger.DetailsTour(id);
+            if (tour == null)
+            {
+                return NotFound();
+
+            }
+            else
+                return Ok(tour);
+
+        }
     }
 }
