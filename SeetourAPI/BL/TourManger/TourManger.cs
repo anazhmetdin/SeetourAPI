@@ -124,8 +124,8 @@ namespace SeetourAPI.BL.TourManger
                 DateTo: tour.DateTo.Date.ToString(),
                 Category: tour.Category.ToString(),
                 Title: tour.Title,
-                AddedToWishList: false,
-                hasTransportation:false
+                AddedToWishList: false
+                //,hasTransportation:false
             );
         }
 
@@ -141,6 +141,24 @@ namespace SeetourAPI.BL.TourManger
             var tours = TourRepo.GetAllLite().Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
             tours = _handler.Filter(tours, toursFilter);
             return _handler.GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
+        }
+
+        public TourDto? DetailsTour(int id)
+        {
+            var tour = TourRepo.GetTourById(id);
+
+            if (tour == null)
+            {
+                return null;
+            }
+
+            return new TourDto
+            (
+                DetailsCard(id),
+                hasTransportation: false,
+                Description: tour.Description,
+                Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
+            );
         }
     }
 }
