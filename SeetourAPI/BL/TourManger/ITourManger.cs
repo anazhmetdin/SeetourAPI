@@ -18,5 +18,6 @@ namespace SeetourAPI.BL.TourManger
         public void EditTourBYAdmin(int id, Tour tour);
         ICollection<TourCardDto> GetAllCards(ToursFilterDto toursFilter);
         ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted, ToursFilterDto toursFilter);
+        public void PostPastTourPics(int tourid,ICollection<photoDto> photoDtos);
     }
 }

@@ -7,10 +7,6 @@ using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
 using System.Text;
-<<<<<<<<< Temporary merge branch 1
-
-
-=========
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
@@ -18,7 +14,7 @@ using SeetourAPI.Services;
 using SeetourAPI.Data.Claims;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
->>>>>>>>> Temporary merge branch 2
+using SeetourAPI.BL.TourGuideManager;
 
 namespace SeetourAPI
 {
@@ -137,13 +133,9 @@ namespace SeetourAPI
 
             #region Hosted Services
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
-            #endregion
-
-
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
             builder.Services.AddScoped<ToursHandler>();
             #endregion
->>>>>>>>> Temporary merge branch 2
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

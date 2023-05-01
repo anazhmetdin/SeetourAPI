@@ -24,6 +24,6 @@ namespace SeetourAPI.DAL.DTO
         public bool HasTransportation { get; set; }
         public virtual ICollection<photoDto> Photos { get; set; } = new HashSet<photoDto>();
 
-        public TourCategory category { get; set; } 
+        public TourCategory category { get; set; }
     }
 }

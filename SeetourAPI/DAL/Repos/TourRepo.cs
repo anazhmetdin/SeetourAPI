@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.DAL.Repos
@@ -17,6 +18,12 @@ namespace SeetourAPI.DAL.Repos
             _Context.Tours.Add(tour);
             _Context.SaveChanges();
         }
+        public void AddPhotos(ICollection<TourPhoto> tourPhotos)
+        {
+            _Context.TourPhoto.AddRange(tourPhotos);
+            _Context.SaveChanges();
+        }
+
 
         public void DeleteTour(int id)
         {

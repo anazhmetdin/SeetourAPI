@@ -35,7 +35,7 @@ namespace SeetourAPI.BL.TourManger
 
         public void AddTour(AddTourDto AddTourDto)
         {
-            var id = GetCurrentUserId();
+            string id = GetCurrentUserId();
 
             var tour = new Tour
             {
@@ -47,26 +47,22 @@ namespace SeetourAPI.BL.TourManger
                 HasTransportation = AddTourDto.HasTransportation,
                 LastDateToCancel = AddTourDto.LastDateToCancel,
                 Capacity = AddTourDto.Capacity,
-                Category=AddTourDto.category,
-                LocationFromUrl= AddTourDto.LocationFromUrl,
-                LocationToUrl= AddTourDto.LocationToUrl,
-                DateTo=AddTourDto.dateTo,
-                Title=AddTourDto.Title,
-                Photos= AddTourDto.Photos.Select(a => new TourPhoto
+                Category = AddTourDto.category,
+                LocationFromUrl = AddTourDto.LocationFromUrl,
+                LocationToUrl = AddTourDto.LocationToUrl,
+                DateTo = AddTourDto.dateTo,
+                Title = AddTourDto.Title,
+                Photos = AddTourDto.Photos.Select(a => new TourPhoto
                 {
-                  Id= a.Id,
-                  PhotoId= a.PhotoId,
-                   TourId= a.TourId,
+                    Id = a.Id,
+                    PhotoId = a.PhotoId,
+                    TourId = a.TourId,
 
                 }
-                
-                    
-                    
-                
-                
-                
+
+
                 ).ToList(),
-                TourGuideId = id 
+                TourGuideId = id
             };
 
             TourRepo.AddTour(tour);
@@ -159,6 +155,20 @@ namespace SeetourAPI.BL.TourManger
             var tours = TourRepo.GetAllLite().Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
             tours = _handler.Filter(tours, toursFilter);
             return _handler.GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
+        }
+        public void PostPastTourPics(int tourid, ICollection<photoDto> photoDtos)
+        {
+           
+            var Photos = photoDtos.Select(a => new TourPhoto
+            {
+                Id = a.Id,
+                PhotoId = a.PhotoId,
+                TourId = tourid,
+
+            }).ToList();
+
+            TourRepo.AddPhotos(Photos);
+
         }
     }
 }
