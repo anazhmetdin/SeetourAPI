@@ -152,13 +152,14 @@ namespace SeetourAPI.BL.TourManger
                 return null;
             }
 
-            return new TourDto
-            (
-                DetailsCard(id),
-                hasTransportation: false,
-                Description: tour.Description,
-                Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
-            );
+            return _handler.GetTourDto(tour , id.ToString());
+            //    new TourDto
+            //(
+            //    DetailsCard(id),
+            //    hasTransportation: false,
+            //    Description: tour.Description,
+            //    Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
+            //);
         }
     }
 }
