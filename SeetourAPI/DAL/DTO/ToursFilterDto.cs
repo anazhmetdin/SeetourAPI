@@ -1,4 +1,6 @@
-﻿namespace SeetourAPI.DAL.DTO
+﻿using SeetourAPI.Data.Enums;
+
+namespace SeetourAPI.DAL.DTO
 {
     public record ToursFilterDto(
         DateTime? DateFrom, DateTime? DateTo,
@@ -6,5 +8,7 @@
         decimal? PriceFrom, decimal? PriceTo,
         int? CapacityFrom, int? CapacityTo,
         int? HasSeats,
-        decimal? MinRating);
+        decimal? MinRating,
+        string? TourCategory,
+        bool? HasTransportation);
 }

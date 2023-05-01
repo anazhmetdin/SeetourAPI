@@ -81,7 +81,18 @@ namespace SeetourAPI.DAL.Repos
             var tours = _Context.Tours
                 .Include(t => t.Photos)
                 .Include(t => t.Likes)
+                .Include(t => t.Wishlist)
                 .Include(t => t.Bookings)
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t!.User);
+            return tours;
+        }
+        public IEnumerable<Tour> GetAllLite()
+        {
+            var tours = _Context.Tours
+                .Include(t => t.Photos)
+                .Include(t => t.Likes)
+                .Include (t => t.Wishlist)
                 .Include(t => t.TourGuide)
                 .ThenInclude(t => t!.User);
             return tours;
@@ -92,6 +103,7 @@ namespace SeetourAPI.DAL.Repos
             var tour= _Context.Tours
                 .Include(a=>a.Photos)
                 .Include(a=>a.Likes)
+                .Include(t => t.Wishlist)
                 .Include(a=> a.Questions)
                 .Include(a=>a.Bookings)
                 .ThenInclude(a => a.Review)
@@ -112,7 +124,7 @@ namespace SeetourAPI.DAL.Repos
             return _Context.Tours
                 .Include(t => t.Photos)
                 .Include(t => t.Likes)
-                .Include(t => t.Bookings)
+                .Include(t => t.Wishlist)
                 .Where(t => t.TourGuideId == id);
         }
     }
