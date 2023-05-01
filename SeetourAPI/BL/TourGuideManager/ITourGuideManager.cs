@@ -6,6 +6,8 @@ namespace SeetourAPI.BL.TourGuideManager
     {
         public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted, ToursFilterDto toursFilter);
         public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted);
-        TourGuideInfoDto? GetInfo(string id);
+		TourGuideDto? GetApplicant(string id);
+		public ICollection<TourGuideInfoDto> GetApplicants();
+		TourGuideInfoDto? GetInfo(string id);
     }
 }

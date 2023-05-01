@@ -99,5 +99,36 @@ namespace SeetourAPI.BL.TourGuideManager
             TGTours = new TGToursDto(TGTours.TourGuide, tours);
             return TGTours;
         }
-    }
+
+		public ICollection<TourGuideInfoDto> GetApplicants()
+		{
+            var tourguides = _tourguideRepo.GetAll();
+            tourguides = tourguides.Where(t => t.Status == TourGuideStatus.Applied);
+            return tourguides.Select(GetTourGuideInfoDto).ToList();
+		}
+
+		public TourGuideDto? GetApplicant(string id)
+		{
+			var tourguide = _tourguideRepo.GetTourGuideLite(id);
+
+            if (tourguide == null) return null;
+
+			return GetTourGuideDto(tourguide);
+		}
+
+		private TourGuideDto GetTourGuideDto(TourGuide tourguide)
+		{
+            return new TourGuideDto(
+                Id: tourguide.Id,
+                Name: tourguide.User?.FullName ?? "",
+                ProfilePic: tourguide.User?.ProfilePic ?? "",
+                RecipientBankNameAndAddress: tourguide.RecipientBankNameAndAddress,
+                RecipientAccountNumberOrIBAN: tourguide.RecipientAccountNumberOrIBAN,
+                RecipientBankSwiftCode: tourguide.RecipientBankSwiftCode,
+                RecipientNameAndAddress: tourguide.RecipientNameAndAddress,
+                TaxRegistrationNumber: tourguide.TaxRegistrationNumber,
+                IDCardPhoto: tourguide.IDCardPhoto
+            );
+		}
+	}
 }
