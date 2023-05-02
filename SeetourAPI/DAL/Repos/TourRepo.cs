@@ -163,4 +163,9 @@ namespace SeetourAPI.DAL.Repos
 
       
     }
+		public Tour? GetTourByIdLite(int tourId)
+		{
+			return _Context.Tours.Find(tourId);
+		}
+	}
 }

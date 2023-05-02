@@ -19,7 +19,13 @@ namespace SeetourAPI.DAL.Repos
             return _context.TourGuides.Any(tg => tg.Id == id);
         }
 
-        public TourGuide? GetTourGuide(string id)
+		public IEnumerable<TourGuide> GetAll()
+		{
+			return _context.TourGuides
+                .Include(t => t.User);
+		}
+
+		public TourGuide? GetTourGuide(string id)
         {
             return _context.TourGuides
                 .Include(a => a.Tours)
@@ -43,5 +49,10 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.User)
                 .FirstOrDefault(t => t.Id == id);
         }
-    }
+
+		public bool SaveChanges()
+		{
+			return _context.SaveChanges()>0;
+		}
+	}
 }

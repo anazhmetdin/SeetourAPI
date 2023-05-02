@@ -79,12 +79,6 @@ namespace SeetourAPI.Controllers
         }
 
 
-
-
-
-
-
-
         [HttpPost]
         [Route("TourGuideRegistration")]
         public async Task<ActionResult<TokenDto>> Register(TourGuideRegistrationDto registrationDto)
@@ -133,9 +127,6 @@ namespace SeetourAPI.Controllers
             return NoContent();
 
         }
-
-
-
 
 
 
