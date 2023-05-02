@@ -32,9 +32,6 @@ namespace SeetourAPI.Controllers
         }
 
 
-
-
-
         [HttpPost]
         [Route("CustomerRegistration")]
         public async Task<ActionResult<TokenDto>> Register(CustomerRegistrationDto registrationDto)
