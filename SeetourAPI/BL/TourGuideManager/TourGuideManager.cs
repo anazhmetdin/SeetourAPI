@@ -135,11 +135,11 @@ namespace SeetourAPI.BL.TourGuideManager
             );
 		}
 
-		public bool ChangeTourGuideStatus(string id, string status)
+		public bool ChangeTourGuideStatus(TGStatusDto statusDto)
 		{
-			if (Enum.TryParse(status, out TourGuideStatus tourGuideStatus))
+			if (Enum.TryParse(statusDto.Status, out TourGuideStatus tourGuideStatus))
             {
-                var tourguide = _tourguideRepo.GetTourGuideLite(id);
+                var tourguide = _tourguideRepo.GetTourGuideLite(statusDto.Id);
                 if (tourguide == null) { return false; }
                 tourguide.Status = tourGuideStatus;
 				return _tourguideRepo.SaveChanges();

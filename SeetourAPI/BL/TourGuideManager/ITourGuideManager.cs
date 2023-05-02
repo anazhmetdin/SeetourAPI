@@ -4,7 +4,7 @@ namespace SeetourAPI.BL.TourGuideManager
 {
     public interface ITourGuideManager
     {
-		bool ChangeTourGuideStatus(string id, string status);
+		bool ChangeTourGuideStatus(TGStatusDto statusDto);
 		public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted, ToursFilterDto toursFilter);
         public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted);
 		TourGuideDto? GetApplicant(string id);

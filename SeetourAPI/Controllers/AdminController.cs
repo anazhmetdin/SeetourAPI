@@ -120,10 +120,10 @@ namespace SeetourAPI.Controllers
 			return Ok(applicant);
 		}
 
-		[HttpPatch("TourGuide/Applicant/{Id}")]
-		public IActionResult GetApplicants(string Id, string Status)
+		[HttpPatch("TourGuide/Applicant")]
+		public IActionResult GetApplicants(TGStatusDto statusDto)
 		{
-			var updated = _tourGuideManager.ChangeTourGuideStatus(Id, Status);
+			var updated = _tourGuideManager.ChangeTourGuideStatus(statusDto);
 
 			if (!updated)
 			{
