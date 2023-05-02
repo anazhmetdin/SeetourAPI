@@ -7,6 +7,7 @@ using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;

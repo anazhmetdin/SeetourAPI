@@ -182,7 +182,8 @@ namespace SeetourAPI.Controllers
         [ResponseCache(Duration = 60*60*24)]
         public IActionResult GetCategories()
         {
-            return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
+            var reviews = _reviewManger.GetAllTourReviews(Id);
+            return Ok(reviews);
         }
 
     }

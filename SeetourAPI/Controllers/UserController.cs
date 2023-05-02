@@ -158,17 +158,19 @@ namespace SeetourAPI.Controllers
             var claimlist = await Usermanger.GetClaimsAsync(user);
 
             var token = new JwtSecurityToken(
-                claims: claimlist,
+                claims: new List<Claim>(),
                 expires: expiry,
                 signingCredentials: siginingCreedentials);
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new TokenDto(tokenString, expiry, user.SecurityLevel));
+            return Ok(new TokenDto(tokenString, expiry));
         }
 
 
     }
 
 }
+
+
