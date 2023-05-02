@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using SeetourAPI.BL.CustomerManager;
+using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
@@ -7,7 +9,9 @@ using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Services;
+using System;
 using System.Security.Claims;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace SeetourAPI.BL.TourManger
 {
@@ -16,11 +20,15 @@ namespace SeetourAPI.BL.TourManger
         private readonly UserManager<SeetourUser> _userManager;
         private readonly HttpContextAccessor _HttpContextAccessor;
         private readonly ToursHandler _handler;
+        private readonly ITourGuideManager tourGuideManager;
+        private readonly ICustomerManager customerManager;
 
         public ITourRepo TourRepo { get; }
-        public TourManger(ITourRepo tourRepo,
+        public TourManger(ITourGuideManager tourGuideManager, ICustomerManager customerManager, ITourRepo tourRepo,
             UserManager<SeetourUser> userManager, HttpContextAccessor _httpContextAccessor, ToursHandler filter)
         {
+            this.tourGuideManager = tourGuideManager;
+            this.customerManager = customerManager;
             TourRepo = tourRepo;
             _userManager = userManager;
             _HttpContextAccessor = _httpContextAccessor;
@@ -29,7 +37,7 @@ namespace SeetourAPI.BL.TourManger
         public string GetCurrentUserId()
         {
             var userId = _HttpContextAccessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            return userId?? "82712fd4-3d4c-4569-bbb7-a29e65de36ec";
+            return userId ?? "82712fd4-3d4c-4569-bbb7-a29e65de36ec";
         }
 
 
@@ -132,7 +140,7 @@ namespace SeetourAPI.BL.TourManger
                 Bookings: tour.BookingsCount,
                 Capacity: tour.Capacity,
                 TourGuideId: tour.TourGuideId,
-                TourGuideName: tour.TourGuide?.User?.FullName??"",
+                TourGuideName: tour.TourGuide?.User?.FullName ?? "",
                 TourGuideRating: (int)tour.Rating,
                 TourGuideRatingCount: tour.RatingCount,
                 DateFrom: tour.DateFrom.Date.ToString(),
@@ -140,7 +148,7 @@ namespace SeetourAPI.BL.TourManger
                 Category: tour.Category.ToString(),
                 Title: tour.Title,
                 AddedToWishList: false
-                //,hasTransportation:false
+            //,hasTransportation:false
             );
         }
 
@@ -157,10 +165,10 @@ namespace SeetourAPI.BL.TourManger
             tours = _handler.Filter(tours, toursFilter);
             return _handler.GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
         }
-        
+
         public void PostPastTourPics(int tourid, ICollection<photoDto> photoDtos)
         {
-           
+
             var Photos = photoDtos.Select(a => new TourPhoto
             {
                 Id = a.Id,
@@ -182,7 +190,7 @@ namespace SeetourAPI.BL.TourManger
                 return null;
             }
 
-            return _handler.GetTourDto(tour , id.ToString());
+            return _handler.GetTourDto(tour, id.ToString());
             //    new TourDto
             //(
             //    DetailsCard(id),
@@ -190,6 +198,49 @@ namespace SeetourAPI.BL.TourManger
             //    Description: tour.Description,
             //    Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
             //);
+        }
+
+
+        public bool BookTour(int id , int seatsNum , string userId)
+        {
+            var tour = TourRepo.GetTourById(id);
+
+            if (tour == null)
+            {
+                return false; // tour not found
+            }
+
+            var bookedTour = new BookedTour() { 
+                Seats = seatsNum , 
+                CustomerId = userId, 
+                TourId = id 
+            };
+
+            tour.Bookings.Add(bookedTour);
+            return true;
+        }
+
+        public async Task<BookTourDto?> BookTourDetailsAsync(int id)
+        {
+            var tour = TourRepo.GetTourById(id);
+
+            if (tour == null)
+            {
+                return null; // tour not found
+            }
+
+            //get tour guide name by id
+            var tourguideId = tour.TourGuideId;
+            var tourguide = tourGuideManager.GetInfo(tourguideId);
+
+            return new BookTourDto
+                (
+                TourName: tour.Title,
+                TourGuideName: tourguide.Name,
+                DateFrom: tour.DateFrom,
+                DateTo: tour.DateTo,
+                LocationFrom: tour.LocationFrom
+                );
         }
     }
 }
