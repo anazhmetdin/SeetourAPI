@@ -184,6 +184,6 @@ namespace SeetourAPI.Controllers
         {
             return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
         }
->>>>>>>>> Temporary merge branch 2
+
     }
 }

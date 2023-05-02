@@ -14,11 +14,8 @@ namespace SeetourAPI.Data.Context.DTOs
         public decimal TotalUpcomingToursPrice { get; set; }
         public decimal AvgUpcomingToursPrice { get; set; }
         public int TotalUpcomingTourSeats { get; set; }
-
         public decimal avgUpcomingTourSeats { get; set; }
-
         public int FullyBookedUpcomingToursCount { get; set; }
-
         public int ToursInCartCount { get; set; }
 
     }
