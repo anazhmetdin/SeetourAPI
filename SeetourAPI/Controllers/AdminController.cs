@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.AdminManger;
+using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
@@ -15,10 +16,12 @@ namespace SeetourAPI.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminManger _adminManager;
+        private readonly ITourGuideManager _tourGuideManager;
 
-        public AdminController(IAdminManger adminManager)
+        public AdminController(IAdminManger adminManager, ITourGuideManager tourGuideManager)
         {
             _adminManager = adminManager;
+            _tourGuideManager = tourGuideManager;
         }
 
         [HttpGet("all")]
@@ -96,6 +99,38 @@ namespace SeetourAPI.Controllers
                 return NoContent();
 
             return BadRequest();
+		}
+
+		[HttpGet("TourGuide/Applicant")]
+		public IActionResult GetApplicants()
+		{
+			return Ok(_tourGuideManager.GetApplicants());
+		}
+
+		[HttpGet("TourGuide/Applicant/{Id}")]
+		public IActionResult GetApplicants(string Id)
+		{
+			var applicant = _tourGuideManager.GetApplicant(Id);
+
+			if (applicant == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(applicant);
+		}
+
+		[HttpPatch("TourGuide/Applicant")]
+		public IActionResult GetApplicants(TGStatusDto statusDto)
+		{
+			var updated = _tourGuideManager.ChangeTourGuideStatus(statusDto);
+
+			if (!updated)
+			{
+				return BadRequest();
+			}
+
+			return Ok();
 		}
 	}
 
