@@ -1,9 +1,10 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Services;
 using System.Security.Claims;
@@ -34,7 +35,7 @@ namespace SeetourAPI.BL.TourManger
 
         public void AddTour(AddTourDto AddTourDto)
         {
-            var id = GetCurrentUserId();
+            string id = GetCurrentUserId();
 
             var tour = new Tour
             {
@@ -46,8 +47,22 @@ namespace SeetourAPI.BL.TourManger
                 HasTransportation = AddTourDto.HasTransportation,
                 LastDateToCancel = AddTourDto.LastDateToCancel,
                 Capacity = AddTourDto.Capacity,
-                Photos= AddTourDto.Photos,
-                TourGuideId = id 
+                Category = AddTourDto.category,
+                LocationFromUrl = AddTourDto.LocationFromUrl,
+                LocationToUrl = AddTourDto.LocationToUrl,
+                DateTo = AddTourDto.dateTo,
+                Title = AddTourDto.Title,
+                Photos = AddTourDto.Photos.Select(a => new TourPhoto
+                {
+                    Id = a.Id,
+                    PhotoId = a.PhotoId,
+                    TourId = a.TourId,
+
+                }
+
+
+                ).ToList(),
+                TourGuideId = id
             };
 
             TourRepo.AddTour(tour);
@@ -142,6 +157,21 @@ namespace SeetourAPI.BL.TourManger
             tours = _handler.Filter(tours, toursFilter);
             return _handler.GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
         }
+        
+        public void PostPastTourPics(int tourid, ICollection<photoDto> photoDtos)
+        {
+           
+            var Photos = photoDtos.Select(a => new TourPhoto
+            {
+                Id = a.Id,
+                PhotoId = a.PhotoId,
+                TourId = tourid,
+
+            }).ToList();
+
+            TourRepo.AddPhotos(Photos);
+        }
+
 
         public TourDto? DetailsTour(int id)
         {

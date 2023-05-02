@@ -24,7 +24,7 @@ namespace SeetourAPI.Controllers
 
         public UserManager<SeetourUser> Usermanger { get; }
 
-        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration,SeetourContext context)
+        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration, SeetourContext context)
         {
             Usermanger = _Usermanger;
             _configuration = configuration;
@@ -46,11 +46,11 @@ namespace SeetourAPI.Controllers
                 ProfilePic = registrationDto.profilepic,
                 SSN = registrationDto.SSN,
                 FullName = registrationDto.FullName,
-                Email= registrationDto.Email,
+                Email = registrationDto.Email,
                 PhoneNumber = registrationDto.PhoneNumber
 
             };
-            
+
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
             {
@@ -87,11 +87,11 @@ namespace SeetourAPI.Controllers
             var UserToAdd = new SeetourUser()
             {
                 UserName = registrationDto.UserName,
-                ProfilePic=registrationDto.profilepic,
-                SSN=registrationDto.SSN,
-                FullName=registrationDto.FullName,
-                Email=registrationDto.Email,
-                PhoneNumber=registrationDto.PhoneNumber
+                ProfilePic = registrationDto.profilepic,
+                SSN = registrationDto.SSN,
+                FullName = registrationDto.FullName,
+                Email = registrationDto.Email,
+                PhoneNumber = registrationDto.PhoneNumber
             };
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
@@ -172,5 +172,3 @@ namespace SeetourAPI.Controllers
     }
 
 }
-
-

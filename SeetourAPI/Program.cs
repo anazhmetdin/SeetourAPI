@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,12 +10,13 @@ using System.Text;
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
-using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.Services;
 using SeetourAPI.Data.Claims;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
 using SeetourAPI.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using SeetourAPI.BL.TourGuideManager;
 
 namespace SeetourAPI
 {
@@ -65,6 +65,10 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
             builder.Services.AddScoped<TourBookingsRepo>();
 
+            builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
+            #region Azure
+            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+            #endregion
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
@@ -131,10 +135,10 @@ namespace SeetourAPI
 
             #region Hosted Services
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
+            builder.Services.AddHostedService<TimedRatingCalculatorService>();
             builder.Services.AddScoped<ToursHandler>();
             builder.Services.AddHostedService<AdminInitializer>();
             #endregion
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -156,3 +160,5 @@ namespace SeetourAPI
         }
     }
 }
+
+

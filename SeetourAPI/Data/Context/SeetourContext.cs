@@ -17,6 +17,7 @@ namespace SeetourAPI.Data.Context
         private readonly PasswordHasher<SeetourUser> _passwordHasher;
 
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<Photo> Photos { get; set; }
         public DbSet<TourGuide> TourGuides { get; set; }
         public DbSet<Tour> Tours { get; set; }
         public DbSet<Review> Reviews { get; set; }
@@ -27,6 +28,8 @@ namespace SeetourAPI.Data.Context
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
         public DbSet<TourGuideRating> TourGuideRatings { get; set; }
         public DbSet<TourBooking> TourBookings { get; set; }
+        public DbSet<TourPhoto> TourPhoto { get; set; }
+
         public DbSet<EditRequest> EditRequests { get; set; }
 
         public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
