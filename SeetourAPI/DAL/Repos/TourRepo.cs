@@ -161,11 +161,10 @@ namespace SeetourAPI.DAL.Repos
             return true;
         }
 
-      
+        public Tour? GetTourByIdLite(int tourId)
+        {
+            return _Context.Tours.Find(tourId);
+        }
+
     }
-		public Tour? GetTourByIdLite(int tourId)
-		{
-			return _Context.Tours.Find(tourId);
-		}
-	}
 }
