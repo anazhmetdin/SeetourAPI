@@ -49,5 +49,10 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.User)
                 .FirstOrDefault(t => t.Id == id);
         }
-    }
+
+		public bool SaveChanges()
+		{
+			return _context.SaveChanges()>0;
+		}
+	}
 }

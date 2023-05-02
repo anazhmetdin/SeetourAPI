@@ -8,5 +8,6 @@ namespace SeetourAPI.DAL.Repos
 		IEnumerable<TourGuide> GetAll();
 		public TourGuide? GetTourGuide(string id);
         public TourGuide? GetTourGuideLite(string id);
-    }
+		bool SaveChanges();
+	}
 }

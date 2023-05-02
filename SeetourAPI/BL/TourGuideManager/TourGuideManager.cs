@@ -121,14 +121,33 @@ namespace SeetourAPI.BL.TourGuideManager
             return new TourGuideDto(
                 Id: tourguide.Id,
                 Name: tourguide.User?.FullName ?? "",
+                Username: tourguide.User?.UserName?? "",
                 ProfilePic: tourguide.User?.ProfilePic ?? "",
                 RecipientBankNameAndAddress: tourguide.RecipientBankNameAndAddress,
                 RecipientAccountNumberOrIBAN: tourguide.RecipientAccountNumberOrIBAN,
                 RecipientBankSwiftCode: tourguide.RecipientBankSwiftCode,
                 RecipientNameAndAddress: tourguide.RecipientNameAndAddress,
                 TaxRegistrationNumber: tourguide.TaxRegistrationNumber,
-                IDCardPhoto: tourguide.IDCardPhoto
+                IDCardPhoto: tourguide.IDCardPhoto,
+                SSN: tourguide.User?.SSN??"",
+                Email: tourguide.User?.Email??"",
+                Phone: tourguide.User?.PhoneNumber??""
             );
+		}
+
+		public bool ChangeTourGuideStatus(string id, string status)
+		{
+			if (Enum.TryParse(status, out TourGuideStatus tourGuideStatus))
+            {
+                var tourguide = _tourguideRepo.GetTourGuideLite(id);
+                if (tourguide == null) { return false; }
+                tourguide.Status = tourGuideStatus;
+				return _tourguideRepo.SaveChanges();
+            }
+            else
+            {
+                return false;
+            }
 		}
 	}
 }

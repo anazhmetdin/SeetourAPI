@@ -4,6 +4,7 @@ namespace SeetourAPI.DAL.DTO
 {
 	public record TourGuideDto(
 		string Id,
+		string Username,
 		string Name,
 		string ProfilePic,
 		string RecipientBankNameAndAddress,
@@ -11,6 +12,9 @@ namespace SeetourAPI.DAL.DTO
 		string RecipientBankSwiftCode,
 		string RecipientNameAndAddress,
 		string TaxRegistrationNumber,
-		string IDCardPhoto
+		string IDCardPhoto,
+		string SSN,
+		string Email,
+		string Phone
 	);
 }

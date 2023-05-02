@@ -110,14 +110,27 @@ namespace SeetourAPI.Controllers
 		[HttpGet("TourGuide/Applicant/{Id}")]
 		public IActionResult GetApplicants(string Id)
 		{
-            var applicant = _tourGuideManager.GetApplicant(Id);
+			var applicant = _tourGuideManager.GetApplicant(Id);
 
-            if (applicant == null)
-            {
-                return NotFound();
-            }
+			if (applicant == null)
+			{
+				return NotFound();
+			}
 
 			return Ok(applicant);
+		}
+
+		[HttpPatch("TourGuide/Applicant/{Id}")]
+		public IActionResult GetApplicants(string Id, string Status)
+		{
+			var updated = _tourGuideManager.ChangeTourGuideStatus(Id, Status);
+
+			if (!updated)
+			{
+				return BadRequest();
+			}
+
+			return Ok();
 		}
 	}
 
