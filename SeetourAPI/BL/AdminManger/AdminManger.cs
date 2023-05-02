@@ -75,10 +75,11 @@ namespace SeetourAPI.BL.AdminManger
 		{
 			if (Enum.TryParse(postRequestDto.Status, out TourPostingStatus status))
             {
-                if (!_tourRepo.UpdatePostingStatus(postRequestDto.TourId, status))
-                {
-                    return false;
-                }
+                var tour = _tourRepo.GetTourByIdLite(postRequestDto.TourId);
+                
+                if (tour == null || tour.TourPostingStatus == TourPostingStatus.Accepted) { return false; }
+                
+                tour.TourPostingStatus = status;
 
                 if (status == TourPostingStatus.EditRequested)
                 {

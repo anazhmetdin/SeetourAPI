@@ -17,7 +17,7 @@ namespace SeetourAPI.DAL.DTO
         string DateTo,
         string Category,
         string Title,
-        bool AddedToWishList,
-        bool hasTransportation
+        bool AddedToWishList
+        //bool hasTransportation
     );
 }

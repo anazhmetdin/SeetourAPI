@@ -150,15 +150,9 @@ namespace SeetourAPI.DAL.Repos
 			return _Context.SaveChanges() > 0;
 		}
 
-		public bool UpdatePostingStatus(int tourId, TourPostingStatus status)
+		public Tour? GetTourByIdLite(int tourId)
 		{
-			var tour = _Context.Tours.Find(tourId);
-
-            if (tour == null) { return false; }
-
-            tour.TourPostingStatus = status;
-
-            return true;
+			return _Context.Tours.Find(tourId);
 		}
 	}
 }

@@ -139,8 +139,8 @@ namespace SeetourAPI.BL.TourManger
                 DateTo: tour.DateTo.Date.ToString(),
                 Category: tour.Category.ToString(),
                 Title: tour.Title,
-                AddedToWishList: false,
-                hasTransportation:false
+                AddedToWishList: false
+                //,hasTransportation:false
             );
         }
 
@@ -157,6 +157,7 @@ namespace SeetourAPI.BL.TourManger
             tours = _handler.Filter(tours, toursFilter);
             return _handler.GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
         }
+        
         public void PostPastTourPics(int tourid, ICollection<photoDto> photoDtos)
         {
            
@@ -169,7 +170,26 @@ namespace SeetourAPI.BL.TourManger
             }).ToList();
 
             TourRepo.AddPhotos(Photos);
+        }
 
+
+        public TourDto? DetailsTour(int id)
+        {
+            var tour = TourRepo.GetTourById(id);
+
+            if (tour == null)
+            {
+                return null;
+            }
+
+            return _handler.GetTourDto(tour , id.ToString());
+            //    new TourDto
+            //(
+            //    DetailsCard(id),
+            //    hasTransportation: false,
+            //    Description: tour.Description,
+            //    Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
+            //);
         }
     }
 }
