@@ -13,10 +13,12 @@ namespace SeetourAPI.BL.TourManger
         public void DeleteTour(int id);
         public TourDetailsDto? Details(int id);
         public TourCardDto? DetailsCard(int id);
+        public TourDto? DetailsTour(int id);
         public string GetCurrentUserId();
 
         public void EditTourBYAdmin(int id, Tour tour);
         ICollection<TourCardDto> GetAllCards(ToursFilterDto toursFilter);
         ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted, ToursFilterDto toursFilter);
+        public void PostPastTourPics(int tourid,ICollection<photoDto> photoDtos);
     }
 }

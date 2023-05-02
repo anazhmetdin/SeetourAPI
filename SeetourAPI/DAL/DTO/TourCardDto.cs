@@ -1,4 +1,4 @@
-﻿namespace SeetourAPI.DAL.DTO
+namespace SeetourAPI.DAL.DTO
 {
     public record TourCardDto(
         int Id,
@@ -18,5 +18,6 @@
         string Category,
         string Title,
         bool AddedToWishList
+        //bool hasTransportation
     );
 }

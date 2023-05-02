@@ -1,4 +1,3 @@
-
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -11,11 +10,13 @@ using System.Text;
 using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.AdminManger;
-using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.Services;
 using SeetourAPI.Data.Claims;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
 using SeetourAPI.Services;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using SeetourAPI.BL.TourGuideManager;
 
 namespace SeetourAPI
 {
@@ -54,7 +55,7 @@ namespace SeetourAPI
             .AddEntityFrameworkStores<SeetourContext>();
             #endregion
             #region repos
-            builder.Services.AddScoped<ITourRepo,TourRepo>();
+            builder.Services.AddScoped<ITourRepo, TourRepo>();
             builder.Services.AddScoped<IReviewRepo, ReviewRepo>();
             builder.Services.AddScoped<IAdminRepo, AdminRepo>();
             builder.Services.AddScoped<ITourAnswerRepo, TourAnswerRepo>();
@@ -64,10 +65,14 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
             builder.Services.AddScoped<TourBookingsRepo>();
 
+            builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
+            #region Azure
+            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+            #endregion
             #endregion
             #region Manger
             builder.Services.AddScoped<ITourManger, TourManger>();
-            builder.Services.AddScoped<IReviewManager, ReviewManager> ();
+            builder.Services.AddScoped<IReviewManager, ReviewManager>();
             builder.Services.AddScoped<IAdminManger, AdminManger>();
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
             builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
@@ -76,8 +81,9 @@ namespace SeetourAPI
 
             #endregion
             #region IdentityManger
-            builder.Services.AddIdentity<SeetourUser, IdentityRole>(o => 
-            { o.Password.RequireLowercase = true;
+            builder.Services.AddIdentity<SeetourUser, IdentityRole>(o =>
+            {
+                o.Password.RequireLowercase = true;
                 o.Password.RequireUppercase = true;
                 o.Password.RequiredUniqueChars = 1;
                 o.Password.RequiredLength = 8;
@@ -129,9 +135,10 @@ namespace SeetourAPI
 
             #region Hosted Services
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
+            builder.Services.AddHostedService<TimedRatingCalculatorService>();
             builder.Services.AddScoped<ToursHandler>();
+            builder.Services.AddHostedService<AdminInitializer>();
             #endregion
-
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -149,7 +156,9 @@ namespace SeetourAPI
 
             app.MapControllers();
 
-            app.Run();
+			app.Run();
         }
     }
 }
+
+

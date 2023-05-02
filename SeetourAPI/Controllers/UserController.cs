@@ -24,7 +24,7 @@ namespace SeetourAPI.Controllers
 
         public UserManager<SeetourUser> Usermanger { get; }
 
-        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration,SeetourContext context)
+        public UserController(UserManager<SeetourUser> _Usermanger, IConfiguration configuration, SeetourContext context)
         {
             Usermanger = _Usermanger;
             _configuration = configuration;
@@ -46,11 +46,11 @@ namespace SeetourAPI.Controllers
                 ProfilePic = registrationDto.profilepic,
                 SSN = registrationDto.SSN,
                 FullName = registrationDto.FullName,
-                Email= registrationDto.Email,
+                Email = registrationDto.Email,
                 PhoneNumber = registrationDto.PhoneNumber
 
             };
-            
+
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
             {
@@ -79,12 +79,6 @@ namespace SeetourAPI.Controllers
         }
 
 
-
-
-
-
-
-
         [HttpPost]
         [Route("TourGuideRegistration")]
         public async Task<ActionResult<TokenDto>> Register(TourGuideRegistrationDto registrationDto)
@@ -93,11 +87,11 @@ namespace SeetourAPI.Controllers
             var UserToAdd = new SeetourUser()
             {
                 UserName = registrationDto.UserName,
-                ProfilePic=registrationDto.profilepic,
-                SSN=registrationDto.SSN,
-                FullName=registrationDto.FullName,
-                Email=registrationDto.Email,
-                PhoneNumber=registrationDto.PhoneNumber
+                ProfilePic = registrationDto.profilepic,
+                SSN = registrationDto.SSN,
+                FullName = registrationDto.FullName,
+                Email = registrationDto.Email,
+                PhoneNumber = registrationDto.PhoneNumber
             };
             var result = await Usermanger.CreateAsync(UserToAdd, registrationDto.Password);
             if (!result.Succeeded)
@@ -136,9 +130,6 @@ namespace SeetourAPI.Controllers
 
 
 
-
-
-
         [HttpPost]
         [Route("Login")]
         public async Task<ActionResult> Login(LoginDto loginDto)
@@ -153,12 +144,6 @@ namespace SeetourAPI.Controllers
             {
                 return Unauthorized();
             }
-            var claimsList = new List<Claim>
-        {
-            new Claim("AnyKey","Some Value"),
-            new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
-                new Claim(ClaimTypes.Email, "somemail@gmail.com"),
-        };
 
             // Generate Secret Key Object
             var secretKeyString = _configuration.GetValue<string>("SecretKey") ?? string.Empty;
@@ -180,12 +165,10 @@ namespace SeetourAPI.Controllers
             var tokenHandler = new JwtSecurityTokenHandler();
             var tokenString = tokenHandler.WriteToken(token);
 
-            return Ok(new TokenDto(tokenString, expiry));
+            return Ok(new TokenDto(tokenString, expiry, user.SecurityLevel));
         }
 
 
     }
 
 }
-
-

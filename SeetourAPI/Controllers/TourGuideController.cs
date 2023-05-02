@@ -9,6 +9,7 @@ using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
 using System;
+using System.Security.Claims;
 
 namespace SeetourAPI.Controllers
 {
@@ -70,5 +71,19 @@ namespace SeetourAPI.Controllers
             }
             return Ok(info);
         }
+
+        [Authorize(policy:Policies.AllowTourGuide)]
+        [HttpGet]
+        public IActionResult GetInfo()
+        {
+            var Id = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			var info = _tourGuideManager.GetInfo(Id);
+			if (info == null)
+			{
+				return NotFound();
+			}
+			return Ok(info);
+		}
     }
 }

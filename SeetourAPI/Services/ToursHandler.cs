@@ -85,6 +85,19 @@ namespace SeetourAPI.Services
                 Category: tour.Category.ToString(),
                 Title: tour.Title,
                 AddedToWishList: tour.Wishlist.Any(l => l.CustomerId == userId)
+                //hasTransportation: tour.HasTransportation
+            );
+        }
+
+
+        public TourDto GetTourDto(Tour tour, string userId)
+        {
+
+            return new TourDto(
+                GetTourCardDto(tour,  userId),
+                hasTransportation: tour.HasTransportation,
+                Description:tour.Description,
+                Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
             );
         }
     }

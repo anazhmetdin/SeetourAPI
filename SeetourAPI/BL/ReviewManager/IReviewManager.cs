@@ -1,4 +1,4 @@
-﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.BL.ReviewManager

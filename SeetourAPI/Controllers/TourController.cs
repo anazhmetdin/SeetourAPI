@@ -32,12 +32,29 @@ namespace SeetourAPI.Controllers
             _reviewManger = reviewManger;
         }
         
-        [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPost]
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         public ActionResult CreateTour(AddTourDto addTourDto)
         {
               ITourManger.AddTour(addTourDto);
                 return Created("", addTourDto);    
+        }
+
+        [HttpPost]
+        [Route("AddPics")]
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
+        public ActionResult AddPastTourPics(int tourid,ICollection<photoDto> photoDtos)
+        {
+           var tour= ITourManger.GetTourById(tourid);
+            string tourguideid = ITourManger.GetCurrentUserId();
+            if(tour.TourGuideId== tourguideid)
+            {
+
+            ITourManger.PostPastTourPics(tourid, photoDtos);
+            return Created("", photoDtos);
+            }
+            return Unauthorized();
+           
         }
 
         [Authorize(Policy = Policies.AcceptedTourGuides)]
@@ -104,7 +121,6 @@ namespace SeetourAPI.Controllers
         [Route("CardDetails")]
         public ActionResult DetailsCard(int id)
         {
-
           var tour=  ITourManger.DetailsCard(id);
             if (tour==null)
             {
@@ -168,5 +184,6 @@ namespace SeetourAPI.Controllers
         {
             return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
         }
+>>>>>>>>> Temporary merge branch 2
     }
 }

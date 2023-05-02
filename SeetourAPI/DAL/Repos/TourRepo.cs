@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Enums;
 
 namespace SeetourAPI.DAL.Repos
 {
@@ -17,6 +19,12 @@ namespace SeetourAPI.DAL.Repos
             _Context.Tours.Add(tour);
             _Context.SaveChanges();
         }
+        public void AddPhotos(ICollection<TourPhoto> tourPhotos)
+        {
+            _Context.TourPhoto.AddRange(tourPhotos);
+            _Context.SaveChanges();
+        }
+
 
         public void DeleteTour(int id)
         {
@@ -127,5 +135,24 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.Wishlist)
                 .Where(t => t.TourGuideId == id);
         }
-    }
+
+		public IEnumerable<Tour> GetTourRequests()
+		{
+            return _Context.Tours
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t!.User)
+                .Include(t => t.Photos)
+                .Where(t => t.TourPostingStatus == TourPostingStatus.Pending);
+		}
+
+		public bool SaveChanges()
+		{
+			return _Context.SaveChanges() > 0;
+		}
+
+		public Tour? GetTourByIdLite(int tourId)
+		{
+			return _Context.Tours.Find(tourId);
+		}
+	}
 }
