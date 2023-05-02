@@ -39,14 +39,20 @@ namespace SeetourAPI.BL.TourGuideManager
             {
                 var statistcs = new TourGuideStatistics
                 {
-                    PastToursCount = _tourGuideDashBoard.PastToursCount(id)
-                    //Top10Tours = _tourGuideDashBoard.Top10Tours(id).ToList(),
-                    //UpComingToursCount = _tourGuideDashBoard.UpComingToursCount(id),
-                    //CancelledInPastTourscount = _tourGuideDashBoard.cancelledInPastTourscount(id),
-                    //FullyBookedPastToursCount = _tourGuideDashBoard.FullyBookedPastTourscount(id),
-                    //FullyBookedUpcomingToursCount = _tourGuideDashBoard.FullyBookedUpComingTourscount(id),
-                    //ToursInCartCount = _tourGuideDashBoard.UpComingToursInCartListCount(id)
-
+                    PastToursCount = _tourGuideDashBoard.PastToursCount(id),
+                   // Top10Tours = _tourGuideDashBoard.Top10Tours(id).ToList(),
+                    UpComingToursCount = _tourGuideDashBoard.UpComingToursCount(id),
+                    CancelledInPastTourscount = _tourGuideDashBoard.cancelledInPastTourscount(id),
+                    FullyBookedPastToursCount = _tourGuideDashBoard.FullyBookedPastTourscount(id),
+                    FullyBookedUpcomingToursCount = _tourGuideDashBoard.FullyBookedUpComingTourscount(id),
+                    ToursInCartCount = _tourGuideDashBoard.UpComingToursInCartListCount(id),
+                    AvgPastoursPrice=_tourGuideDashBoard.AveragePastToursPrice(id),
+                    TotalPastToursPrice=_tourGuideDashBoard.TotalPastToursPrice(id),
+                    TotalUpcomingToursPrice=_tourGuideDashBoard.TotalUpcomingToursPrice(id),
+                    AvgUpcomingToursPrice=_tourGuideDashBoard.AveragePastToursPrice(id),
+                    TotalUpcomingTourSeats=_tourGuideDashBoard.TotalUpcomingTourSeats(id),
+                    avgUpcomingTourSeats=_tourGuideDashBoard.AvgUpcomingTourSeats(id)
+                    
 
                 };
                 return statistcs;

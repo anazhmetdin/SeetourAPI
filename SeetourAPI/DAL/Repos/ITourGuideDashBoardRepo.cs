@@ -15,7 +15,7 @@ namespace SeetourAPI.DAL.Repos
             public int PastToursCount(string id);
 
             //The Top10Tours Ordered By Rate
-            public ICollection<Tour> Top10Tours(string id);
+           // public ICollection<Tour> Top10Tours(string id);
 
             //cancelledInPastTours
             public ICollection<Tour> cancelledInPastTours(string id);
@@ -48,6 +48,26 @@ namespace SeetourAPI.DAL.Repos
 
             //UpcomingToursInCartListCount
             public int UpComingToursInCartListCount(string id);
+        // Get the total price of all Past tours
+        public decimal TotalPastToursPrice(string id);
+
+        // Get the average price of all Past tours
+        public decimal AveragePastToursPrice(string id);
+
+        // Get the total price of all upcoming tours
+        public decimal TotalUpcomingToursPrice(string id);
+
+        // Get the average price of all upcoming tours
+        public decimal AverageUpcomingoursPrice(string id);
+
+        // Get the total number of seats available in all upcoming tours
+        public int TotalUpcomingTourSeats(string id);
+
+        // Get the average number of seats available per upcoming tour
+        public double AvgUpcomingTourSeats(string id);
+
         
+        
+
     }
 }

@@ -16,7 +16,7 @@ namespace SeetourAPI.DAL.Repos
         }
         public ICollection<Tour> PastTours(string id)
         {
-            var PastToursList = _Context.Tours.Where(x => x.TourGuideId == id && x.DateFrom < DateTime.Now && x.Bookings.Any(b => b.Status == BookedTourStatus.Completed)).ToList();
+            var PastToursList = _Context.Tours.Where(x => x.TourGuideId == id && x.DateFrom < DateTime.Now).ToList();
             if (PastToursList != null)
             {
 
@@ -30,27 +30,28 @@ namespace SeetourAPI.DAL.Repos
             return PastTours(id).Count();
         }
 
-        public ICollection<Tour> Top10Tours(string id)
-        {
-            var Top10Tourss = _Context.Tours
-    .Where(t => t.TourGuideId == id && t.DateFrom < DateTime.Now && t.Bookings.Any(b => b.Status == BookedTourStatus.Completed))
-    .OrderByDescending(t => t.Bookings.Where(b => b.Status == BookedTourStatus.Completed)
-        .Average(b => b.Review != null ? b.Review.Rating : 0))
-    .Take(10)
-    .ToList();
-            if(Top10Tourss != null)
-            {
+    //    public ICollection<Tour> Top10Tours(string id)
+    //    {
+    //        var Top10Tourss = _Context.Tours
+    //.Where(t => t.TourGuideId == id && t.DateFrom < DateTime.Now && t.Bookings.Any(b => b.Status == BookedTourStatus.Completed))
+    //.OrderByDescending(t => t.Bookings.Where(b => b.Status == BookedTourStatus.Completed)
+    //    .Average(b => b.Review != null ? b.Review.Rating : 0))
+    //.Take(10)
+    //.ToList();
+    //        if(Top10Tourss != null)
+    //        {
 
-            return Top10Tourss;
-            }
-            return new List<Tour>();
+    //        return Top10Tourss;
+    //        }
+    //        return new List<Tour>();
 
-        }
+    //    }
 
         public ICollection<Tour> cancelledInPastTours(string id)
         {
             var cancelledtours = _Context.Tours
-       .Where(x => x.TourGuideId == id && x.DateFrom < DateTime.Now && x.Bookings.Any(b => b.Status == BookedTourStatus.Cancelled))
+       .Where(x => x.TourGuideId == id && x.DateFrom < DateTime.Now && x.Bookings.
+       Any(b => b.Status == BookedTourStatus.Cancelled))
        .ToList();
             if(cancelledtours != null)
             {
@@ -68,8 +69,7 @@ namespace SeetourAPI.DAL.Repos
         {
             var fullybooked = _Context.Tours.Where(t => t.TourGuideId == id
                         && t.DateFrom < DateTime.Now
-                        && t.Bookings.Any(b => b.Status == BookedTourStatus.Booked)
-                        && t.BookingsCount == t.Capacity)
+                        && t.Bookings.Any(b => b.Status == BookedTourStatus.Booked && b.Status == BookedTourStatus.Completed))
               .ToList();
 
             if (fullybooked != null)
@@ -88,8 +88,7 @@ namespace SeetourAPI.DAL.Repos
         public ICollection<Tour> UpComingTours(string id)
         {
             var upcoming = _Context.Tours.
-                Where(x => x.TourGuideId == id && x.Bookings.
-                Any(b => b.Status != BookedTourStatus.Completed) && x.DateFrom > DateTime.Now).ToList();
+                Where(x => x.TourGuideId == id && x.DateFrom > DateTime.Now).ToList();
 
             if (upcoming != null)
             {
@@ -112,7 +111,7 @@ namespace SeetourAPI.DAL.Repos
             var fullybooked = _Context.Tours.Where(t => t.TourGuideId == id
                         && t.DateFrom > DateTime.Now
                         && t.Bookings.Any(b => b.Status == BookedTourStatus.Booked)
-                        && t.BookingsCount == t.Capacity)
+                        && t.TourBooking.BookingsCount == t.Capacity)
               .ToList();
 
 
@@ -153,6 +152,37 @@ namespace SeetourAPI.DAL.Repos
         public int UpComingToursInCartListCount(string id)
         {
             return UpcomingToursInCartList(id).Count();
+        }
+
+        public decimal TotalPastToursPrice(string id)
+        {
+            return PastTours(id).Sum(t => t.Price);
+        }
+
+        public decimal AveragePastToursPrice(string id)
+        {
+            return PastTours(id).Average(t => t.Price);
+        }
+
+        public decimal TotalUpcomingToursPrice(string id)
+        {
+            return UpComingTours(id).Sum(t => t.Price);
+        }
+
+        public decimal AverageUpcomingoursPrice(string id)
+        {
+            return UpComingTours(id).Average(t => t.Price);
+        }
+
+        public int TotalUpcomingTourSeats(string id)
+        {
+            return UpComingTours(id).Sum(t => t.Capacity);
+        }
+
+        public double AvgUpcomingTourSeats(string id)
+        {
+            return UpComingTours(id).Average(t => t.Capacity);
+
         }
     }
 }
