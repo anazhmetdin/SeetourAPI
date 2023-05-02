@@ -1,4 +1,4 @@
 ﻿namespace SeetourAPI.DAL.DTO
 {
-    public record TokenDto(string Token, DateTime Expiry,string Interface);
+    public record TokenDto(string Token, DateTime Expiry, string Interface);
 }

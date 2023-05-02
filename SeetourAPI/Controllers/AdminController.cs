@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.AdminManger;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
 
@@ -80,7 +81,22 @@ namespace SeetourAPI.Controllers
         {
             _adminManager.DeleteSeeTourUser(id);
             return NoContent();
-        }
-    }
+		}
+
+		[HttpGet("Tour/Request")]
+		public IActionResult GetTourRequests()
+		{
+			return Ok(_adminManager.GetTourRequests());
+		}
+
+		[HttpPost("Tour/Request")]
+		public IActionResult EditPostRequest(AdminTourPostRequestDto postRequestDto)
+		{
+            if (_adminManager.UpdateTourStatus(postRequestDto))
+                return NoContent();
+
+            return BadRequest();
+		}
+	}
 
 }

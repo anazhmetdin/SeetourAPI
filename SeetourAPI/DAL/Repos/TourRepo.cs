@@ -2,6 +2,7 @@
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Photos;
 using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Enums;
 
 namespace SeetourAPI.DAL.Repos
 {
@@ -134,5 +135,30 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.Wishlist)
                 .Where(t => t.TourGuideId == id);
         }
-    }
+
+		public IEnumerable<Tour> GetTourRequests()
+		{
+            return _Context.Tours
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t!.User)
+                .Include(t => t.Photos)
+                .Where(t => t.TourPostingStatus == TourPostingStatus.Pending);
+		}
+
+		public bool SaveChanges()
+		{
+			return _Context.SaveChanges() > 0;
+		}
+
+		public bool UpdatePostingStatus(int tourId, TourPostingStatus status)
+		{
+			var tour = _Context.Tours.Find(tourId);
+
+            if (tour == null) { return false; }
+
+            tour.TourPostingStatus = status;
+
+            return true;
+		}
+	}
 }

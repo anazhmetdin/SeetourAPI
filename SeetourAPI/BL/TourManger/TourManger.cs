@@ -139,7 +139,8 @@ namespace SeetourAPI.BL.TourManger
                 DateTo: tour.DateTo.Date.ToString(),
                 Category: tour.Category.ToString(),
                 Title: tour.Title,
-                AddedToWishList: false
+                AddedToWishList: false,
+                hasTransportation:false
             );
         }
 

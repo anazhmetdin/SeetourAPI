@@ -30,6 +30,7 @@ namespace SeetourAPI.Data.Context
         public DbSet<TourBooking> TourBookings { get; set; }
         public DbSet<TourPhoto> TourPhoto { get; set; }
 
+        public DbSet<EditRequest> EditRequests { get; set; }
 
         public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)

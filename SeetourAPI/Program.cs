@@ -14,6 +14,8 @@ using SeetourAPI.Services;
 using SeetourAPI.Data.Claims;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
+using SeetourAPI.Services;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SeetourAPI.BL.TourGuideManager;
 
 namespace SeetourAPI
@@ -135,6 +137,7 @@ namespace SeetourAPI
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
             builder.Services.AddScoped<ToursHandler>();
+            builder.Services.AddHostedService<AdminInitializer>();
             #endregion
             var app = builder.Build();
 
@@ -153,7 +156,7 @@ namespace SeetourAPI
 
             app.MapControllers();
 
-            app.Run();
+			app.Run();
         }
     }
 }
