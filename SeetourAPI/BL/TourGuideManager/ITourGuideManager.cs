@@ -1,4 +1,5 @@
 ﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Context.DTOs;
 
 namespace SeetourAPI.BL.TourGuideManager
 {
@@ -7,5 +8,6 @@ namespace SeetourAPI.BL.TourGuideManager
         public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted, ToursFilterDto toursFilter);
         public ICollection<TourCardDto>? CompletedTourCards(string tourguideId, bool isCompleted);
         TourGuideInfoDto? GetInfo(string id);
+        public TourGuideStatistics GetTStatistics(string id);
     }
 }

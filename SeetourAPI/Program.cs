@@ -64,6 +64,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<IUserRepo, UserRepo>();
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
             builder.Services.AddScoped<TourBookingsRepo>();
+            builder.Services.AddScoped<ITourGuideDashBoardRepo, TourGuideDashBoardRepo>();
 
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
             #region Azure
@@ -127,7 +128,7 @@ namespace SeetourAPI
 
                 options.AddPolicy(Policies.AcceptedTourGuides, policy =>
                    policy.RequireClaim(ClaimTypes.Role, "TourGuide")
-                         .RequireClaim(ClaimType.Status, TourGuideStatus.Accepted.ToString())
+                         .RequireClaim(ClaimType.Status, TourGuideStatus.Accepted.ToString(),"Allowed")
                          .RequireClaim(ClaimTypes.NameIdentifier));
             });
 

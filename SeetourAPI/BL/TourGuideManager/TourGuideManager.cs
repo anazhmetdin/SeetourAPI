@@ -1,5 +1,6 @@
 ﻿using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
+using SeetourAPI.Data.Context.DTOs;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
@@ -12,18 +13,47 @@ namespace SeetourAPI.BL.TourGuideManager
     public class TourGuideManager : ITourGuideManager
     {
         private readonly ITourGuideRepo _tourguideRepo;
+        private readonly ITourGuideDashBoardRepo _tourGuideDashBoard;
         private readonly ITourRepo _tourRepo;
         private readonly ToursHandler _handler;
         private readonly HttpContextAccessor _contextAccessor;
 
-        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo, ToursHandler handler, HttpContextAccessor contextAccessor)
+        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo,ITourGuideDashBoardRepo tourGuideDashBoard, ToursHandler handler, HttpContextAccessor contextAccessor)
         {
             _tourRepo = tourRepo;
             _tourguideRepo = tourguideRepo;
+            _tourGuideDashBoard = tourGuideDashBoard;
             _handler = handler;
             _contextAccessor = contextAccessor;
         }
 
+        public TourGuideStatistics GetTStatistics(string id)
+        {
+            var tourGuide = _tourguideRepo.GetTourGuideLite(id);
+
+            if (tourGuide is null)
+            {
+                return null;
+            }
+            else
+            {
+                var statistcs = new TourGuideStatistics
+                {
+                    PastToursCount = _tourGuideDashBoard.PastToursCount(id)
+                    //Top10Tours = _tourGuideDashBoard.Top10Tours(id).ToList(),
+                    //UpComingToursCount = _tourGuideDashBoard.UpComingToursCount(id),
+                    //CancelledInPastTourscount = _tourGuideDashBoard.cancelledInPastTourscount(id),
+                    //FullyBookedPastToursCount = _tourGuideDashBoard.FullyBookedPastTourscount(id),
+                    //FullyBookedUpcomingToursCount = _tourGuideDashBoard.FullyBookedUpComingTourscount(id),
+                    //ToursInCartCount = _tourGuideDashBoard.UpComingToursInCartListCount(id)
+
+
+                };
+                return statistcs;
+
+            }
+
+        }
         public TourGuideInfoDto? GetInfo(string id)
         {
             var tourGuide = _tourguideRepo.GetTourGuideLite(id);
