@@ -74,7 +74,7 @@ namespace SeetourAPI.BL.TourGuideManager
         private ICollection<TourCardDto> GetToursCompleted(
             IEnumerable<Tour> tours, bool isCompleted)
         {
-            return _handler.GetTourCardDto(tours.Where(t => isCompleted == t.IsCompleted));
+            return _handler.GetTourCardDto(tours.Where(t => isCompleted == t.TourBooking!.IsCompleted));
         }
 
         public ICollection<TourCardDto>? CompletedTourCards(

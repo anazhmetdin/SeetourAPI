@@ -59,7 +59,7 @@ namespace SeetourAPI.Data.Models
         public virtual ICollection<EditRequest> EditRequests { get; set; } = new HashSet<EditRequest>();
         public virtual ICollection<TourQuestion> Questions { get; set; } = new HashSet<TourQuestion>();
         [NotMapped]
-        public bool IsCompleted { get => DateFrom < DateTime.Now; }
+        public bool IsCompleted { get => TourBooking?.IsCompleted??DateFrom<DateTime.Now; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime PostedAt { get; set; } = DateTime.UtcNow;
 
