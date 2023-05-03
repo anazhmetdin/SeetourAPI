@@ -4,6 +4,7 @@ using SeetourAPI.BL.CustomerManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Photos;
@@ -20,13 +21,15 @@ namespace SeetourAPI.BL.TourManger
         private readonly UserManager<SeetourUser> _userManager;
         private readonly HttpContextAccessor _HttpContextAccessor;
         private readonly ToursHandler _handler;
+        private readonly SeetourContext context;
         private readonly ITourGuideManager tourGuideManager;
         private readonly ICustomerManager customerManager;
 
         public ITourRepo TourRepo { get; }
-        public TourManger(ITourGuideManager tourGuideManager, ICustomerManager customerManager, ITourRepo tourRepo,
+        public TourManger(SeetourContext context,ITourGuideManager tourGuideManager, ICustomerManager customerManager, ITourRepo tourRepo,
             UserManager<SeetourUser> userManager, HttpContextAccessor _httpContextAccessor, ToursHandler filter)
         {
+            this.context = context;
             this.tourGuideManager = tourGuideManager;
             this.customerManager = customerManager;
             TourRepo = tourRepo;
@@ -183,7 +186,7 @@ namespace SeetourAPI.BL.TourManger
 
         public TourDto? DetailsTour(int id)
         {
-            var tour = TourRepo.GetTourById(id);
+            var tour = TourRepo.GetTourByIdLite2(id);
 
             if (tour == null)
             {
@@ -201,28 +204,34 @@ namespace SeetourAPI.BL.TourManger
         }
 
 
-        public bool BookTour(int id , int seatsNum , string userId)
+        public string BookTour(int id , int seatsNum , string userId)
         {
-            var tour = TourRepo.GetTourById(id);
+            var tour = TourRepo.GetTourByIdLite2(id);
 
             if (tour == null)
             {
-                return false; // tour not found
+                return "Completed"; // tour not found
             }
 
             var bookedTour = new BookedTour() { 
                 Seats = seatsNum , 
                 CustomerId = userId, 
-                TourId = id 
+                TourId = id ,
+                Status = BookedTourStatus.Cart
             };
 
-            tour.Bookings.Add(bookedTour);
-            return true;
+            if (!TourRepo.bookTour(bookedTour))
+            {
+
+                return "Already Booked";
+            }
+
+            return "Booked Successfully";
         }
 
         public async Task<BookTourDto?> BookTourDetailsAsync(int id)
         {
-            var tour = TourRepo.GetTourById(id);
+            var tour = TourRepo.GetTourByIdLite2(id);
 
             if (tour == null)
             {
