@@ -4,6 +4,7 @@ using SeetourAPI.BL.CustomerManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Photos;
@@ -20,13 +21,15 @@ namespace SeetourAPI.BL.TourManger
         private readonly UserManager<SeetourUser> _userManager;
         private readonly HttpContextAccessor _HttpContextAccessor;
         private readonly ToursHandler _handler;
+        private readonly SeetourContext context;
         private readonly ITourGuideManager tourGuideManager;
         private readonly ICustomerManager customerManager;
 
         public ITourRepo TourRepo { get; }
-        public TourManger(ITourGuideManager tourGuideManager, ICustomerManager customerManager, ITourRepo tourRepo,
+        public TourManger(SeetourContext context,ITourGuideManager tourGuideManager, ICustomerManager customerManager, ITourRepo tourRepo,
             UserManager<SeetourUser> userManager, HttpContextAccessor _httpContextAccessor, ToursHandler filter)
         {
+            this.context = context;
             this.tourGuideManager = tourGuideManager;
             this.customerManager = customerManager;
             TourRepo = tourRepo;
@@ -213,10 +216,12 @@ namespace SeetourAPI.BL.TourManger
             var bookedTour = new BookedTour() { 
                 Seats = seatsNum , 
                 CustomerId = userId, 
-                TourId = id 
+                TourId = id ,
+                Status = BookedTourStatus.Cart
             };
 
-            tour.Bookings.Add(bookedTour);
+            context.BookedTours.Add(bookedTour);
+            context.SaveChanges();
             return true;
         }
 

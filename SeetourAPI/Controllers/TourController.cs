@@ -216,8 +216,10 @@ namespace SeetourAPI.Controllers
             //var tour = ITourManger.GetTourById(id);
 
             // get current user ID
-            var user = await manger.FindByIdAsync(ClaimTypes.NameIdentifier);
-            var cust = customerManager.GetCustomerById(user.Id);
+
+            var userId = ITourManger.GetCurrentUserId();
+
+            var cust = customerManager.GetCustomerById(userId);
 
             // check if he books the tour already
             var booking = cust.BookedTours.FirstOrDefault(b => b.TourId == id);
@@ -226,7 +228,7 @@ namespace SeetourAPI.Controllers
                 return BadRequest("You already booked this tour."); // user already booked this tour
             }
 
-            if (!ITourManger.BookTour(id, seatsNum, user.Id))
+            if (!ITourManger.BookTour(id, seatsNum, userId))
             {
                 return BadRequest("Tour is already completed."); // tour is completed
             }
