@@ -157,6 +157,10 @@ namespace SeetourAPI.DAL.Repos
 
         public bool bookTour(BookedTour bookedTour)
         {
+            if (_Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId) != null)
+            {
+                return false;
+            }
             _Context.BookedTours.Add(bookedTour);
             //_Context.SaveChanges();
             return SaveChanges();

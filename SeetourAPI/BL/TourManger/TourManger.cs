@@ -204,13 +204,13 @@ namespace SeetourAPI.BL.TourManger
         }
 
 
-        public bool BookTour(int id , int seatsNum , string userId)
+        public string BookTour(int id , int seatsNum , string userId)
         {
             var tour = TourRepo.GetTourByIdLite2(id);
 
             if (tour == null)
             {
-                return false; // tour not found
+                return "Completed"; // tour not found
             }
 
             var bookedTour = new BookedTour() { 
@@ -220,7 +220,13 @@ namespace SeetourAPI.BL.TourManger
                 Status = BookedTourStatus.Cart
             };
 
-            return TourRepo.bookTour(bookedTour);
+            if (!TourRepo.bookTour(bookedTour))
+            {
+
+                return "Already Booked";
+            }
+
+            return "Booked Successfully";
         }
 
         public async Task<BookTourDto?> BookTourDetailsAsync(int id)

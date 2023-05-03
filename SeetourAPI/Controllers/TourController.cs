@@ -222,18 +222,22 @@ namespace SeetourAPI.Controllers
             var cust = customerManager.GetCustomerById(userId);
 
             // check if he books the tour already
-            var booking = cust.BookedTours.FirstOrDefault(b => b.TourId == id);
-            if (booking != null)
+            //var booking = cust.BookedTours.FirstOrDefault(b => b.TourId == id);
+            //if (booking != null)
+            //{
+            //    return BadRequest("You already booked this tour."); // user already booked this tour
+            //}
+            var book = ITourManger.BookTour(id, seatsNum, userId);
+            if (book == "Completed")
             {
-                return BadRequest("You already booked this tour."); // user already booked this tour
+                return BadRequest("Tour is already completed"); // tour is completed
+            }
+            else if (book == "Already Booked")
+            {
+                return BadRequest("Tour is Already Booked"); // tour is completed
             }
 
-            if (!ITourManger.BookTour(id, seatsNum, userId))
-            {
-                return BadRequest("Tour is already completed."); // tour is completed
-            }
-
-            return Ok();
+            return Ok(book);
         }
 
 
