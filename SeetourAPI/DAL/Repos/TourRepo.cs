@@ -154,5 +154,29 @@ namespace SeetourAPI.DAL.Repos
 		{
 			return _Context.Tours.Find(tourId);
 		}
-	}
+
+        public bool bookTour(BookedTour bookedTour)
+        {
+            _Context.BookedTours.Add(bookedTour);
+            //_Context.SaveChanges();
+            return SaveChanges();
+        }
+
+        public Tour? GetTourByIdLite2(int id)
+        {
+            var tour = _Context.Tours
+                .Include(a => a.Photos)
+                .Include(a => a.Questions)
+                .Include(a => a.Bookings)
+                .ThenInclude(a => a.Review)
+                .FirstOrDefault(a => a.Id == id);
+
+            if (tour != null)
+            {
+                return tour;
+
+            }
+            else return null;
+        }
+    }
 }

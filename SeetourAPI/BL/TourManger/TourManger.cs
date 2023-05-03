@@ -186,7 +186,7 @@ namespace SeetourAPI.BL.TourManger
 
         public TourDto? DetailsTour(int id)
         {
-            var tour = TourRepo.GetTourById(id);
+            var tour = TourRepo.GetTourByIdLite2(id);
 
             if (tour == null)
             {
@@ -206,7 +206,7 @@ namespace SeetourAPI.BL.TourManger
 
         public bool BookTour(int id , int seatsNum , string userId)
         {
-            var tour = TourRepo.GetTourById(id);
+            var tour = TourRepo.GetTourByIdLite2(id);
 
             if (tour == null)
             {
@@ -220,14 +220,12 @@ namespace SeetourAPI.BL.TourManger
                 Status = BookedTourStatus.Cart
             };
 
-            context.BookedTours.Add(bookedTour);
-            context.SaveChanges();
-            return true;
+            return TourRepo.bookTour(bookedTour);
         }
 
         public async Task<BookTourDto?> BookTourDetailsAsync(int id)
         {
-            var tour = TourRepo.GetTourById(id);
+            var tour = TourRepo.GetTourByIdLite2(id);
 
             if (tour == null)
             {
