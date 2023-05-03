@@ -26,6 +26,19 @@ namespace SeetourAPI.BL.CustomerManager
 			_logger = logger;
 		}
 
+		public int GetBookedTourIdToReview(int tourId, string userId)
+		{
+			var bookings = _bookedTourRepo.GetAllLit();
+
+			bookings = bookings.Where(b => b.CustomerId == userId)
+				.Where(b => b.Status == BookedTourStatus.Completed)
+				.Where(b => b.TourId == tourId);
+
+			var BookingToReview = bookings.ToList()
+				.FirstOrDefault(b => _reviewRepo.GetBookingReviewId(b.Id) == 0);
+
+			return BookingToReview?.Id ?? 0;
+		}
 
 		public ICollection<BookedTourDto> GetIsCompletedTours(string UserId, BookedTourStatus status)
 		{
@@ -38,6 +51,7 @@ namespace SeetourAPI.BL.CustomerManager
 			bookings.ToList().ForEach(booking =>
 			{
 				booking.Tour = _tourRepo.GetTourByIdLiteIncluded(booking.TourId);
+				booking.ReviewId = _reviewRepo.GetBookingReviewId(booking.Id);
 			});
 
 			if (status == BookedTourStatus.Booked)
@@ -62,6 +76,7 @@ namespace SeetourAPI.BL.CustomerManager
 						createdAt: t.LastEditedAt.ToString(),
 						seats: t.Seats,
 						canCancel: t.Tour!.CanCancel ? 1 : 0,
+						canReview: t.ReviewId == 0 ? 1 : 0,
 						tourCard: _tourHandler.GetTourCardDto(t.Tour!, UserId)
 					)
 				).ToList();

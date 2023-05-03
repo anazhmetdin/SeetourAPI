@@ -56,7 +56,15 @@ namespace SeetourAPI.DAL.Repos
             return GetIncludes();
         }
 
-        public Review GetReviewById(int id)
+		public int GetBookingReviewId(int id)
+		{
+			return _context.Reviews
+                .Where(r => r.BookedTourId == id)
+                .Select(r => r.Id)
+                .FirstOrDefault();
+		}
+
+		public Review GetReviewById(int id)
         {
             var review = _context.Reviews.Find(id);
             return review;

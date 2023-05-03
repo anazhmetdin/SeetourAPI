@@ -53,5 +53,15 @@ namespace SeetourAPI.Controllers
 
 			return Ok(bookings);
 		}
+
+		[HttpGet("Tour/{TourId}/ReviewCheck")]
+		public IActionResult CheckCanReview(int TourId)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			int BookedTourToReviewId = _customerManager.GetBookedTourIdToReview(TourId, UserId);
+			
+			return Ok(BookedTourToReviewId);
+		}
 	}
 }
