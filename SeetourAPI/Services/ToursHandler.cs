@@ -100,5 +100,6 @@ namespace SeetourAPI.Services
                 Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
             );
         }
+
     }
 }

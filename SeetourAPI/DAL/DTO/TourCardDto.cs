@@ -1,4 +1,4 @@
-﻿namespace SeetourAPI.DAL.DTO
+namespace SeetourAPI.DAL.DTO
 {
     public record TourCardDto(
         int Id,

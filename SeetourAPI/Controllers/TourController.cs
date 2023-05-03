@@ -1,11 +1,13 @@
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using SeetourAPI.BL.CustomerManager;
 using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
+using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Enums;
@@ -13,6 +15,8 @@ using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
 using System;
+using System.Linq;
+using System.Security.Claims;
 
 namespace SeetourAPI.Controllers
 {
@@ -21,37 +25,58 @@ namespace SeetourAPI.Controllers
     //[TypeFilter(typeof(TourGuideFilter))]
     public class TourController : ControllerBase
     {
+        private readonly ITourGuideManager tourGuideManager;
+        private readonly ICustomerManager customerManager;
         private readonly UserManager<SeetourUser> manger;
         private readonly IReviewManager _reviewManger;
 
         public ITourManger ITourManger { get; }
-        public TourController(ITourManger ITourManger, UserManager<SeetourUser> Manger, IReviewManager reviewManger)
+        public TourController(ITourGuideManager tourGuideManager , ICustomerManager customerManager ,ITourManger ITourManger, UserManager<SeetourUser> Manger, IReviewManager reviewManger)
         {
+            this.tourGuideManager = tourGuideManager;
+            this.customerManager = customerManager;
             this.ITourManger = ITourManger;
             manger = Manger;
             _reviewManger = reviewManger;
         }
-        
-        [Authorize(Policy = Policies.AcceptedTourGuides)]
+
         [HttpPost]
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         public ActionResult CreateTour(AddTourDto addTourDto)
         {
-              ITourManger.AddTour(addTourDto);
-                return Created("", addTourDto);    
+            ITourManger.AddTour(addTourDto);
+            return Created("", addTourDto);
+        }
+
+        [HttpPost]
+        [Route("AddPics")]
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
+        public ActionResult AddPastTourPics(int tourid, ICollection<photoDto> photoDtos)
+        {
+            var tour = ITourManger.GetTourById(tourid);
+            string tourguideid = ITourManger.GetCurrentUserId();
+            if (tour.TourGuideId == tourguideid)
+            {
+
+                ITourManger.PostPastTourPics(tourid, photoDtos);
+                return Created("", photoDtos);
+            }
+            return Unauthorized();
+
         }
 
         [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPut]
-        public ActionResult EditTour(int id,Tour tour)
+        public ActionResult EditTour(int id, Tour tour)
         {
-            if(tour.Id!=id)
+            if (tour.Id != id)
             {
                 return BadRequest();
             }
             else
             {
-            ITourManger.EditTour(id, tour);
-            return Ok();
+                ITourManger.EditTour(id, tour);
+                return Ok();
             }
         }
 
@@ -60,14 +85,14 @@ namespace SeetourAPI.Controllers
         public ActionResult DeleteTour(int id)
         {
             ITourManger.DeleteTour(id);
-            return  NoContent();
+            return NoContent();
         }
 
         [HttpGet]
         [Route("GetById")]
         public ActionResult GetById(int id)
         {
-          var t=  ITourManger.GetTourById(id);
+            var t = ITourManger.GetTourById(id);
             if (t == null)
             {
                 return NotFound();
@@ -80,7 +105,7 @@ namespace SeetourAPI.Controllers
         public ActionResult GetAll()
         {
             var tours = ITourManger.GetAll();
-            if(tours == null)
+            if (tours == null)
             {
                 return NotFound();
             }
@@ -94,7 +119,7 @@ namespace SeetourAPI.Controllers
             var tour = ITourManger.GetTourById(id);
             if (tour?.Id == id)
             {
-                return Ok( ITourManger.Details(id));
+                return Ok(ITourManger.Details(id));
 
             }
             return NotFound();
@@ -104,11 +129,10 @@ namespace SeetourAPI.Controllers
         [Route("CardDetails")]
         public ActionResult DetailsCard(int id)
         {
-
-          var tour=  ITourManger.DetailsCard(id);
-            if (tour==null)
+            var tour = ITourManger.DetailsCard(id);
+            if (tour == null)
             {
-            return NotFound();
+                return NotFound();
 
             }
             else
@@ -162,8 +186,8 @@ namespace SeetourAPI.Controllers
         }
 
         [HttpGet("categories")]
-        [OutputCache(Duration = 60*60*24)]
-        [ResponseCache(Duration = 60*60*24)]
+        [OutputCache(Duration = 60 * 60 * 24)]
+        [ResponseCache(Duration = 60 * 60 * 24)]
         public IActionResult GetCategories()
         {
             return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
@@ -181,7 +205,41 @@ namespace SeetourAPI.Controllers
             }
             else
                 return Ok(tour);
+        }
 
+        [Authorize(Policy = Policies.AllowCustomers)]
+        [HttpPost]
+        [Route("BookTour")]
+        public async Task<ActionResult> TourBook(int id, int seatsNum)
+        {
+            //get tour by id
+            //var tour = ITourManger.GetTourById(id);
+
+            // get current user ID
+            var user = await manger.FindByIdAsync(ClaimTypes.NameIdentifier);
+            var cust = customerManager.GetCustomerById(user.Id);
+
+            // check if he books the tour already
+            var booking = cust.BookedTours.FirstOrDefault(b => b.TourId == id);
+            if (booking != null)
+            {
+                return BadRequest("You already booked this tour."); // user already booked this tour
+            }
+
+            if (!ITourManger.BookTour(id, seatsNum, user.Id))
+            {
+                return BadRequest("Tour is already completed."); // tour is completed
+            }
+
+            return Ok();
+        }
+
+
+        [HttpPost]
+        [Route("BookTourDetails")]
+        public async Task<ActionResult> BookTourDetails(int id)
+        {
+            return Ok(await ITourManger.BookTourDetailsAsync(id));
         }
     }
 }

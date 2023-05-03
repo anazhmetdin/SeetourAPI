@@ -14,10 +14,14 @@ namespace SeetourAPI.Data.Models
         public string Title { get; set; } = string.Empty;
         [DataType(DataType.MultilineText)]
         public string Description { get; set; } = string.Empty;
+
+
         [FutureDateRange(1)] // 1 day in the future
         public DateTime DateFrom { get; set; }
         [FutureDateRange(0, "DateFrom")] // at least 0 days after DateFrom
         public DateTime DateTo { get; set; }
+
+
         [Range(0, (double)decimal.MaxValue)]
         [DataType(DataType.Currency)]
         [Column(TypeName = "decimal(18,2)")]
@@ -39,10 +43,10 @@ namespace SeetourAPI.Data.Models
         [Range(1, 100)]
         public int Capacity { get; set; }
         // TODO: use all photos in thumbnail gallery
-        public virtual ICollection<TourPhoto> Photos { get; set; } = new HashSet<TourPhoto>();
-        public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
-        public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
-        public virtual ICollection<BookedTour> Bookings { get; set; } = new HashSet<BookedTour>();
+        public virtual ICollection<TourPhoto>? Photos { get; set; } = new HashSet<TourPhoto>();
+        public virtual ICollection<CustomerLikes>? Likes { get; set; } = new HashSet<CustomerLikes>();
+        public virtual ICollection<CustomerWishlist>? Wishlist { get; set; } = new HashSet<CustomerWishlist>();
+        public virtual ICollection<BookedTour>? Bookings { get; set; } = new HashSet<BookedTour>();
         [NotMapped]
         public ICollection<BookedTour> PaidBookings { get => Bookings.Where(b => b.Status == BookedTourStatus.Booked || b.Status == BookedTourStatus.Completed).ToList(); }
         [NotMapped]
@@ -56,8 +60,8 @@ namespace SeetourAPI.Data.Models
         public string TourGuideId { get; set; } = string.Empty;
         public virtual TourGuide? TourGuide { get; set; }
         public TourPostingStatus TourPostingStatus { get; set; }
-        public virtual ICollection<EditRequest> EditRequests { get; set; } = new HashSet<EditRequest>();
-        public virtual ICollection<TourQuestion> Questions { get; set; } = new HashSet<TourQuestion>();
+        public virtual ICollection<EditRequest>? EditRequests { get; set; } = new HashSet<EditRequest>();
+        public virtual ICollection<TourQuestion>? Questions { get; set; } = new HashSet<TourQuestion>();
         [NotMapped]
         public bool IsCompleted { get => TourBooking?.IsCompleted??DateFrom<DateTime.Now; }
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

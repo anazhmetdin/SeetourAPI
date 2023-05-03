@@ -1,10 +1,10 @@
-﻿using SeetourAPI.BL.ReviewManager;
-using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Services;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.BL.CustomerManager
 {
@@ -14,16 +14,16 @@ namespace SeetourAPI.BL.CustomerManager
 		private readonly IReviewRepo _reviewRepo;
 		private readonly IBookedTourRepo _bookedTourRepo;
 		private readonly ToursHandler _tourHandler;
-		private readonly ILogger<ICustomerManager> _logger;
+		private readonly ICustomerRepo customerRepo;
 
 		public CustomerManager(IReviewRepo reviewManager, ITourRepo tourRepo, IBookedTourRepo bookedTourRepo,
-			ToursHandler tourHandler, ILogger<ICustomerManager> logger)
+			ToursHandler tourHandler, ICustomerRepo customerRepo)
 		{
 			_reviewRepo = reviewManager;
 			_tourRepo = tourRepo;
 			_bookedTourRepo = bookedTourRepo;
 			_tourHandler = tourHandler;
-			_logger = logger;
+            this.customerRepo = customerRepo;
 		}
 
 		public int GetBookedTourIdToReview(int tourId, string userId)
@@ -81,5 +81,11 @@ namespace SeetourAPI.BL.CustomerManager
 					)
 				).ToList();
 		}
+
+        public Customer GetCustomerById(string id)
+        {
+            var cust = customerRepo.GetCustomerById(id);
+            return cust;
+        }
 	}
 }
