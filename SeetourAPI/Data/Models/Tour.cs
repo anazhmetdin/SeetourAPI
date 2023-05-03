@@ -64,5 +64,7 @@ namespace SeetourAPI.Data.Models
         public DateTime PostedAt { get; set; } = DateTime.UtcNow;
 
         public virtual TourBooking? TourBooking { get; set; }
+        [NotMapped]
+        public bool CanCancel { get => DateTime.Now < LastDateToCancel; }
     }
 }

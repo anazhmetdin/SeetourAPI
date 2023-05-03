@@ -65,6 +65,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<IUserRepo, UserRepo>();
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
             builder.Services.AddScoped<IBookingRepo, BookingRepo>();
+            builder.Services.AddScoped<IBookedTourRepo, BookedTourRepo>();
             builder.Services.AddScoped<TourBookingsRepo>();
 
             #endregion

@@ -147,5 +147,16 @@ namespace SeetourAPI.DAL.Repos
 		{
 			return _Context.Tours.Find(tourId);
 		}
+
+		public Tour? GetTourByIdLiteIncluded(int tourId)
+		{
+			return _Context.Tours
+				.Include(t => t.Photos)
+				.Include(t => t.Likes)
+				.Include(t => t.Wishlist)
+				.Include(t => t.TourGuide)
+				.ThenInclude(t => t!.User)
+				.FirstOrDefault(t => t.Id == tourId);
+		}
 	}
 }

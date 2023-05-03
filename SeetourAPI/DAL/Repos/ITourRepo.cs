@@ -18,5 +18,6 @@ namespace SeetourAPI.DAL.Repos
 		Tour? GetTourByIdLite(int tourId);
 		IEnumerable<Tour> GetTourRequests();
 		bool SaveChanges();
+		Tour? GetTourByIdLiteIncluded(int tourId);
 	}
 }
