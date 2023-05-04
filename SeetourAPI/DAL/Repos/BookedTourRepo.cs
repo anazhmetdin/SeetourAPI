@@ -28,5 +28,10 @@ namespace SeetourAPI.DAL.Repos
 		{
 			return _Context.BookedTours;
 		}
+
+		public BookedTour? GetByIdLite(int bookedTourId)
+		{
+			return _Context.BookedTours.Find(bookedTourId);
+		}
 	}
 }

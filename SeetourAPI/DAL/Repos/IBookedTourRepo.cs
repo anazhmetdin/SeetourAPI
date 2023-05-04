@@ -6,5 +6,6 @@ namespace SeetourAPI.DAL.Repos
 	{
 		IEnumerable<BookedTour> GetAll();
 		IEnumerable<BookedTour> GetAllLit();
+		BookedTour? GetByIdLite(int bookedTourId);
 	}
 }

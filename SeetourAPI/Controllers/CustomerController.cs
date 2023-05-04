@@ -4,15 +4,17 @@ using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.CustomerManager;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
 using System.Security.Claims;
+using System.Text.Json;
 
 namespace SeetourAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	[Authorize(policy:Policies.AllowCustomers)]
+	//[Authorize(policy:Policies.AllowCustomers)]
 	public class CustomerController : ControllerBase
 	{
 		private readonly IReviewManager _reviewManager;
@@ -54,14 +56,29 @@ namespace SeetourAPI.Controllers
 			return Ok(bookings);
 		}
 
-		[HttpGet("Tour/{TourId}/ReviewCheck")]
+		[HttpGet("Tour/{TourId}/Review/Check")]
 		public IActionResult CheckCanReview(int TourId)
 		{
 			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
 
 			int BookedTourToReviewId = _customerManager.GetBookedTourIdToReview(TourId, UserId);
-			
+
 			return Ok(BookedTourToReviewId);
+		}
+
+		[HttpPost("Tour/Review")]
+		public IActionResult PostReview(ICollection<IFormFile> files, [FromForm]ReviewDto review)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			bool posted = _customerManager.PostReview(UserId, files, review);
+
+			if (!posted)
+			{
+				return BadRequest();
+			}
+
+			return Ok();
 		}
 	}
 }

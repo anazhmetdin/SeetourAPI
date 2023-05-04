@@ -12,5 +12,8 @@ namespace SeetourAPI.DAL.Repos
         public IEnumerable<Review> GetTourGuideReviews(string Id);
         public IEnumerable<int> GetTourGuideRatings(string id);
 		int GetBookingReviewId(int id);
+
+        void AddReviewPlain(Review review);
+        bool SaveChanges();
 	}
 }

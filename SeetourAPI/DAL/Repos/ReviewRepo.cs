@@ -28,7 +28,12 @@ namespace SeetourAPI.DAL.Repos
 
         }
 
-        public void DeleteReview(int id)
+		public void AddReviewPlain(Review review)
+		{
+			_context.Reviews.Add(review);
+		}
+
+		public void DeleteReview(int id)
         {
             var review = _context.Reviews.Find(id);
             if(review != null)
@@ -82,7 +87,12 @@ namespace SeetourAPI.DAL.Repos
                 .Where(r => r.BookedTour!.Tour!.TourGuideId == Id);
         }
 
-        private IQueryable<Review> GetIncludes()
+		public bool SaveChanges()
+		{
+			return _context.SaveChanges() > 0;
+		}
+
+		private IQueryable<Review> GetIncludes()
         {
             return _context.Reviews
                 .Include(r => r.BookedTour)

@@ -9,5 +9,6 @@ namespace SeetourAPI.BL.CustomerManager
         public Customer GetCustomerById(string id);
 		int GetBookedTourIdToReview(int tourId, string userId);
 		ICollection<BookedTourDto> GetIsCompletedTours(string UserId, BookedTourStatus status);
+		bool PostReview(string userId, ICollection<IFormFile> files, ReviewDto review);
 	}
 }

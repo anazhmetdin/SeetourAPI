@@ -5,6 +5,7 @@ using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Services;
 using SeetourAPI.Data.Models.Users;
+using SeetourAPI.Data.Models.Photos;
 
 namespace SeetourAPI.BL.CustomerManager
 {
@@ -15,15 +16,17 @@ namespace SeetourAPI.BL.CustomerManager
 		private readonly IBookedTourRepo _bookedTourRepo;
 		private readonly ToursHandler _tourHandler;
 		private readonly ICustomerRepo customerRepo;
+		private readonly IAzureBlobStorageService _azureBlobStorageService;
 
 		public CustomerManager(IReviewRepo reviewManager, ITourRepo tourRepo, IBookedTourRepo bookedTourRepo,
-			ToursHandler tourHandler, ICustomerRepo customerRepo)
+			ToursHandler tourHandler, ICustomerRepo customerRepo, IAzureBlobStorageService azureBlobStorageService)
 		{
 			_reviewRepo = reviewManager;
 			_tourRepo = tourRepo;
 			_bookedTourRepo = bookedTourRepo;
 			_tourHandler = tourHandler;
-            this.customerRepo = customerRepo;
+			this.customerRepo = customerRepo;
+			_azureBlobStorageService = azureBlobStorageService;
 		}
 
 		public int GetBookedTourIdToReview(int tourId, string userId)
@@ -87,5 +90,40 @@ namespace SeetourAPI.BL.CustomerManager
             var cust = customerRepo.GetCustomerById(id);
             return cust;
         }
+
+		public bool PostReview(string userId, ICollection<IFormFile> files, ReviewDto review)
+		{
+			BookedTour? booking = _bookedTourRepo.GetByIdLite(review.bookedTourId);
+
+			if (booking == null || booking.CustomerId != userId) { return false; }
+
+			ICollection<string> urls;
+			try
+			{
+				urls = _azureBlobStorageService.UploadBlobAsyncImgs(files).Result;
+			}
+			catch { return false; }
+
+			Review newReview = new Review()
+			{
+				Rating = review.rating,
+				Comment = review.reviewBody,
+				BookedTourId = review.bookedTourId,
+				Photos = urls.Select(url =>
+
+					new ReviewPhoto()
+					{
+						Photo = new Photo()
+						{
+							Url = url
+						}
+					}
+				).ToList()
+			};
+
+			_reviewRepo.AddReviewPlain(newReview);
+
+			return _reviewRepo.SaveChanges();
+		}
 	}
 }

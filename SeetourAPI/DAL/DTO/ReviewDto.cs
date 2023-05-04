@@ -1,4 +1,4 @@
 ﻿namespace SeetourAPI.DAL.DTO
 {
-	public record ReviewDto(int BookedTourId, int Rating, string ReviewBody, int[] photos);
+	public record ReviewDto(int bookedTourId, int rating, string reviewBody);
 }
