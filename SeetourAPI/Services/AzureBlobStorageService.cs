@@ -99,7 +99,7 @@ namespace SeetourAPI.Services
 
 
         #region UploadingImages
-        public async Task<List<string>> UploadBlobAsyncImgs(List<IFormFile> files)
+        public async Task<List<string>> UploadBlobAsyncImgs(ICollection<IFormFile> files)
         {
           //  CheckFileAllowed(files);
 

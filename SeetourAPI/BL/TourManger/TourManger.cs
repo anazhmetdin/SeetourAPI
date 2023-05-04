@@ -156,17 +156,34 @@ namespace SeetourAPI.BL.TourManger
         }
 
         public ICollection<TourCardDto> GetAllCards(ToursFilterDto toursFilter)
-        {
-            var tours = TourRepo.GetAllLite().Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
-            tours = _handler.Filter(tours, toursFilter);
-            return _handler.GetTourCardDto(tours);
-        }
+		{
+			var tours = TourRepo.GetAllPlain()
+				.Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
 
-        public ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted, ToursFilterDto toursFilter)
+			return ReattachToursInfo(toursFilter, tours);
+		}
+
+		private ICollection<TourCardDto> ReattachToursInfo(ToursFilterDto toursFilter, IEnumerable<Tour> tours)
+		{
+			tours = _handler.Filter(tours, toursFilter);
+
+			foreach (var tour in tours)
+			{
+				tour.Likes = TourRepo.GetTourLikes(tour.Id).ToList();
+				tour.Wishlist = TourRepo.GetTourWishlist(tour.Id).ToList();
+				tour.Photos = TourRepo.GetTourPhotos(tour.Id).ToList();
+			}
+
+			return _handler.GetTourCardDto(tours);
+		}
+
+		public ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted, ToursFilterDto toursFilter)
         {
-            var tours = TourRepo.GetAllLite().Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
-            tours = _handler.Filter(tours, toursFilter);
-            return _handler.GetTourCardDto(tours.Where(t => t.IsCompleted == isCompleted));
+            var tours = TourRepo.GetAllPlain()
+                .Where(t => t.TourPostingStatus == TourPostingStatus.Accepted)
+                .Where(t => t.IsCompleted == isCompleted);            
+
+			return ReattachToursInfo(toursFilter, tours);
         }
 
         public void PostPastTourPics(int tourid, ICollection<photoDto> photoDtos)
@@ -226,7 +243,7 @@ namespace SeetourAPI.BL.TourManger
                 return "Already Booked";
             }
 
-            return "Booked Successfully";
+            return $"{bookedTour.Id}";
         }
 
         public async Task<BookTourDto?> BookTourDetailsAsync(int id)
