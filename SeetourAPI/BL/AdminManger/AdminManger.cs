@@ -1,4 +1,5 @@
-﻿using SeetourAPI.DAL.DTO;
+﻿using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models.Users;
@@ -11,12 +12,14 @@ namespace SeetourAPI.BL.AdminManger
         private readonly IAdminRepo adminRepo;
         private readonly ITourRepo _tourRepo;
         private readonly ToursHandler _tourHandler;
+        private readonly ITourGuideRepo _tourGuideRepo;
 
-		public AdminManger(IAdminRepo adminRepo, ITourRepo tourRepo, ToursHandler tourHandler)
+		public AdminManger(IAdminRepo adminRepo, ITourRepo tourRepo, ToursHandler tourHandler, ITourGuideRepo tourGuideRepo)
 		{
 			this.adminRepo = adminRepo;
 			_tourRepo = tourRepo;
 			_tourHandler = tourHandler;
+			_tourGuideRepo = tourGuideRepo;
 		}
 
 		public void DeleteSeeTourUser(string id)
@@ -57,6 +60,11 @@ namespace SeetourAPI.BL.AdminManger
                 .OrderBy(t => t.DateFrom)
                 .ThenBy(t => t.PostedAt)
                 .Where(t => !t.IsCompleted);
+
+            foreach (var tour in tours)
+            {
+                tour.TourGuide = _tourGuideRepo.GetTourGuideLite(tour.TourGuideId);
+            }
 
 			return _tourHandler.GetTourCardDto(tours);
 		}
