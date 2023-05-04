@@ -77,15 +77,29 @@ namespace SeetourAPI.DAL.Repos
 
         public IEnumerable<int> GetTourGuideRatings(string id)
         {
-            return GetTourGuideReviews(id)
+            return GetTourGuideReviewsLite(id)
                 .Select(r => r.Rating);
-        }
+		}
 
-        public IEnumerable<Review> GetTourGuideReviews(string Id)
-        {
-            return _context.Reviews
-                .Where(r => r.BookedTour!.Tour!.TourGuideId == Id);
-        }
+		public IEnumerable<Review> GetTourGuideReviewsLite(string Id)
+		{
+			return _context.Reviews
+				.Where(r => r.BookedTour!.Tour!.TourGuideId == Id);
+		}
+
+		public IEnumerable<Review> GetTourGuideReviews(string Id)
+		{
+			return _context.Reviews
+				.Include(r => r.Photos)
+				.Where(r => r.BookedTour!.Tour!.TourGuideId == Id);
+		}
+
+		public IEnumerable<Review> GetTourReviews(int Id)
+		{
+			return _context.Reviews
+				.Include(r => r.Photos)
+				.Where(r => r.BookedTour!.TourId == Id);
+		}
 
 		public bool SaveChanges()
 		{

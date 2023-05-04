@@ -56,8 +56,16 @@ namespace SeetourAPI.BL.TourGuideManager
                 return null;
             }
 
-            var tours = _tourRepo.GetTourGuideTours(tourguide.Id);
-            return new TGToursDto(tourguide, tours.Where(t=>t.TourPostingStatus == TourPostingStatus.Accepted));
+            var tours = _tourRepo.GetTourGuideToursLite(tourguide.Id);
+
+			foreach (var tour in tours)
+			{
+				tour.Likes = _tourRepo.GetTourLikes(tour.Id).ToList();
+				tour.Wishlist = _tourRepo.GetTourWishlist(tour.Id).ToList();
+				tour.Photos = _tourRepo.GetTourPhotos(tour.Id).ToList();
+			}
+
+			return new TGToursDto(tourguide, tours.Where(t=>t.TourPostingStatus == TourPostingStatus.Accepted));
         }
 
         public ICollection<TourCardDto>? CompletedTourCards(string tourguideId,
