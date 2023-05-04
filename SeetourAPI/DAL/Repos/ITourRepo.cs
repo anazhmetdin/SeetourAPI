@@ -18,7 +18,8 @@ namespace SeetourAPI.DAL.Repos
 
         public void AddPhotos(ICollection<TourPhoto> tourPhotos);
         public void EditTourBYAdmin(int id, Tour tour);
-        IEnumerable<Tour> GetTourGuideTours(string id);
+		IEnumerable<Tour> GetTourGuideTours(string id);
+		IEnumerable<Tour> GetTourGuideToursLite(string id);
 		Tour? GetTourByIdLite(int tourId);
 		IEnumerable<Tour> GetTourRequests();
         public bool bookTour(BookedTour bookedTour);

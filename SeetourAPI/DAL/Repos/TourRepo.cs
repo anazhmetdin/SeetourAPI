@@ -250,5 +250,13 @@ namespace SeetourAPI.DAL.Repos
 				TourId = tourId
 			});
 		}
+
+		public IEnumerable<Tour> GetTourGuideToursLite(string id)
+		{
+			return _Context.Tours
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t.User)
+				.Where(t => t.TourGuideId == id);
+		}
 	}
 }
