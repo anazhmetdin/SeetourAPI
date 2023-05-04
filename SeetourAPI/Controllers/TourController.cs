@@ -180,7 +180,7 @@ namespace SeetourAPI.Controllers
         [HttpGet("categories")]
         [OutputCache(Duration = 60*60*24)]
         [ResponseCache(Duration = 60*60*24)]
-        public IActionResult GetCategories()
+        public IActionResult GetCategories(int Id)
         {
             var reviews = _reviewManger.GetAllTourReviews(Id);
             return Ok(reviews);
