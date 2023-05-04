@@ -64,7 +64,7 @@ namespace SeetourAPI.Services
             return tours.Select(t => GetTourCardDto(t, userId)).ToList();
         }
 
-        private TourCardDto GetTourCardDto(Tour tour, string userId)
+        public TourCardDto GetTourCardDto(Tour tour, string userId)
         {
 
             return new TourCardDto(
@@ -100,5 +100,6 @@ namespace SeetourAPI.Services
                 Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
             );
         }
+
     }
 }

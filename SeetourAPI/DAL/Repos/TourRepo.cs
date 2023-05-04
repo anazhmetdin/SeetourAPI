@@ -150,21 +150,48 @@ namespace SeetourAPI.DAL.Repos
             return _Context.SaveChanges() > 0;
         }
 
-        public bool UpdatePostingStatus(int tourId, TourPostingStatus status)
+		public Tour? GetTourByIdLite(int tourId)
+		{
+			return _Context.Tours.Find(tourId);
+		}
+
+		public Tour? GetTourByIdLiteIncluded(int tourId)
+		{
+			return _Context.Tours
+				.Include(t => t.Photos)
+				.Include(t => t.Likes)
+				.Include(t => t.Wishlist)
+				.Include(t => t.TourGuide)
+				.ThenInclude(t => t!.User)
+				.FirstOrDefault(t => t.Id == tourId);
+		}
+
+        public bool bookTour(BookedTour bookedTour)
         {
-            var tour = _Context.Tours.Find(tourId);
-
-            if (tour == null) { return false; }
-
-            tour.TourPostingStatus = status;
-
-            return true;
+            if (_Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId) != null)
+            {
+                return false;
+            }
+            _Context.BookedTours.Add(bookedTour);
+            //_Context.SaveChanges();
+            return SaveChanges();
         }
 
-        public Tour? GetTourByIdLite(int tourId)
+        public Tour? GetTourByIdLite2(int id)
         {
-            return _Context.Tours.Find(tourId);
-        }
+            var tour = _Context.Tours
+                .Include(a => a.Photos)
+                .Include(a => a.Questions)
+                .Include(a => a.Bookings)
+                .ThenInclude(a => a.Review)
+                .FirstOrDefault(a => a.Id == id);
 
+            if (tour != null)
+            {
+                return tour;
+
+            }
+            else return null;
+        }
     }
 }

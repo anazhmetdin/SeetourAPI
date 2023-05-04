@@ -23,20 +23,20 @@ namespace SeetourAPI.DAL.Repos
                 foreach (var p in _context.TourBookings)
                 {
                     _context.Entry(p).State = EntityState.Deleted;
-                }
+				}
 
-                var bookings = _context.BookedTours
-                    .Where(b=>b.Status == BookedTourStatus.Booked || b.Status == BookedTourStatus.Completed)
-                    .GroupBy(r => r.TourId)
-                    .Select(g => new TourBooking()
-                    {
-                        Id = g.Key,
-                        BookingsCount = g.Count(),
-                    });
+				var bookings = _context.Tours
+                    .Include(b=>b.Bookings)
+					.Select(g => new TourBooking()
+					{
+						Id = g.Id,
+						BookingsCount = g.Bookings.Where(b => b.Status == BookedTourStatus.Booked || b.Status == BookedTourStatus.Completed).Count(),
+                        IsCompleted = g.DateFrom < DateTime.Now,
+					});
 
-                _context.TourBookings.AddRange(bookings);
+				_context.TourBookings.AddRange(bookings);
 
-                _context.SaveChanges();
+				_context.SaveChanges();
 
                 return true;
             }
@@ -45,5 +45,5 @@ namespace SeetourAPI.DAL.Repos
                 return false;
             }
         }
-    }
+	}
 }

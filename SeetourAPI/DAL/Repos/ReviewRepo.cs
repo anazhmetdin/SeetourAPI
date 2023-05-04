@@ -28,7 +28,12 @@ namespace SeetourAPI.DAL.Repos
 
         }
 
-        public void DeleteReview(int id)
+		public void AddReviewPlain(Review review)
+		{
+			_context.Reviews.Add(review);
+		}
+
+		public void DeleteReview(int id)
         {
             var review = _context.Reviews.Find(id);
             if(review != null)
@@ -56,7 +61,15 @@ namespace SeetourAPI.DAL.Repos
             return GetIncludes();
         }
 
-        public Review GetReviewById(int id)
+		public int GetBookingReviewId(int id)
+		{
+			return _context.Reviews
+                .Where(r => r.BookedTourId == id)
+                .Select(r => r.Id)
+                .FirstOrDefault();
+		}
+
+		public Review GetReviewById(int id)
         {
             var review = _context.Reviews.Find(id);
             return review;
@@ -74,7 +87,12 @@ namespace SeetourAPI.DAL.Repos
                 .Where(r => r.BookedTour!.Tour!.TourGuideId == Id);
         }
 
-        private IQueryable<Review> GetIncludes()
+		public bool SaveChanges()
+		{
+			return _context.SaveChanges() > 0;
+		}
+
+		private IQueryable<Review> GetIncludes()
         {
             return _context.Reviews
                 .Include(r => r.BookedTour)
