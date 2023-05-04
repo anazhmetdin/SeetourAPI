@@ -225,8 +225,6 @@ namespace SeetourAPI.DAL.Repos
             return true;
         }
 
-    }
-    
 
 		public IEnumerable<Tour> GetAllPlain()
 		{
