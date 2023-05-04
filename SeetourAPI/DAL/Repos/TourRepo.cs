@@ -160,9 +160,6 @@ namespace SeetourAPI.DAL.Repos
 		public IEnumerable<Tour> GetTourRequests()
 		{
             return _Context.Tours
-                .Include(t => t.TourGuide)
-                .ThenInclude(t => t!.User)
-                .Include(t => t.Photos)
                 .Where(t => t.TourPostingStatus == TourPostingStatus.Pending);
 		}
 
