@@ -20,5 +20,8 @@ namespace SeetourAPI.DAL.Repos
 		Tour? GetTourByIdLite(int tourId);
 		IEnumerable<Tour> GetTourRequests();
 		bool SaveChanges();
+		bool UpdatePostingStatus(int tourId, TourPostingStatus status);
+
+        bool SaveChanges();
 	}
 }
