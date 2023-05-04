@@ -1,10 +1,16 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Information;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
 using SeetourAPI.BL.AdminManger;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
+using System;
+
+
 
 namespace SeetourAPI.Controllers
 {
@@ -80,6 +86,7 @@ namespace SeetourAPI.Controllers
 
 
 
+       
         [HttpGet("TopTourRevenueName")]
         public IActionResult GetTopTourRevenue()
         {
@@ -90,13 +97,18 @@ namespace SeetourAPI.Controllers
                 .FirstOrDefault();
 
             var tour = _context.Tours.FirstOrDefault(t => t.Id == mostBookedTour);
-            if(tour != null)
-            {
-            return Ok(tour.Title);
+            var title = tour.Title;
 
+            if (tour != null)
+            {
+                var dto = new TopTourRevenueDTO { TourName = title };
+                return Ok(dto);
             }
             else
-                return Ok("");
+            {
+                var dto=new TopTourRevenueDTO { TourName= title };
+                return Ok(dto);
+            }
         }
 
 
@@ -133,11 +145,11 @@ namespace SeetourAPI.Controllers
 
             decimal refundRate = completed == 0 ? 0 : ((decimal)Refunded / completed) * 100;
 
-            return Ok($"Refund rate: {refundRate}%");
+            return Ok(refundRate);
         }
 
 
-        [HttpPost("TourGuideName")]
+        [HttpGet("TourGuideName")]
         public IActionResult Search(string Name)
         {
 
