@@ -64,7 +64,7 @@ namespace SeetourAPI.Controllers
             return Unauthorized();
 
         }
-
+        
         [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPut]
         public ActionResult EditTour(int id, Tour tour)

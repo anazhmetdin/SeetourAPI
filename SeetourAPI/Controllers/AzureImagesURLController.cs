@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.Services;
-using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Photos;
 
@@ -30,14 +29,9 @@ namespace SeetourAPI.Controllers
             try
             {
                 url = await _azureBlobStorage.UploadBlobAsync(file);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            
             var imageInfo = new Photo
             {
+                Id=0,
                 Url = url
 
             };
@@ -45,9 +39,16 @@ namespace SeetourAPI.Controllers
             //Getting decoded URl
             _context.Photos.Add(imageInfo);
             _context.SaveChanges();
+                return Ok(imageInfo);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            
 
             // Return a response indicating the image was uploaded successfully
-            return Ok(imageInfo);
+            return Ok();
         }
         #endregion
 

@@ -22,8 +22,13 @@ namespace SeetourAPI.DAL.Repos
 		IEnumerable<Tour> GetTourGuideToursLite(string id);
 		Tour? GetTourByIdLite(int tourId);
 		IEnumerable<Tour> GetTourRequests();
+		bool SaveChanges();
+		bool UpdatePostingStatus(int tourId, TourPostingStatus status);
+
+       // bool SaveChanges();
         public bool bookTour(BookedTour bookedTour);
         public Tour? GetTourByIdLite2(int id);
+
 
         bool SaveChanges();
 		Tour? GetTourByIdLiteIncluded(int tourId);
@@ -36,5 +41,6 @@ namespace SeetourAPI.DAL.Repos
 		void AddTourLike(string userId, int tourId);
 		void RemoveTourWish(CustomerWishlist tourWishedBefore);
 		void AddTourWish(string userId, int tourId);
+
 	}
 }

@@ -42,7 +42,7 @@ namespace SeetourAPI.DAL.Repos
             }
         }
 
-        
+
 
         public Tour? EditTour(int id, Tour tour)
         {
@@ -56,17 +56,17 @@ namespace SeetourAPI.DAL.Repos
                     t.DateFrom = tour.DateFrom;
                     t.DateTo = tour.DateTo;
                     t.Price = tour.Price;
-                    t.LocationFrom= tour.LocationFrom;
-                    t.LocationTo= tour.LocationTo;
-                    t.LocationToUrl= tour.LocationToUrl;
-                    t.LocationFromUrl= tour.LocationFromUrl;
-                    t.Category= tour.Category;
-                    t.HasTransportation= tour.HasTransportation;
-                    t.LastDateToCancel= tour.LastDateToCancel; 
-                    t.Capacity= tour.Capacity;
-                    t.TourGuideId= tour.TourGuideId;
+                    t.LocationFrom = tour.LocationFrom;
+                    t.LocationTo = tour.LocationTo;
+                    t.LocationToUrl = tour.LocationToUrl;
+                    t.LocationFromUrl = tour.LocationFromUrl;
+                    t.Category = tour.Category;
+                    t.HasTransportation = tour.HasTransportation;
+                    t.LastDateToCancel = tour.LastDateToCancel;
+                    t.Capacity = tour.Capacity;
+                    t.TourGuideId = tour.TourGuideId;
                     _Context.SaveChanges();
-                    return tour;        
+                    return tour;
                 }
             }
             return new Tour();
@@ -79,7 +79,7 @@ namespace SeetourAPI.DAL.Repos
                 var t = _Context.Tours.Find(id);
                 if (t != null)
                 {
-                    t.TourPostingStatus= tour.TourPostingStatus;
+                    t.TourPostingStatus = tour.TourPostingStatus;
                     _Context.SaveChanges();
                 }
             }
@@ -94,17 +94,19 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.TourGuide)
                 .ThenInclude(t => t!.User);
             return tours;
-		}
-		public IEnumerable<Tour> GetAllLite()
-		{
-			var tours = _Context.Tours
-				.Include(t => t.Photos)
-				.Include(t => t.Likes)
-				.Include(t => t.Wishlist)
-				.Include(t => t.TourGuide)
-				.ThenInclude(t => t!.User);
-			return tours;
-		}
+
+        }
+        public IEnumerable<Tour> GetAllLite()
+        {
+            var tours = _Context.Tours
+                .Include(t => t.Photos)
+                .Include(t => t.Likes)
+                .Include(t => t.Wishlist)
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t!.User);
+            return tours;
+        }
+
 
 		public IEnumerable<CustomerLikes> GetTourLikes(int tourId)
 		{
@@ -129,19 +131,19 @@ namespace SeetourAPI.DAL.Repos
 
 		public Tour? GetTourById(int id)
         {
-            var tour= _Context.Tours
-                .Include(a=>a.Photos)
-                .Include(a=>a.Likes)
+            var tour = _Context.Tours
+                .Include(a => a.Photos)
+                .Include(a => a.Likes)
                 .Include(t => t.Wishlist)
-                .Include(a=> a.Questions)
-                .Include(a=>a.Bookings)
+                .Include(a => a.Questions)
+                .Include(a => a.Bookings)
                 .ThenInclude(a => a.Review)
-                .Include(a=>a.TourGuide)
-                .ThenInclude(a=>a.User)
-                .FirstOrDefault(a=>a.Id==id);
+                .Include(a => a.TourGuide)
+                .ThenInclude(a => a.User)
+                .FirstOrDefault(a => a.Id == id);
 
-            if(tour != null)
-            { 
+            if (tour != null)
+            {
                 return tour;
 
             }
@@ -157,17 +159,17 @@ namespace SeetourAPI.DAL.Repos
                 .Where(t => t.TourGuideId == id);
         }
 
-		public IEnumerable<Tour> GetTourRequests()
-		{
+        public IEnumerable<Tour> GetTourRequests()
+        {
             return _Context.Tours
                 .Where(t => t.TourPostingStatus == TourPostingStatus.Pending);
-		}
+        }
 
-		public bool SaveChanges()
-		{
-			return _Context.SaveChanges() > 0;
-		}
-
+        public bool SaveChanges()
+        {
+            return _Context.SaveChanges() > 0;
+        }
+        
 		public Tour? GetTourByIdLite(int tourId)
 		{
 			return _Context.Tours.Find(tourId);
@@ -211,6 +213,20 @@ namespace SeetourAPI.DAL.Repos
             }
             else return null;
         }
+
+        public bool UpdatePostingStatus(int tourId, TourPostingStatus status)
+        {
+            var tour = _Context.Tours.Find(tourId);
+
+            if (tour == null) { return false; }
+
+            tour.TourPostingStatus = status;
+
+            return true;
+        }
+
+    }
+    
 
 		public IEnumerable<Tour> GetAllPlain()
 		{
@@ -256,4 +272,5 @@ namespace SeetourAPI.DAL.Repos
 				.Where(t => t.TourGuideId == id);
 		}
 	}
+
 }
