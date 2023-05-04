@@ -25,6 +25,7 @@ namespace SeetourAPI.Data.Context
         public DbSet<BookedTour> BookedTours { get; set; }
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
+        public DbSet<TourBookingPayment> payments { get; set; }
 
         public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)
