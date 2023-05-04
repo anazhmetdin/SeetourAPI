@@ -125,5 +125,53 @@ namespace SeetourAPI.BL.CustomerManager
 
 			return _reviewRepo.SaveChanges();
 		}
+
+		public bool ToggleTourLike(string userId, CustomerTourSaveDto tourLike)
+		{
+			var tourLikes = _tourRepo.GetTourLikes(tourLike.tourId);
+			if (tourLikes == null) return false;
+
+			var TourLikedBefore = tourLikes.FirstOrDefault(l => l.CustomerId == userId);
+
+			if ((tourLike.isAdded == 1) == (TourLikedBefore != null))
+			{
+				return false;
+			}
+
+			if (TourLikedBefore != null)
+			{
+				_tourRepo.RemoveTourLike(TourLikedBefore);
+			}
+			else
+			{
+				_tourRepo.AddTourLike(userId, tourLike.tourId);
+			}
+
+			return _tourRepo.SaveChanges();
+		}
+
+		public bool ToggleTourWishlist(string userId, CustomerTourSaveDto tourWish)
+		{
+			var tourWishlists = _tourRepo.GetTourWishlist(tourWish.tourId);
+			if (tourWishlists == null) return false;
+
+			var TourWishedBefore = tourWishlists.FirstOrDefault(l => l.CustomerId == userId);
+
+			if ((tourWish.isAdded == 1) == (TourWishedBefore != null))
+			{
+				return false;
+			}
+
+			if (TourWishedBefore != null)
+			{
+				_tourRepo.RemoveTourWish(TourWishedBefore);
+			}
+			else
+			{
+				_tourRepo.AddTourWish(userId, tourWish.tourId);
+			}
+
+			return _tourRepo.SaveChanges();
+		}
 	}
 }
