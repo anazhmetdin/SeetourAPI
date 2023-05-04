@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Photos;
@@ -9,7 +10,8 @@ namespace SeetourAPI.DAL.Repos
     {
         public IEnumerable<Tour> GetAll();
         public IEnumerable<Tour> GetAllLite();
-        public Tour? GetTourById(int id);
+        public IEnumerable<Tour> GetAllPlain();
+		public Tour? GetTourById(int id);
         public Tour? EditTour(int id,Tour tour);
         public void AddTour(Tour tour);
         public void DeleteTour(int id);
@@ -24,5 +26,10 @@ namespace SeetourAPI.DAL.Repos
 
         bool SaveChanges();
 		Tour? GetTourByIdLiteIncluded(int tourId);
+
+        public IEnumerable<CustomerLikes> GetTourLikes(int tourId);
+        public IEnumerable<CustomerWishlist> GetTourWishlist(int tourId);
+
+		public IEnumerable<TourPhoto> GetTourPhotos(int tourId);
 	}
 }

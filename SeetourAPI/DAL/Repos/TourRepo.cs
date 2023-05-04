@@ -94,19 +94,40 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.TourGuide)
                 .ThenInclude(t => t!.User);
             return tours;
-        }
-        public IEnumerable<Tour> GetAllLite()
-        {
-            var tours = _Context.Tours
-                .Include(t => t.Photos)
-                .Include(t => t.Likes)
-                .Include (t => t.Wishlist)
-                .Include(t => t.TourGuide)
-                .ThenInclude(t => t!.User);
-            return tours;
-        }
+		}
+		public IEnumerable<Tour> GetAllLite()
+		{
+			var tours = _Context.Tours
+				.Include(t => t.Photos)
+				.Include(t => t.Likes)
+				.Include(t => t.Wishlist)
+				.Include(t => t.TourGuide)
+				.ThenInclude(t => t!.User);
+			return tours;
+		}
 
-        public Tour? GetTourById(int id)
+		public IEnumerable<CustomerLikes> GetTourLikes(int tourId)
+		{
+			var likes = _Context.CustomerLikes
+				.Where(l => l.TourId == tourId);
+			return likes;
+		}
+
+		public IEnumerable<CustomerWishlist> GetTourWishlist(int tourId)
+		{
+			var wishlists = _Context.CustomerWishlists
+				.Where(l => l.TourId == tourId);
+			return wishlists;
+		}
+
+		public IEnumerable<TourPhoto> GetTourPhotos(int tourId)
+		{
+			var photos = _Context.TourPhoto
+				.Where(l => l.TourId == tourId);
+			return photos;
+		}
+
+		public Tour? GetTourById(int id)
         {
             var tour= _Context.Tours
                 .Include(a=>a.Photos)
@@ -193,5 +214,13 @@ namespace SeetourAPI.DAL.Repos
             }
             else return null;
         }
-    }
+
+		public IEnumerable<Tour> GetAllPlain()
+		{
+            var tours = _Context.Tours
+                .Include(t => t.TourGuide)
+				.ThenInclude(t => t.User);
+			return tours;
+		}
+	}
 }
