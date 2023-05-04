@@ -31,5 +31,9 @@ namespace SeetourAPI.DAL.Repos
         public IEnumerable<CustomerWishlist> GetTourWishlist(int tourId);
 
 		public IEnumerable<TourPhoto> GetTourPhotos(int tourId);
+		void RemoveTourLike(CustomerLikes customerLike);
+		void AddTourLike(string userId, int tourId);
+		void RemoveTourWish(CustomerWishlist tourWishedBefore);
+		void AddTourWish(string userId, int tourId);
 	}
 }

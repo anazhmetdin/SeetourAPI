@@ -80,5 +80,35 @@ namespace SeetourAPI.Controllers
 
 			return Ok();
 		}
+
+		[HttpPost("Tour/Like")]
+		public IActionResult LikeTour(CustomerTourSaveDto tourLike)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			bool done = _customerManager.ToggleTourLike(UserId, tourLike);
+
+			if (!done)
+			{
+				return BadRequest();
+			}
+
+			return Ok();
+		}
+
+		[HttpPost("Tour/Wish")]
+		public IActionResult WishTour(CustomerTourSaveDto tourWish)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			bool done = _customerManager.ToggleTourWishlist(UserId, tourWish);
+
+			if (!done)
+			{
+				return BadRequest();
+			}
+
+			return Ok();
+		}
 	}
 }

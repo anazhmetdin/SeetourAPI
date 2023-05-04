@@ -222,5 +222,33 @@ namespace SeetourAPI.DAL.Repos
 				.ThenInclude(t => t.User);
 			return tours;
 		}
+
+		public void RemoveTourLike(CustomerLikes customerLike)
+		{
+            _Context.CustomerLikes.Remove(customerLike);
+		}
+
+		public void AddTourLike(string userId, int tourId)
+		{
+            _Context.CustomerLikes.Add(new CustomerLikes()
+            {
+                CustomerId = userId,
+                TourId = tourId
+            });
+		}
+
+		public void RemoveTourWish(CustomerWishlist tourWishedBefore)
+		{
+			_Context.CustomerWishlists.Remove(tourWishedBefore);
+		}
+
+		public void AddTourWish(string userId, int tourId)
+		{
+			_Context.CustomerWishlists.Add(new CustomerWishlist()
+			{
+				CustomerId = userId,
+				TourId = tourId
+			});
+		}
 	}
 }
