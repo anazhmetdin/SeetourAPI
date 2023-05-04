@@ -29,6 +29,7 @@ namespace SeetourAPI.Controllers
 
         
         [HttpPost]
+        [Authorize(Policy = Policies.AllowCustomers)]
         public ActionResult AddToWoshlist(int tourid)
         {
 

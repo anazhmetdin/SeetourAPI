@@ -21,14 +21,14 @@ namespace SeetourAPI.DAL.Repos
         public bool AddToWishlist(CustomerWishlist customerWishlist)
         {
             var cuswishlist = _context.CustomerWishlists.FirstOrDefault(w => w.CustomerId == customerWishlist.CustomerId && w.TourId==customerWishlist.TourId);
-            if(cuswishlist == null) 
+            if(cuswishlist != null) 
             { 
             
+            return false;
+            }
                _context.CustomerWishlists.Add(customerWishlist);
                 _context.SaveChanges();
                 return true;
-            }
-            return false;
         }
 
         public SeetourUser GetCustomerByID(int id)

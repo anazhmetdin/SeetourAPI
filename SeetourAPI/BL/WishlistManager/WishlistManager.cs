@@ -37,9 +37,6 @@ namespace SeetourAPI.BL.WishlistManager
         public bool AddToWishlist(int tourid)
         {
             string cusId = GetCurrentUserId();
-            var tour = _tourRepo.GetTourByIdLite(tourid);
-            if (tour != null)
-            {
                 var wishlist = new CustomerWishlist
                 {
                     CustomerId = cusId,
@@ -51,7 +48,6 @@ namespace SeetourAPI.BL.WishlistManager
                 {
                     return true;
                 }
-            }
                 return false;
 
             

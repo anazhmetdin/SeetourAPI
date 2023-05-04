@@ -26,6 +26,6 @@ namespace SeetourAPI.DAL.Repos
         public bool bookTour(BookedTour bookedTour);
         public Tour? GetTourByIdLite2(int id);
 
-        bool SaveChanges();
+       // bool SaveChanges();
 	}
 }

@@ -149,7 +149,7 @@ namespace SeetourAPI.DAL.Repos
         {
             return _Context.SaveChanges() > 0;
         }
-
+        
 		public Tour? GetTourByIdLite(int tourId)
 		{
 			return _Context.Tours.Find(tourId);
@@ -182,7 +182,6 @@ namespace SeetourAPI.DAL.Repos
             }
             else return null;
         }
-    }
         public bool UpdatePostingStatus(int tourId, TourPostingStatus status)
         {
             var tour = _Context.Tours.Find(tourId);
@@ -194,10 +193,6 @@ namespace SeetourAPI.DAL.Repos
             return true;
         }
 
-        public Tour? GetTourByIdLite(int tourId)
-        {
-            return _Context.Tours.Find(tourId);
-        }
-
     }
+    
 }
