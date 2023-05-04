@@ -23,5 +23,9 @@ namespace SeetourAPI.DAL.Repos
 		bool UpdatePostingStatus(int tourId, TourPostingStatus status);
 
        // bool SaveChanges();
+        public bool bookTour(BookedTour bookedTour);
+        public Tour? GetTourByIdLite2(int id);
+
+        bool SaveChanges();
 	}
 }
