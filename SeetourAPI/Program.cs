@@ -17,6 +17,7 @@ using SeetourAPI.Data.Policies;
 using SeetourAPI.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.BL.WishlistManager;
 
 namespace SeetourAPI
 {
@@ -65,8 +66,8 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
             builder.Services.AddScoped<TourBookingsRepo>();
             builder.Services.AddScoped<ITourGuideDashBoardRepo, TourGuideDashBoardRepo>();
-
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
+            builder.Services.AddScoped<IWishlistRepo, WishlistRepo>();
             #region Azure
             builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
             #endregion
@@ -78,6 +79,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourAnswerManager, TourAnswerManager>();
             builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
             builder.Services.AddScoped<ITourGuideManager, TourGuideManager>();
+            builder.Services.AddScoped<IWishlistManager, WishlistManager>();
             builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
