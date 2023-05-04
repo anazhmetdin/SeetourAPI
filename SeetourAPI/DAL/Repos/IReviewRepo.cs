@@ -15,5 +15,6 @@ namespace SeetourAPI.DAL.Repos
 
         void AddReviewPlain(Review review);
         bool SaveChanges();
+		IEnumerable<Review> GetTourReviews(int id);
 	}
 }

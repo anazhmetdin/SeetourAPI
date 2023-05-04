@@ -94,6 +94,7 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.TourGuide)
                 .ThenInclude(t => t!.User);
             return tours;
+
         }
         public IEnumerable<Tour> GetAllLite()
         {
@@ -106,7 +107,29 @@ namespace SeetourAPI.DAL.Repos
             return tours;
         }
 
-        public Tour? GetTourById(int id)
+
+		public IEnumerable<CustomerLikes> GetTourLikes(int tourId)
+		{
+			var likes = _Context.CustomerLikes
+				.Where(l => l.TourId == tourId);
+			return likes;
+		}
+
+		public IEnumerable<CustomerWishlist> GetTourWishlist(int tourId)
+		{
+			var wishlists = _Context.CustomerWishlists
+				.Where(l => l.TourId == tourId);
+			return wishlists;
+		}
+
+		public IEnumerable<TourPhoto> GetTourPhotos(int tourId)
+		{
+			var photos = _Context.TourPhoto
+				.Where(l => l.TourId == tourId);
+			return photos;
+		}
+
+		public Tour? GetTourById(int id)
         {
             var tour = _Context.Tours
                 .Include(a => a.Photos)
@@ -139,9 +162,6 @@ namespace SeetourAPI.DAL.Repos
         public IEnumerable<Tour> GetTourRequests()
         {
             return _Context.Tours
-                .Include(t => t.TourGuide)
-                .ThenInclude(t => t!.User)
-                .Include(t => t.Photos)
                 .Where(t => t.TourPostingStatus == TourPostingStatus.Pending);
         }
 
@@ -149,7 +169,7 @@ namespace SeetourAPI.DAL.Repos
         {
             return _Context.SaveChanges() > 0;
         }
-
+        
 		public Tour? GetTourByIdLite(int tourId)
 		{
 			return _Context.Tours.Find(tourId);
@@ -193,5 +213,62 @@ namespace SeetourAPI.DAL.Repos
             }
             else return null;
         }
-    }
+
+        public bool UpdatePostingStatus(int tourId, TourPostingStatus status)
+        {
+            var tour = _Context.Tours.Find(tourId);
+
+            if (tour == null) { return false; }
+
+            tour.TourPostingStatus = status;
+
+            return true;
+        }
+
+
+		public IEnumerable<Tour> GetAllPlain()
+		{
+            var tours = _Context.Tours
+                .Include(t => t.TourGuide)
+				.ThenInclude(t => t.User);
+			return tours;
+		}
+
+		public void RemoveTourLike(CustomerLikes customerLike)
+		{
+            _Context.CustomerLikes.Remove(customerLike);
+		}
+
+		public void AddTourLike(string userId, int tourId)
+		{
+            _Context.CustomerLikes.Add(new CustomerLikes()
+            {
+                CustomerId = userId,
+                TourId = tourId
+            });
+		}
+
+		public void RemoveTourWish(CustomerWishlist tourWishedBefore)
+		{
+			_Context.CustomerWishlists.Remove(tourWishedBefore);
+		}
+
+		public void AddTourWish(string userId, int tourId)
+		{
+			_Context.CustomerWishlists.Add(new CustomerWishlist()
+			{
+				CustomerId = userId,
+				TourId = tourId
+			});
+		}
+
+		public IEnumerable<Tour> GetTourGuideToursLite(string id)
+		{
+			return _Context.Tours
+                .Include(t => t.TourGuide)
+                .ThenInclude(t => t.User)
+				.Where(t => t.TourGuideId == id);
+		}
+	}
+
 }
