@@ -29,13 +29,14 @@ namespace SeetourAPI.Controllers
 
         
         [HttpPost]
+        [Authorize(Policy = Policies.AllowCustomers)]
         public ActionResult AddToWoshlist(int tourid)
         {
 
             if(_wishlistManager.AddToWishlist(tourid))
                return Ok("Added");
             else
-                return BadRequest("Alreadybooked");
+                return BadRequest("AlreadyAdded");
         }
 
 
