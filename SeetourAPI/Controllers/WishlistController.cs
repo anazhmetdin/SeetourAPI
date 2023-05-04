@@ -29,7 +29,6 @@ namespace SeetourAPI.Controllers
 
         
         [HttpPost]
-        [Authorize(Policy = Policies.AllowCustomers)]
         public ActionResult AddToWoshlist(int tourid)
         {
 
@@ -37,6 +36,7 @@ namespace SeetourAPI.Controllers
                return Ok("Added");
             else
                 return BadRequest("AlreadyAdded");
+
         }
 
 
