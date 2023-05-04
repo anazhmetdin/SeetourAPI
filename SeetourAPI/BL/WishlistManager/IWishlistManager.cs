@@ -5,7 +5,7 @@ namespace SeetourAPI.BL.WishlistManager
 {
     public interface IWishlistManager
     {
-        public string AddToWishlist(int  tourid);
+        public bool AddToWishlist(int  tourid);
         ICollection<WishlistToursDto> GetCustomerToursInWishliist();
     }
 }

@@ -6,7 +6,7 @@ namespace SeetourAPI.DAL.Repos
     public interface IWishlistRepo
     {
         public SeetourUser GetCustomerByID(int id);
-        public void AddToWishlist(CustomerWishlist customerWishlist);
+        public bool AddToWishlist(CustomerWishlist customerWishlist);
         IEnumerable<CustomerWishlist> GetCustomerToursInWishlist(string id);
 
         int SaveChanges();

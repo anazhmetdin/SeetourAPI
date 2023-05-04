@@ -34,7 +34,7 @@ namespace SeetourAPI.BL.WishlistManager
             return userId ?? "82712fd4-3d4c-4569-bbb7-a29e65de36ec";
         }
         #endregion
-        public string AddToWishlist(int tourid)
+        public bool AddToWishlist(int tourid)
         {
             string cusId = GetCurrentUserId();
             var tour = _tourRepo.GetTourByIdLite(tourid);
@@ -49,10 +49,10 @@ namespace SeetourAPI.BL.WishlistManager
 
                 if (_wishlistRepo.AddToWishlist(wishlist))
                 {
-                    return "Added";
+                    return true;
                 }
             }
-                return "Already Added";
+                return false;
 
             
 
