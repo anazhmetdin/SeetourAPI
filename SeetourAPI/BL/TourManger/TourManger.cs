@@ -243,7 +243,7 @@ namespace SeetourAPI.BL.TourManger
                 return "Already Booked";
             }
 
-            return "Booked Successfully";
+            return $"{bookedTour.Id}";
         }
 
         public async Task<BookTourDto?> BookTourDetailsAsync(int id)
