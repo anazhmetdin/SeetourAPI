@@ -98,6 +98,6 @@ namespace SeetourAPI.Controllers
             if(s!=null)
             { return Ok(s); } 
             return NotFound();
-         }
+        }
     }
 }
