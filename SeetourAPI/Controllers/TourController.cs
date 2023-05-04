@@ -41,7 +41,8 @@ namespace SeetourAPI.Controllers
             manger = Manger;
             _reviewManger = reviewManger;
         }
-
+        
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPost]
         [Authorize(Policy = Policies.AcceptedTourGuides)]
         public ActionResult CreateTour(AddTourDto addTourDto)
@@ -49,7 +50,6 @@ namespace SeetourAPI.Controllers
             ITourManger.AddTour(addTourDto);
             return Created("", addTourDto);
         }
-
         [HttpPost]
         [Route("AddPics")]
         [Authorize(Policy = Policies.AcceptedTourGuides)]

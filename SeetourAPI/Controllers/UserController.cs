@@ -150,7 +150,7 @@ namespace SeetourAPI.Controllers
             // Combination SecretKey, HashingAlgorithm
             var siginingCreedentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256Signature);
 
-            var expiry = DateTime.Now.AddDays(1);
+            var expiry = DateTime.Now.AddDays(2);
 
             var claimlist = await Usermanger.GetClaimsAsync(user);
 
