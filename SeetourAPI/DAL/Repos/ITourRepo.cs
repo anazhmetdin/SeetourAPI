@@ -23,5 +23,6 @@ namespace SeetourAPI.DAL.Repos
         public Tour? GetTourByIdLite2(int id);
 
         bool SaveChanges();
+		Tour? GetTourByIdLiteIncluded(int tourId);
 	}
 }

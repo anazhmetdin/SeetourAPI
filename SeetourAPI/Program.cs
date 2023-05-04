@@ -16,8 +16,8 @@ using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Policies;
 using SeetourAPI.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.BL.CustomerManager;
+using SeetourAPI.BL.TourGuideManager;
 
 namespace SeetourAPI
 {
@@ -64,6 +64,8 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourGuideRepo, TourGuideRepo>();
             builder.Services.AddScoped<IUserRepo, UserRepo>();
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
+            builder.Services.AddScoped<IBookingRepo, BookingRepo>();
+            builder.Services.AddScoped<IBookedTourRepo, BookedTourRepo>();
             builder.Services.AddScoped<ICustomerRepo, CustomerRepo>();
             builder.Services.AddScoped<TourBookingsRepo>();
 
@@ -138,7 +140,7 @@ namespace SeetourAPI
 
             #region Hosted Services
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
-            builder.Services.AddHostedService<TimedRatingCalculatorService>();
+            builder.Services.AddHostedService<TimedBookingCheckerService>();
             builder.Services.AddScoped<ToursHandler>();
             builder.Services.AddHostedService<AdminInitializer>();
             #endregion
