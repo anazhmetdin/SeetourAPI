@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.AdminManger;
-using SeetourAPI.BL.TourGuideManager;
-using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
 
@@ -13,25 +12,16 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    //[Authorize(Policy = Policies.AllowAdmins)]
-    public class AdminController : ControllerBase
+    [Authorize(Policy = Policies.AllowAdmins)]
+    public class DashboardController : ControllerBase
     {
-        private readonly SeetourContext context;
         private readonly IAdminManger _adminManager;
-        private readonly ITourGuideManager _tourGuideManager;
+        private readonly SeetourContext _context;
 
-        public AdminController(SeetourContext context ,IAdminManger adminManager, ITourGuideManager tourGuideManager)
+        public DashboardController(IAdminManger adminManager,SeetourContext context)
         {
-            this.context = context;
             _adminManager = adminManager;
-            _tourGuideManager = tourGuideManager;
-        }
-
-        [HttpGet("allUsers")]
-        public ActionResult<IEnumerable<SeetourUser>> GetAllUser()
-        {
-            var users = context.Users.ToList();
-            return Ok(users);
+            _context = context;
         }
 
         [HttpGet("all")]
@@ -94,54 +84,13 @@ namespace SeetourAPI.Controllers
         {
             _adminManager.DeleteSeeTourUser(id);
             return NoContent();
-		}
+        }
 
-		[HttpGet("Tour/Request")]
-		public IActionResult GetTourRequests()
-		{
-			return Ok(_adminManager.GetTourRequests());
-		}
 
-		[HttpPost("Tour/Request")]
-		public IActionResult EditPostRequest(AdminTourPostRequestDto postRequestDto)
-		{
-            if (_adminManager.UpdateTourStatus(postRequestDto))
-                return NoContent();
 
-            return BadRequest();
-		}
 
-		[HttpGet("TourGuide/Applicant")]
-		public IActionResult GetApplicants()
-		{
-			return Ok(_tourGuideManager.GetApplicants());
-		}
+        
 
-		[HttpGet("TourGuide/Applicant/{Id}")]
-		public IActionResult GetApplicants(string Id)
-		{
-			var applicant = _tourGuideManager.GetApplicant(Id);
-
-			if (applicant == null)
-			{
-				return NotFound();
-			}
-
-			return Ok(applicant);
-		}
-
-		[HttpPatch("TourGuide/Applicant")]
-		public IActionResult GetApplicants(TGStatusDto statusDto)
-		{
-			var updated = _tourGuideManager.ChangeTourGuideStatus(statusDto);
-
-			if (!updated)
-			{
-				return BadRequest();
-			}
-
-			return Ok();
-		}
-	}
+    }
 
 }

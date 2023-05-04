@@ -27,6 +27,7 @@ namespace SeetourAPI.Data.Context
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
         public DbSet<TourBookingPayment> payments { get; set; }
+        public DbSet<Views> Views { get; set; }
         public DbSet<TourGuideRating> TourGuideRatings { get; set; }
         public DbSet<TourBooking> TourBookings { get; set; }
         public DbSet<TourPhoto> TourPhoto { get; set; }
@@ -82,8 +83,9 @@ namespace SeetourAPI.Data.Context
                 b.HasData(customers);
             });
             #endregion
-            #region TourGuide
-            builder.Entity<TourGuide>(b =>
+  
+        #region TourGuide
+        builder.Entity<TourGuide>(b =>
             {
                 b.HasKey(x => x.Id);
 
