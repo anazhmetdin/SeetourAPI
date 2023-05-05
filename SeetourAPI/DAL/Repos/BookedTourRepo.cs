@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.DAL.Repos
@@ -32,6 +33,16 @@ namespace SeetourAPI.DAL.Repos
 		public BookedTour? GetByIdLite(int bookedTourId)
 		{
 			return _Context.BookedTours.Find(bookedTourId);
+		}
+
+		public bool SaveChanges()
+		{
+			return _Context.SaveChanges() > 0;
+		}
+
+		public void UpdateBooking(BookedTour booking)
+		{
+			_Context.BookedTours.Entry(booking).State = EntityState.Modified;
 		}
 	}
 }

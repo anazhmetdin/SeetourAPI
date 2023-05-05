@@ -14,7 +14,7 @@ namespace SeetourAPI.Controllers
 {
 	[Route("api/[controller]")]
 	[ApiController]
-	//[Authorize(policy:Policies.AllowCustomers)]
+	[Authorize(policy:Policies.AllowCustomers)]
 	public class CustomerController : ControllerBase
 	{
 		private readonly IReviewManager _reviewManager;

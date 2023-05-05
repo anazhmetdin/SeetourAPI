@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Models;
+﻿using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.DAL.Repos
 {
@@ -7,5 +8,7 @@ namespace SeetourAPI.DAL.Repos
 		IEnumerable<BookedTour> GetAll();
 		IEnumerable<BookedTour> GetAllLit();
 		BookedTour? GetByIdLite(int bookedTourId);
+		bool SaveChanges();
+		void UpdateBooking(BookedTour booking);
 	}
 }
