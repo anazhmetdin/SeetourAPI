@@ -18,6 +18,7 @@ using SeetourAPI.Services;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using SeetourAPI.BL.CustomerManager;
 using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.BL.BookingManager;
 
 namespace SeetourAPI
 {
@@ -82,7 +83,8 @@ namespace SeetourAPI
             builder.Services.AddScoped<ITourQuestionManger, TourQuestionManger>();
             builder.Services.AddScoped<ITourGuideManager, TourGuideManager>();
             builder.Services.AddScoped<ICustomerManager, CustomerManager>();
-            builder.Services.AddScoped<HttpContextAccessor>();
+            builder.Services.AddScoped<IBookingManager, BookingManager>();
+			builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
             #region IdentityManger
