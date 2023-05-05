@@ -91,10 +91,10 @@ namespace SeetourAPI.Controllers
 
         [HttpGet]
         [Route("Get Statistics")]
-        public IActionResult GetStatistics(string id)
+        public IActionResult GetStatistics()
         {
-            //string userid = _tourManger.GetCurrentUserId();
-          var s=  _tourGuideManager.GetTStatistics(id);
+            string userid = _tourManger.GetCurrentUserId();
+            var s=  _tourGuideManager.GetTStatistics(userid);
             if(s!=null)
             { return Ok(s); } 
             return NotFound();
