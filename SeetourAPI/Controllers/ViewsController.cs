@@ -163,7 +163,7 @@ namespace SeetourAPI.Controllers
                 return Ok(matchedUsers);
             }
             else
-                return Ok("");
+                return Ok(matchedUsers);
 
             
 
