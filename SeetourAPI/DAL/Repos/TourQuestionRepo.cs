@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 
@@ -27,6 +28,11 @@ namespace SeetourAPI.DAL.Repos
                 _context.SaveChanges();
 
             }
+        }
+
+        public IEnumerable<TourQuestion> GetAllWithAnswers(int tourId)
+        {
+            return _context.TourQuestions.Where(t=> t.TourId == tourId).Include(t=>t.TourAnswer);
         }
 
         public IEnumerable<TourQuestion> GetAll()

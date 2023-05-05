@@ -94,10 +94,22 @@ namespace SeetourAPI.Services
         {
 
             return new TourDto(
-                GetTourCardDto(tour,  userId),
+                Id: tour.Id,
+                Photos: tour.Photos.Select(p => p.Url).ToArray(),
+                LocationTo: tour.LocationTo,
+                LocationFrom: tour.LocationFrom,
+                TourguideId: tour.TourGuideId,
+                Price: tour.Price,
+                Likes: tour.Likes.Count,
+                Bookings: tour.BookingsCount,
+                Capacity: tour.Capacity,
+                DateFrom: tour.DateFrom.Date.ToString(),
+                DateTo: tour.DateTo.Date.ToString(),
+                Title: tour.Title,
                 hasTransportation: tour.HasTransportation,
                 Description:tour.Description,
-                Reviews: tour.Reviews.Select(r => r.Comment).ToArray()
+                Reviews: tour.Reviews.Select(r => r.Comment).ToArray(),
+                Rating: tour.Reviews.Select(r => r.Rating).ToArray()
             );
         }
 

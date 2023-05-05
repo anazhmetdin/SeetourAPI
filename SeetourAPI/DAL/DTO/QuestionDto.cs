@@ -1,6 +1,8 @@
 ﻿namespace SeetourAPI.DAL.DTO
 {
-    public class QuestionDto
-    {
-    }
+    public record QuestionDto
+    (
+        string Question,
+        int TourId
+    );
 }

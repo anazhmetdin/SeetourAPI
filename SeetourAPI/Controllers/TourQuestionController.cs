@@ -40,13 +40,13 @@ namespace SeetourAPI.Controllers
             return Ok(q);
         }
 
-        [HttpPost]
-        [Authorize(Policy = Policies.AllowCustomers)]
-        public IActionResult createTourQuestion(TourQuestion question )
-        {
-            ITourQuestionManger.AddQuestion( question);
-            return Created("Created Successfully", question);
-        }
+        //[HttpPost]
+        //[Authorize(Policy = Policies.AllowCustomers)]
+        //public IActionResult createTourQuestion(TourQuestion question )
+        //{
+        //    ITourQuestionManger.AddQuestion( question);
+        //    return Created("Created Successfully", question);
+        //}
 
         [HttpPut]
         [Authorize(Policy = Policies.AllowAdmins)]
