@@ -201,7 +201,8 @@ namespace SeetourAPI.DAL.Repos
         {
             var tour = _Context.Tours
                 .Include(a => a.Photos)
-                .Include(a => a.Questions)
+                .Include(a => a.Likes)
+                //.Include(a => a.Questions)
                 .Include(a => a.Bookings)
                 .ThenInclude(a => a.Review)
                 .FirstOrDefault(a => a.Id == id);

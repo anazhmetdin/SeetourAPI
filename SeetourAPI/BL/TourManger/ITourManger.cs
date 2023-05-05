@@ -15,6 +15,7 @@ namespace SeetourAPI.BL.TourManger
         public TourCardDto? DetailsCard(int id);
         public TourDto? DetailsTour(int id);
         public string GetCurrentUserId();
+        public Tour? getSomeDetails(int id);
         public Task<BookTourDto?> BookTourDetailsAsync(int id);
         public string BookTour(int id, int seatsNum, string userId);
         public void EditTourBYAdmin(int id, Tour tour);
