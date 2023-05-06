@@ -188,7 +188,9 @@ namespace SeetourAPI.DAL.Repos
 
         public bool bookTour(BookedTour bookedTour)
         {
-            if (_Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId) != null)
+            var book = _Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId);
+            
+            if (book != null && book.Status == BookedTourStatus.Booked)
             {
                 return false;
             }
