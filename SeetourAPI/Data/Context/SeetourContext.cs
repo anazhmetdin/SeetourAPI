@@ -31,8 +31,9 @@ namespace SeetourAPI.Data.Context
         public DbSet<TourPhoto> TourPhoto { get; set; }
         public DbSet<CustomerFavoriteTourGuide> CustomerFavoriteTourGuides { get; set; }
         public DbSet<EditRequest> EditRequests { get; set; }
+        public DbSet<TrendingTour> TrendingTours { get; set; }
 
-        public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
+		public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)
         {
             _env = env;

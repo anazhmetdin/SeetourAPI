@@ -254,5 +254,14 @@ namespace SeetourAPI.BL.TourManger
                 LocationFrom: tour.LocationFrom
                 );
         }
-    }
+
+		public ICollection<TourCardDto> GetIsTrendingCards()
+		{
+			var tours = TourRepo.GetTrendingPlain()
+				.Where(t => t.TourPostingStatus == TourPostingStatus.Accepted)
+				.Where(t => !t.IsCompleted);
+
+			return _handler.ReattachToursInfo(new ToursFilterDto(), tours);
+		}
+	}
 }

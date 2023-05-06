@@ -275,6 +275,18 @@ namespace SeetourAPI.DAL.Repos
 				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked)
 				.Where(t => t.TourGuideId == id);
 		}
+
+		public IEnumerable<Tour> GetTrendingPlain()
+		{
+			var tours = _Context.TrendingTours
+                .Include(t => t.Tour)
+				.ThenInclude(t => t!.TourGuide)
+				.ThenInclude(t => t!.User)
+                .Select(t => t.Tour!)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked);
+			
+            return tours;
+		}
 	}
 
 }
