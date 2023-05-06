@@ -1,4 +1,5 @@
 ﻿using SeetourAPI.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.DAL.Repos

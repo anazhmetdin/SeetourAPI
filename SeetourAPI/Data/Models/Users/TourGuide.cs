@@ -39,5 +39,6 @@ namespace SeetourAPI.Data.Models.Users
         public int RatingCount { get => TourGuideRating?.RatingCount ?? 0; }
 
         public virtual TourGuideRating? TourGuideRating { get; set; }
+        public virtual ICollection<CustomerFavoriteTourGuide> Favorites { get; set; } = new List<CustomerFavoriteTourGuide>();
     }
 }

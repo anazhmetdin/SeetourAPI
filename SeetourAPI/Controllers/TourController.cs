@@ -161,22 +161,35 @@ namespace SeetourAPI.Controllers
             }
 
             return Ok(tours);
-        }
+		}
 
-        [HttpGet("Upcoming")]
-        public IActionResult GetUpcomingCards([FromQuery] ToursFilterDto toursFilter)
-        {
-            var tours = ITourManger.GetIsCompletedCards(false, toursFilter);
+		[HttpGet("Upcoming")]
+		public IActionResult GetUpcomingCards([FromQuery] ToursFilterDto toursFilter)
+		{
+			var tours = ITourManger.GetIsCompletedCards(false, toursFilter);
 
-            if (tours == null)
-            {
-                return NotFound();
-            }
+			if (tours == null)
+			{
+				return NotFound();
+			}
 
-            return Ok(tours);
-        }
+			return Ok(tours);
+		}
 
-        [HttpGet("Past")]
+		[HttpGet("Trending")]
+		public IActionResult GetTrendingCards()
+		{
+			var tours = ITourManger.GetIsTrendingCards();
+
+			if (tours == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(tours);
+		}
+
+		[HttpGet("Past")]
         public IActionResult GetPastCards([FromQuery] ToursFilterDto toursFilter)
         {
             var tours = ITourManger.GetIsCompletedCards(true, toursFilter);

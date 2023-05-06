@@ -103,7 +103,8 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.Likes)
                 .Include(t => t.Wishlist)
                 .Include(t => t.TourGuide)
-                .ThenInclude(t => t!.User);
+                .ThenInclude(t => t!.User)
+                .Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked);
             return tours;
         }
 
@@ -183,12 +184,15 @@ namespace SeetourAPI.DAL.Repos
 				.Include(t => t.Wishlist)
 				.Include(t => t.TourGuide)
 				.ThenInclude(t => t!.User)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked)
 				.FirstOrDefault(t => t.Id == tourId);
 		}
 
         public bool bookTour(BookedTour bookedTour)
         {
-            if (_Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId) != null)
+            var book = _Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId);
+            
+            if (book != null && book.Status == BookedTourStatus.Booked)
             {
                 return false;
             }
@@ -205,7 +209,9 @@ namespace SeetourAPI.DAL.Repos
                 //.Include(a => a.Questions)
                 .Include(a => a.Bookings)
                 .ThenInclude(a => a.Review)
-                .FirstOrDefault(a => a.Id == id);
+				.Include(t => t.TourGuide)
+				.ThenInclude(t => t!.User)
+				.FirstOrDefault(a => a.Id == id);
 
             if (tour != null)
             {
@@ -231,7 +237,8 @@ namespace SeetourAPI.DAL.Repos
 		{
             var tours = _Context.Tours
                 .Include(t => t.TourGuide)
-				.ThenInclude(t => t.User);
+				.ThenInclude(t => t.User)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked);
 			return tours;
 		}
 
@@ -268,7 +275,20 @@ namespace SeetourAPI.DAL.Repos
 			return _Context.Tours
                 .Include(t => t.TourGuide)
                 .ThenInclude(t => t.User)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked)
 				.Where(t => t.TourGuideId == id);
+		}
+
+		public IEnumerable<Tour> GetTrendingPlain()
+		{
+			var tours = _Context.TrendingTours
+                .Include(t => t.Tour)
+				.ThenInclude(t => t!.TourGuide)
+				.ThenInclude(t => t!.User)
+                .Select(t => t.Tour!)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked);
+			
+            return tours;
 		}
 	}
 

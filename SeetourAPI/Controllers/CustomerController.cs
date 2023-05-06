@@ -26,6 +26,16 @@ namespace SeetourAPI.Controllers
 			_customerManager = customerManager;
 		}
 
+		[HttpGet("tour/cart")]
+		public IActionResult GetCartTours()
+		{
+			var Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			var bookings = _customerManager.GetIsCompletedTours(Id, BookedTourStatus.Cart);
+
+			return Ok(bookings);
+		}
+
 		[HttpGet("tour/upcoming")]
 		public IActionResult GetUpcomingBookedTours()
 		{
@@ -106,6 +116,36 @@ namespace SeetourAPI.Controllers
 			if (!done)
 			{
 				return BadRequest();
+			}
+
+			return Ok();
+		}
+
+		[HttpGet("Tour/Like/{tourId}")]
+		public IActionResult isTourLiked(int tourId)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			var like = _customerManager.isTourLiked(UserId, tourId);
+
+			if (like == null)
+			{
+				return NotFound();
+			}
+
+			return Ok();
+		}
+
+		[HttpGet("Tour/Wish/{tourId}")]
+		public IActionResult isTourWished(int tourId)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			var wish = _customerManager.isTourWished(UserId, tourId);
+
+			if (wish==null)
+			{
+				return NotFound();
 			}
 
 			return Ok();
