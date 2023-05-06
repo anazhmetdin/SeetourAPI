@@ -103,7 +103,8 @@ namespace SeetourAPI.DAL.Repos
                 .Include(t => t.Likes)
                 .Include(t => t.Wishlist)
                 .Include(t => t.TourGuide)
-                .ThenInclude(t => t!.User);
+                .ThenInclude(t => t!.User)
+                .Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked);
             return tours;
         }
 
@@ -183,6 +184,7 @@ namespace SeetourAPI.DAL.Repos
 				.Include(t => t.Wishlist)
 				.Include(t => t.TourGuide)
 				.ThenInclude(t => t!.User)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked)
 				.FirstOrDefault(t => t.Id == tourId);
 		}
 
@@ -204,7 +206,9 @@ namespace SeetourAPI.DAL.Repos
                 .Include(a => a.Questions)
                 .Include(a => a.Bookings)
                 .ThenInclude(a => a.Review)
-                .FirstOrDefault(a => a.Id == id);
+				.Include(t => t.TourGuide)
+				.ThenInclude(t => t!.User)
+				.FirstOrDefault(a => a.Id == id);
 
             if (tour != null)
             {
@@ -230,7 +234,8 @@ namespace SeetourAPI.DAL.Repos
 		{
             var tours = _Context.Tours
                 .Include(t => t.TourGuide)
-				.ThenInclude(t => t.User);
+				.ThenInclude(t => t.User)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked);
 			return tours;
 		}
 
@@ -267,6 +272,7 @@ namespace SeetourAPI.DAL.Repos
 			return _Context.Tours
                 .Include(t => t.TourGuide)
                 .ThenInclude(t => t.User)
+				.Where(t => t.TourGuide!.Status != TourGuideStatus.Blocked)
 				.Where(t => t.TourGuideId == id);
 		}
 	}

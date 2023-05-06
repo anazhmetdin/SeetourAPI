@@ -1,4 +1,5 @@
 ﻿using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.DAL.Repos
@@ -12,7 +13,9 @@ namespace SeetourAPI.DAL.Repos
         }
         public Customer GetCustomerById(string id)
         {
-            var cust = context.Customers.FirstOrDefault(c => c.Id == id);
+            var cust = context.Customers
+				.Where(t => !t.IsBlocked)
+				.FirstOrDefault(c => c.Id == id);
             return cust;
         }
     }
