@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Models.Users;
+﻿using SeetourAPI.Data.Models;
+using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.DAL.Repos
 {
@@ -8,6 +9,7 @@ namespace SeetourAPI.DAL.Repos
 		IEnumerable<TourGuide> GetAll();
 		public TourGuide? GetTourGuide(string id);
         public TourGuide? GetTourGuideLite(string id);
+       public IEnumerable<dynamic> GetAllQustionss(string id);
 		bool SaveChanges();
 	}
 }
