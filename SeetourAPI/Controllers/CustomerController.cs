@@ -26,6 +26,16 @@ namespace SeetourAPI.Controllers
 			_customerManager = customerManager;
 		}
 
+		[HttpGet("tour/cart")]
+		public IActionResult GetCartTours()
+		{
+			var Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			var bookings = _customerManager.GetIsCompletedTours(Id, BookedTourStatus.Cart);
+
+			return Ok(bookings);
+		}
+
 		[HttpGet("tour/upcoming")]
 		public IActionResult GetUpcomingBookedTours()
 		{
