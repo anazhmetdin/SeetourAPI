@@ -29,7 +29,7 @@ namespace SeetourAPI.Data.Context
         public DbSet<TourGuideRating> TourGuideRatings { get; set; }
         public DbSet<TourBooking> TourBookings { get; set; }
         public DbSet<TourPhoto> TourPhoto { get; set; }
-
+        public DbSet<CustomerFavoriteTourGuide> CustomerFavoriteTourGuides { get; set; }
         public DbSet<EditRequest> EditRequests { get; set; }
 
         public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
@@ -307,9 +307,23 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey<TourBooking>(bt => bt.Id);
             });
             #endregion
-        }
+            #region CustomerFavoriteTourGuides
+            builder.Entity<CustomerFavoriteTourGuide>(b =>
+			{
+				b.HasOne(c => c.TourGuide)
+					.WithMany(c => c.Favorites)
+					.HasForeignKey(c => c.TourGuideId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-        private T[] GetData<T> (string jsonfile)
+				b.HasOne(c => c.Customer)
+					.WithMany(c => c.Favorites)
+					.HasForeignKey(c => c.CustomerId)
+					.OnDelete(DeleteBehavior.Restrict);
+			});
+			#endregion
+		}
+
+		private T[] GetData<T> (string jsonfile)
         {
             // Get the content root path of the application
             string contentRootPath = _env.ContentRootPath;
