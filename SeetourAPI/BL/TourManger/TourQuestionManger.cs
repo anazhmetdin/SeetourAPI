@@ -50,6 +50,10 @@ namespace SeetourAPI.BL.TourManger
         public IEnumerable<QuestionAnswerDto> GetAllWithAnswers(int tourId)
         {
             var questAns = _tourQuestionRepo.GetAllWithAnswers(tourId);
+            if(questAns == null)
+            {
+                return null;
+            }
 
             return _tourQuestionRepo.GetAllWithAnswers(tourId).Select(QuestionAns).ToList();
         }
@@ -60,7 +64,7 @@ namespace SeetourAPI.BL.TourManger
                 QuestionId : questionAnswer.Id,
                 Question : questionAnswer.Question,
                 AnswerId: questionAnswer.TourAnswerId,
-                Answer : questionAnswer.TourAnswer.Answer
+                Answer : questionAnswer.TourAnswer?.Answer??""
             );
         }
             public void DeleteQuestion(int id)
