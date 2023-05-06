@@ -1,6 +1,7 @@
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.BL.CustomerManager
 {
@@ -12,5 +13,7 @@ namespace SeetourAPI.BL.CustomerManager
 		bool PostReview(string userId, ICollection<IFormFile> files, ReviewDto review);
 		bool ToggleTourLike(string userId, CustomerTourSaveDto tourLike);
 		bool ToggleTourWishlist(string userId, CustomerTourSaveDto tourWish);
+		CustomerWishlist? isTourWished(string userId, int tourId);
+		CustomerLikes? isTourLiked(string userId, int tourId);
 	}
 }

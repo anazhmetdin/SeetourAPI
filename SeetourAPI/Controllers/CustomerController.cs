@@ -120,5 +120,35 @@ namespace SeetourAPI.Controllers
 
 			return Ok();
 		}
+
+		[HttpGet("Tour/Like/{tourId}")]
+		public IActionResult isTourLiked(int tourId)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			var like = _customerManager.isTourLiked(UserId, tourId);
+
+			if (like == null)
+			{
+				return NotFound();
+			}
+
+			return Ok();
+		}
+
+		[HttpGet("Tour/Wish/{tourId}")]
+		public IActionResult isTourWished(int tourId)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			var wish = _customerManager.isTourWished(UserId, tourId);
+
+			if (wish==null)
+			{
+				return NotFound();
+			}
+
+			return Ok();
+		}
 	}
 }
