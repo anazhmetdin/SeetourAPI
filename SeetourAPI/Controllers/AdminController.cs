@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.AdminManger;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
 
@@ -12,16 +13,25 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    [Authorize(Policy = Policies.AllowAdmins)]
+    //[Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
+        private readonly SeetourContext context;
         private readonly IAdminManger _adminManager;
         private readonly ITourGuideManager _tourGuideManager;
 
-        public AdminController(IAdminManger adminManager, ITourGuideManager tourGuideManager)
+        public AdminController(SeetourContext context ,IAdminManger adminManager, ITourGuideManager tourGuideManager)
         {
+            this.context = context;
             _adminManager = adminManager;
             _tourGuideManager = tourGuideManager;
+        }
+
+        [HttpGet("allUsers")]
+        public ActionResult<IEnumerable<SeetourUser>> GetAllUser()
+        {
+            var users = context.Users.ToList();
+            return Ok(users);
         }
 
         [HttpGet("all")]

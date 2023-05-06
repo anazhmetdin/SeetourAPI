@@ -251,7 +251,8 @@ namespace SeetourAPI.BL.TourManger
                 TourGuideName: tourguide.Name,
                 DateFrom: tour.DateFrom,
                 DateTo: tour.DateTo,
-                LocationFrom: tour.LocationFrom
+                LocationFrom: tour.LocationFrom,
+                Price :  tour.Price
                 );
         }
 
