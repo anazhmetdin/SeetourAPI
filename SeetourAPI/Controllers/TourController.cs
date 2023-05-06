@@ -269,7 +269,7 @@ namespace SeetourAPI.Controllers
         }
 
         [HttpGet]
-        [Route("AddQuestion")]
+        [Route("GetQuestWithAns")]
         public ActionResult GetQuestWithAns(int tourId)
         {
             var questions = tourQuestionManger.GetAllWithAnswers(tourId);
