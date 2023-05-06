@@ -12,5 +12,6 @@ namespace SeetourAPI.DAL.DTO
         string? TourCategory = null,
         bool? HasTransportation = null,
         
-        int Take = -1);
+        int Take = -1,
+        string? query = null);
 }

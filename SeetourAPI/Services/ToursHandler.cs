@@ -20,6 +20,31 @@ namespace SeetourAPI.Services
 
 		public IEnumerable<Tour> Filter(IEnumerable<Tour> tours, ToursFilterDto toursFilter)
         {
+            if (toursFilter.query != null && toursFilter.query.Length >= 3)
+            {
+				List<Tour> temp = new List<Tour>();
+
+				temp.AddRange(
+                    tours.Where(t => t.LocationFrom.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
+                temp.AddRange(tours
+                        .Where(t => t.LocationTo.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
+
+				temp.AddRange(tours
+						.Where(t => t.DateFrom.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
+				temp.AddRange(tours
+						.Where(t => t.DateTo.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
+
+				temp.AddRange(tours
+						.Where(t => t.Title.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
+				temp.AddRange(tours
+						.Where(t => t.Description.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
+
+				temp.AddRange(tours
+						.Where(t => t.TourGuide!.User!.FullName.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
+
+                tours = temp;
+			}
+
             if (toursFilter.HasSeats != null)
                 tours = tours.Where(t => toursFilter.HasSeats + t.BookingsCount <= t.Capacity);
 
@@ -76,11 +101,11 @@ namespace SeetourAPI.Services
 
             return new TourCardDto(
                 Id: tour.Id,
-                Photos: tour.Photos.Select(p => p.Url).ToArray(),
+                Photos: tour.Photos!.Select(p => p.Url).ToArray(),
                 LocationTo: tour.LocationTo,
                 Price: tour.Price,
-                Likes: tour.Likes.Count,
-                isLiked: tour.Likes.Any(l => l.CustomerId == userId),
+                Likes: tour.Likes?.Count ?? 0,
+                isLiked: tour.Likes?.Any(l => l.CustomerId == userId) ?? false,
                 Bookings: tour.BookingsCount,
                 Capacity: tour.Capacity,
                 TourGuideId: tour.TourGuideId,
@@ -91,7 +116,7 @@ namespace SeetourAPI.Services
                 DateTo: tour.DateTo.Date.ToString(),
                 Category: tour.Category.ToString(),
                 Title: tour.Title,
-                AddedToWishList: tour.Wishlist.Any(l => l.CustomerId == userId)
+                AddedToWishList: tour.Wishlist?.Any(l => l.CustomerId == userId) ?? false
                 //hasTransportation: tour.HasTransportation
             );
         }
