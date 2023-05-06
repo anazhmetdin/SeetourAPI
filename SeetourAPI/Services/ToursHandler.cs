@@ -56,6 +56,9 @@ namespace SeetourAPI.Services
             if (Enum.TryParse(toursFilter.TourCategory, out TourCategory category))
                 tours = tours.Where(t => t.Category == category);
 
+            if(toursFilter.Take != -1)
+                tours = tours.Take(toursFilter.Take);
+
             return tours;
         }
 

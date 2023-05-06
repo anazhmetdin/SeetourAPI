@@ -10,5 +10,7 @@ namespace SeetourAPI.DAL.DTO
         int? HasSeats = null,
         decimal? MinRating = null,
         string? TourCategory = null,
-        bool? HasTransportation = null);
+        bool? HasTransportation = null,
+        
+        int Take = -1);
 }
