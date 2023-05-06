@@ -7,6 +7,7 @@ namespace SeetourAPI.DAL.DTO
          string TourName,
          DateTime DateFrom,
          DateTime DateTo,
-         string LocationFrom
+         string LocationFrom,
+         decimal Price
     );
 }
