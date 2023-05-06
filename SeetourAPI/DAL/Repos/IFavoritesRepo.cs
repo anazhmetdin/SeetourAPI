@@ -8,5 +8,6 @@ namespace SeetourAPI.DAL.Repos
 		public void RemoveTourguideFavorite(CustomerFavoriteTourGuide favorite);
 		public void AddTourguideFavorite(string customerId, string tourguideId);
 		CustomerFavoriteTourGuide? GetFavorite(string customerId, string tourguideId);
+		public IEnumerable<CustomerFavoriteTourGuide> GetFavoritesTours(string customerId);
 	}
 }

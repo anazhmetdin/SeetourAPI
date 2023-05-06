@@ -37,5 +37,16 @@ namespace SeetourAPI.DAL.Repos
 			return _context.CustomerFavoriteTourGuides
 				.FirstOrDefault(f => f.CustomerId == customerId && f.TourGuideId == tourguideId);
 		}
+
+		public IEnumerable<CustomerFavoriteTourGuide> GetFavoritesTours(string customerId)
+		{
+			return _context.CustomerFavoriteTourGuides
+				.Include(f => f.TourGuide)
+				.ThenInclude(t => t!.Tours)
+				.Include(f => f.TourGuide)
+				.ThenInclude(t => t!.User)
+				.Where(f => f.CustomerId == customerId)
+				.Where(f => f.TourGuide!.Status == Data.Enums.TourGuideStatus.Accepted);
+		}
 	}
 }

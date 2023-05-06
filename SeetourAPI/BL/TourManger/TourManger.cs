@@ -160,21 +160,7 @@ namespace SeetourAPI.BL.TourManger
 			var tours = TourRepo.GetAllPlain()
 				.Where(t => t.TourPostingStatus == TourPostingStatus.Accepted);
 
-			return ReattachToursInfo(toursFilter, tours);
-		}
-
-		private ICollection<TourCardDto> ReattachToursInfo(ToursFilterDto toursFilter, IEnumerable<Tour> tours)
-		{
-			tours = _handler.Filter(tours, toursFilter);
-
-			foreach (var tour in tours)
-			{
-				tour.Likes = TourRepo.GetTourLikes(tour.Id).ToList();
-				tour.Wishlist = TourRepo.GetTourWishlist(tour.Id).ToList();
-				tour.Photos = TourRepo.GetTourPhotos(tour.Id).ToList();
-			}
-
-			return _handler.GetTourCardDto(tours);
+			return _handler.ReattachToursInfo(toursFilter, tours);
 		}
 
 		public ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted, ToursFilterDto toursFilter)
@@ -183,7 +169,7 @@ namespace SeetourAPI.BL.TourManger
                 .Where(t => t.TourPostingStatus == TourPostingStatus.Accepted)
                 .Where(t => t.IsCompleted == isCompleted);            
 
-			return ReattachToursInfo(toursFilter, tours);
+			return _handler.ReattachToursInfo(toursFilter, tours);
         }
 
         public void PostPastTourPics(int tourid, ICollection<photoDto> photoDtos)

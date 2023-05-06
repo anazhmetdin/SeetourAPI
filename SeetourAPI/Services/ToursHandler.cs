@@ -1,6 +1,8 @@
 ﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
+using System.Reflection.Metadata;
 using System.Security.Claims;
 
 namespace SeetourAPI.Services
@@ -8,13 +10,15 @@ namespace SeetourAPI.Services
     public class ToursHandler
     {
         private HttpContextAccessor _contextAccessor;
+        private ITourRepo _tourRepo;
 
-        public ToursHandler(HttpContextAccessor contextAccessor)
-        {
-            _contextAccessor = contextAccessor;
-        }
+		public ToursHandler(HttpContextAccessor contextAccessor, ITourRepo tourRepo)
+		{
+			_contextAccessor = contextAccessor;
+			_tourRepo = tourRepo;
+		}
 
-        public IEnumerable<Tour> Filter(IEnumerable<Tour> tours, ToursFilterDto toursFilter)
+		public IEnumerable<Tour> Filter(IEnumerable<Tour> tours, ToursFilterDto toursFilter)
         {
             if (toursFilter.HasSeats != null)
                 tours = tours.Where(t => toursFilter.HasSeats + t.BookingsCount <= t.Capacity);
@@ -101,5 +105,19 @@ namespace SeetourAPI.Services
             );
         }
 
-    }
+		public ICollection<TourCardDto> ReattachToursInfo(ToursFilterDto toursFilter, IEnumerable<Tour> tours)
+		{
+			tours = Filter(tours, toursFilter);
+
+			foreach (var tour in tours)
+			{
+				tour.Likes = _tourRepo.GetTourLikes(tour.Id).ToList();
+				tour.Wishlist = _tourRepo.GetTourWishlist(tour.Id).ToList();
+				tour.Photos = _tourRepo.GetTourPhotos(tour.Id).ToList();
+			}
+
+			return GetTourCardDto(tours);
+		}
+
+	}
 }

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.FavoritesManager;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Policies;
 using System.Security.Claims;
 
@@ -64,6 +65,16 @@ namespace SeetourAPI.Controllers
 			}
 
 			return Ok();
+		}
+
+		[HttpGet("tour")]
+		public IActionResult GetTours([FromQuery] ToursFilterDto toursFilter)
+		{
+			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
+
+			ICollection<TourCardDto> tours = _favoriteManager.GetTours(UserId, toursFilter);
+
+			return Ok(tours);
 		}
 	}
 }
