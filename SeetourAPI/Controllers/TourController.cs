@@ -185,13 +185,20 @@ namespace SeetourAPI.Controllers
             return Ok(tours);
         }
 
+        //[HttpGet("categories")]
+        //[OutputCache(Duration = 60 * 60 * 24)]
+        //[ResponseCache(Duration = 60 * 60 * 24)]
+        //public IActionResult GetCategories()
+        //{
+        //    var reviews = _reviewManger.GetAllTourReviews(Id);
+        //    return Ok(reviews);
+        //}
         [HttpGet("categories")]
         [OutputCache(Duration = 60 * 60 * 24)]
         [ResponseCache(Duration = 60 * 60 * 24)]
         public IActionResult GetCategories()
         {
-            var reviews = _reviewManger.GetAllTourReviews(Id);
-            return Ok(reviews);
+            return Ok(Enum.GetNames(typeof(TourCategory)).ToList());
         }
 
         [HttpGet]
