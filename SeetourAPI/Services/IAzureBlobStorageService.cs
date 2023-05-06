@@ -8,7 +8,7 @@ namespace SeetourAPI.Services
         Task<string> UploadBlobAsync(IFormFile file);
         // Task<Stream> DownloadBlobAsync(string fileName);
         Task<bool> DeleteBlobAsync(string fileName);
-        Task<List<string>> UploadBlobAsyncImgs(List<IFormFile> files);
+        Task<List<string>> UploadBlobAsyncImgs(ICollection<IFormFile> files);
         Task<Stream> GetImageAsync(string fileName);
 
     }

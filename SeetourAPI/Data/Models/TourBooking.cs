@@ -8,5 +8,6 @@ namespace SeetourAPI.Data.Models
         public int Id { get; set; }
         public virtual Tour? Tour { get; set; }
         public int BookingsCount { get; set; }
+        public bool IsCompleted { get; set; }
     }
 }
