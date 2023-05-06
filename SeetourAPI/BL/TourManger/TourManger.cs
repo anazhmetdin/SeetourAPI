@@ -263,5 +263,11 @@ namespace SeetourAPI.BL.TourManger
 
 			return _handler.ReattachToursInfo(new ToursFilterDto(), tours);
 		}
+
+        public Tour? getSomeDetails(int id )
+        {
+            var tour = TourRepo.GetTourByIdLite(id);
+            return tour;
+        }
 	}
 }
