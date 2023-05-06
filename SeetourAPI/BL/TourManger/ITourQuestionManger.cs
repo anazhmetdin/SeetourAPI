@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Models;
+﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.BL.TourManger
 {
@@ -6,7 +7,8 @@ namespace SeetourAPI.BL.TourManger
     {
         IEnumerable<TourQuestion> GetAll();
         public TourQuestion GetById(int id);
-        public void AddQuestion(TourQuestion question);
+        public bool AddQuestion(QuestionDto questionDto);
+        public IEnumerable<QuestionAnswerDto> GetAllWithAnswers(int tourId);
         public void UpdateQuestion(int id, TourQuestion question);
         public void DeleteQuestion(int id);
         int SaveChanges();

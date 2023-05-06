@@ -9,6 +9,7 @@ namespace SeetourAPI.DAL.Repos
         public void AddQuestion(TourQuestion question);
         public void UpdateQuestion( int id ,TourQuestion question);
         public void DeleteQuestion(int id);
+        public IEnumerable<TourQuestion> GetAllWithAnswers(int tourId);
         int SaveChanges();
     }
 }
