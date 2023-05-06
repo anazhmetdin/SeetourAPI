@@ -22,6 +22,7 @@ using SeetourAPI.BL.WishlistManager;
 using SeetourAPI.BL.CustomerManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.BL.BookingManager;
+using SeetourAPI.BL.FavoritesManager;
 
 namespace SeetourAPI
 {
@@ -74,9 +75,11 @@ namespace SeetourAPI
             builder.Services.AddScoped<TourBookingsRepo>();
             builder.Services.AddScoped<ITourGuideDashBoardRepo, TourGuideDashBoardRepo>();
             builder.Services.AddScoped<ITourGuideRatingRepo, TourGuideRatingRepo>();
-            builder.Services.AddScoped<IWishlistRepo, WishlistRepo>();
-            #region Azure
-            builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
+			builder.Services.AddScoped<IWishlistRepo, WishlistRepo>();
+			builder.Services.AddScoped<IFavoritesRepo, FavoritesRepo>();
+			builder.Services.AddScoped<ITrendingTourRepo, TrendingTourRepo>();
+			#region Azure
+			builder.Services.AddScoped<IAzureBlobStorageService, AzureBlobStorageService>();
             #endregion
             #endregion
             #region Manger
@@ -89,6 +92,7 @@ namespace SeetourAPI
             builder.Services.AddScoped<IWishlistManager, WishlistManager>();
             builder.Services.AddScoped<ICustomerManager, CustomerManager>();
             builder.Services.AddScoped<IBookingManager, BookingManager>();
+            builder.Services.AddScoped<IFavoritesManager, FavoritesManager>();
 			builder.Services.AddScoped<HttpContextAccessor>();
 
             #endregion
@@ -148,7 +152,8 @@ namespace SeetourAPI
             #region Hosted Services
             builder.Services.AddHostedService<TimedRatingCalculatorService>();
             builder.Services.AddHostedService<TimedBookingCheckerService>();
-            builder.Services.AddScoped<ToursHandler>();
+            builder.Services.AddHostedService<TimedTrrendingService>();
+			builder.Services.AddScoped<ToursHandler>();
             builder.Services.AddHostedService<AdminInitializer>();
             #endregion
             var app = builder.Build();

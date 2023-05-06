@@ -22,13 +22,13 @@ namespace SeetourAPI.BL.BookingManager
 		public bool CancelBooking(string userId, int bookingId)
 		{
 			var booking = _bookedTourRepo.GetByIdLite(bookingId);
-			if (booking == null || booking.CustomerId != userId || booking.Status != BookedTourStatus.Booked)
+			if (booking == null || booking.CustomerId != userId || booking.Status == BookedTourStatus.Cancelled)
 			{
 				return false;
 			}
 
 			var tour = _tourRepo.GetTourByIdLite(booking.TourId);
-			if (tour == null || !tour.CanCancel) return false;
+			if (tour == null || (booking.Status == BookedTourStatus.Booked && !tour.CanCancel)) return false;
 
 			booking.Status = BookedTourStatus.Cancelled;
 

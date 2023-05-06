@@ -10,6 +10,7 @@ namespace SeetourAPI.Data.Models.Users
         public virtual ICollection<CustomerLikes> Likes { get; set; } = new HashSet<CustomerLikes>();
         public virtual ICollection<CustomerWishlist> Wishlist { get; set; } = new HashSet<CustomerWishlist>();
         public virtual ICollection<BookedTour> BookedTours { get; set; } = new HashSet<BookedTour>();
-        public Boolean IsBlocked { get; set; }
+		public virtual ICollection<CustomerFavoriteTourGuide> Favorites { get; set; } = new List<CustomerFavoriteTourGuide>();
+		public Boolean IsBlocked { get; set; }
     }
 }
