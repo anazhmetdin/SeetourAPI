@@ -41,13 +41,13 @@ namespace SeetourAPI.Controllers
         }
 
 
-        [HttpPost]
-        [Authorize(Policy = Policies.AcceptedTourGuides)]
-        public IActionResult createTourAnswer(TourAnswer tourAnswer)
-        {
-            ITourAnswerManager.AddAnswer(tourAnswer);
-            return Created("Created Successfully", tourAnswer);
-        }
+        //[HttpPost]
+        //[Authorize(Policy = Policies.AcceptedTourGuides)]
+        //public IActionResult createTourAnswer(TourAnswer tourAnswer)
+        //{
+        //    ITourAnswerManager.AddAnswer(tourAnswer);
+        //    return Created("Created Successfully", tourAnswer);
+        //}
 
 
         [HttpPut]
