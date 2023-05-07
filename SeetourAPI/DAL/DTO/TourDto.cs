@@ -18,7 +18,7 @@ namespace SeetourAPI.DAL.DTO
         string Title,
         bool hasTransportation,
         string Description,
-        string[] Reviews,
+        ReviewCardDto[] Reviews,
         int[] Rating
     );
 }

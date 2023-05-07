@@ -1,4 +1,5 @@
-﻿using SeetourAPI.DAL.DTO;
+﻿using SeetourAPI.BL.ReviewManager;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
@@ -11,11 +12,13 @@ namespace SeetourAPI.Services
     {
         private HttpContextAccessor _contextAccessor;
         private ITourRepo _tourRepo;
+        private IReviewManager _reviewManager;
 
-		public ToursHandler(HttpContextAccessor contextAccessor, ITourRepo tourRepo)
+		public ToursHandler(HttpContextAccessor contextAccessor, ITourRepo tourRepo, IReviewManager reviewManager)
 		{
 			_contextAccessor = contextAccessor;
 			_tourRepo = tourRepo;
+			_reviewManager = reviewManager;
 		}
 
 		public IEnumerable<Tour> Filter(IEnumerable<Tour> tours, ToursFilterDto toursFilter)
@@ -140,7 +143,7 @@ namespace SeetourAPI.Services
                 Title: tour.Title,
                 hasTransportation: tour.HasTransportation,
                 Description:tour.Description,
-                Reviews: tour.Reviews.Select(r => r.Comment).ToArray(),
+                Reviews: _reviewManager.GetAllTourReviews(tour.Id).ToArray(),
                 Rating: tour.Reviews.Select(r => r.Rating).ToArray()
             );
         }
