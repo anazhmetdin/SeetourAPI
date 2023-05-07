@@ -20,11 +20,11 @@ namespace SeetourAPI.Data.Models
 
         // Additional properties for Visa card information
         [CreditCard]
-        [StringLength(19, MinimumLength = 16)]
+        [StringLength(19, MinimumLength = 5)]
         public string CardNumber { get; set; } = string.Empty;
 
         [RegularExpression(@"^(0[1-9]|1[0-2])\/([0-9]{2})$")]
-        [StringLength(5)]
+        [StringLength(20)]
         public string ExpirationDate { get; set; } = string.Empty;
         
         [RegularExpression(@"^[0-9]{3}$")]

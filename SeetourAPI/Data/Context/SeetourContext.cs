@@ -26,6 +26,8 @@ namespace SeetourAPI.Data.Context
         public DbSet<BookedTour> BookedTours { get; set; }
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
+        public DbSet<TourBookingPayment> payments { get; set; }
+        public DbSet<Views> Views { get; set; }
         public DbSet<TourGuideRating> TourGuideRatings { get; set; }
         public DbSet<TourBooking> TourBookings { get; set; }
         public DbSet<TourPhoto> TourPhoto { get; set; }
@@ -81,24 +83,25 @@ namespace SeetourAPI.Data.Context
                 b.HasData(customers);
             });
             #endregion
+  
             #region TourGuide
             builder.Entity<TourGuide>(b =>
-            {
-                b.HasKey(x => x.Id);
+                {
+                    b.HasKey(x => x.Id);
 
-                b.HasMany(tg => tg.Tours)
-                    .WithOne(b => b.TourGuide)
-                    .HasForeignKey(b => b.TourGuideId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    b.HasMany(tg => tg.Tours)
+                        .WithOne(b => b.TourGuide)
+                        .HasForeignKey(b => b.TourGuideId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                b.Navigation(b => b.TourGuideRating)
-                    .AutoInclude(true);
+                    b.Navigation(b => b.TourGuideRating)
+                        .AutoInclude(true);
 
-                //b.Property(tg => tg.Status)
-                //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
+                    //b.Property(tg => tg.Status)
+                    //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
 
-                TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
-                b.HasData(customers);
+                    TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
+                    b.HasData(customers);
             });
             #endregion
             #region Tour

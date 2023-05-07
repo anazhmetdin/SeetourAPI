@@ -1,8 +1,10 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourManger;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Policies;
 
@@ -12,9 +14,12 @@ namespace SeetourAPI.Controllers
     [ApiController]
     public class ReviewController : ControllerBase
     {
+        private readonly SeetourContext _Context;
+
         public IReviewManager _reviewManger { get; }
-        public ReviewController(IReviewManager reviewManger)
+        public ReviewController(SeetourContext context,IReviewManager reviewManger)
         {
+            _Context = context;
             _reviewManger = reviewManger;
         }
 
@@ -43,6 +48,7 @@ namespace SeetourAPI.Controllers
 
         [HttpDelete]
         [Authorize(Policy = Policies.AllowCustomers)]
+        [Authorize(Policy = Policies.AllowAdmins)]
         public ActionResult DeleteReview(int id)
         {
             _reviewManger.DeleteReview(id);
@@ -62,15 +68,26 @@ namespace SeetourAPI.Controllers
         }
 
         [HttpGet]
-        [Route("GetAll")]
-        public ActionResult GetAll()
+        public ActionResult<IEnumerable<object>> GetAllReviews()
         {
-            var Reviews = _reviewManger.GetAll();
-            if (Reviews == null)
-            {
-                return NotFound();
-            }
-            return Ok(_reviewManger.GetAll());
+            var result = _Context.Reviews
+                .Include(r => r.BookedTour)
+                .Include(r => r.Photos)
+                .Select(r => new {
+                    ReviewId = r.Id,
+                    Rating = r.Rating,
+                    Comment = r.Comment,
+                    TourName = r.BookedTour.Tour.Title,
+                    PhotoCount = r.Photos.Count,
+                    tourId=r.BookedTour.TourId,
+                    tourGuideName=r.BookedTour.Tour.TourGuide.User.FullName,
+                    userPhoto=r.BookedTour.Customer.User.ProfilePic,
+                    CustomerUserName=r.BookedTour.Customer.User.FullName
+                })
+                .ToList();
+
+            return Ok(result);
         }
+
     }
 }
