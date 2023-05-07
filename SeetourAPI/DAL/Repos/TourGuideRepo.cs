@@ -53,9 +53,30 @@ namespace SeetourAPI.DAL.Repos
                 .FirstOrDefault(t => t.Id == id);
         }
 
-		public bool SaveChanges()
+      
+        
+        public bool SaveChanges()
 		{
 			return _context.SaveChanges()>0;
 		}
-	}
+
+        IEnumerable<dynamic> ITourGuideRepo.GetAllQustionss(string id)
+        {
+            var unansweredQuestions = from question in _context.TourQuestions
+                                      join tour in _context.Tours on question.TourId equals tour.Id
+                                      where question.TourAnswer == null && tour.TourGuideId == id
+                                      select new
+                                      {
+                                          question.Id,
+                                          question.Question,
+                                          question.CreatedAt,
+                                          TourId = tour.Id,
+                                          TourTitle = tour.Title
+                                      };
+
+            return (unansweredQuestions.ToList());
+
+        }
+
+    }
 }
