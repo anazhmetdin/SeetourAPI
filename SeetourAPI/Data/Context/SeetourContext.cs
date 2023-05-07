@@ -32,6 +32,8 @@ namespace SeetourAPI.Data.Context
         public DbSet<CustomerFavoriteTourGuide> CustomerFavoriteTourGuides { get; set; }
         public DbSet<EditRequest> EditRequests { get; set; }
         public DbSet<TrendingTour> TrendingTours { get; set; }
+        public DbSet<TourBookingPayment> payments { get; set; }
+        public DbSet<Views> Views { get; set; }
 
 		public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)
@@ -81,8 +83,9 @@ namespace SeetourAPI.Data.Context
                 b.HasData(customers);
             });
             #endregion
-            #region TourGuide
-            builder.Entity<TourGuide>(b =>
+  
+        #region TourGuide
+        builder.Entity<TourGuide>(b =>
             {
                 b.HasKey(x => x.Id);
 
