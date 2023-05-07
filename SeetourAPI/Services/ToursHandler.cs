@@ -25,27 +25,41 @@ namespace SeetourAPI.Services
         {
             if (toursFilter.query != null && toursFilter.query.Length >= 3)
             {
-				List<Tour> temp = new List<Tour>();
-
-				temp.AddRange(
-                    tours.Where(t => t.LocationFrom.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
-                temp.AddRange(tours
-                        .Where(t => t.LocationTo.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
-
-				temp.AddRange(tours
-						.Where(t => t.DateFrom.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
-				temp.AddRange(tours
-						.Where(t => t.DateTo.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
-
-				temp.AddRange(tours
-						.Where(t => t.Title.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
-				temp.AddRange(tours
-						.Where(t => t.Description.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
-
-				temp.AddRange(tours
-						.Where(t => t.TourGuide!.User!.FullName.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)));
-
-                tours = temp;
+				tours = tours
+                    .Where(t => t.LocationFrom.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase))
+                    .UnionBy(
+                        tours.Where(t => t.LocationTo.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+                        t => t.Id
+                    )
+                    .UnionBy(
+                        tours.Where(t => t.DateFrom.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+                        t => t.Id
+					)
+					.UnionBy(
+						tours.Where(t => t.DateTo.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+						t => t.Id
+					)
+					.UnionBy(
+						tours.Where(t => t.LastDateToCancel.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+						t => t.Id
+					)
+					.UnionBy(
+                        tours.Where(t => t.Title.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+                        t => t.Id
+					)
+					.UnionBy(
+						tours.Where(t => t.Description.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+						t => t.Id
+					)
+					.UnionBy(
+						tours.Where(t => t.Category.ToString().Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+						t => t.Id
+					)
+					.UnionBy(
+                        tours.Where(t => t.TourGuide!.User!.FullName.Contains(toursFilter.query, StringComparison.OrdinalIgnoreCase)),
+                        t => t.Id
+                    )
+                    .ToList();
 			}
 
             if (toursFilter.HasSeats != null)
@@ -137,11 +151,12 @@ namespace SeetourAPI.Services
                 Price: tour.Price,
                 Likes: tour.Likes.Count,
                 Bookings: tour.BookingsCount,
-                Capacity: tour.Capacity,
-                DateFrom: tour.DateFrom.Date.ToString(),
-                DateTo: tour.DateTo.Date.ToString(),
+				Capacity: tour.Capacity,
+				Category: tour.Category.ToString(),
+				DateFrom: tour.DateFrom.Date.ToString(),
+				DateTo: tour.DateTo.Date.ToString(),
 				DateToCancel: tour.LastDateToCancel.Date.ToString(),
-                Title: tour.Title,
+				Title: tour.Title,
                 hasTransportation: tour.HasTransportation,
                 Description:tour.Description,
                 Reviews: _reviewManager.GetAllTourReviews(tour.Id).ToArray(),
