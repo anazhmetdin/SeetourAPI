@@ -11,7 +11,9 @@ namespace SeetourAPI.BL.TourGuideManager
         TourGuideInfoDto? GetInfo(string id);
         public TourGuideStatistics GetTStatistics(string id);
 		TourGuideDto? GetApplicant(string id);
+
 		public ICollection<TourGuideInfoDto> GetApplicants();
+        public ICollection<dynamic> GetAllQuestions();
 		//TourGuideInfoDto? GetInfo(string id);
     }
 }

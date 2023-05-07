@@ -1,4 +1,5 @@
-﻿using SeetourAPI.DAL.DTO;
+﻿using Microsoft.AspNetCore.Identity;
+using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Context.DTOs;
 using SeetourAPI.Data.Enums;
@@ -17,16 +18,22 @@ namespace SeetourAPI.BL.TourGuideManager
         private readonly ITourRepo _tourRepo;
         private readonly ToursHandler _handler;
         private readonly HttpContextAccessor _contextAccessor;
-
-        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo,ITourGuideDashBoardRepo tourGuideDashBoard, ToursHandler handler, HttpContextAccessor contextAccessor)
+        private readonly UserManager<SeetourUser> _userManager;
+        public TourGuideManager(ITourRepo tourRepo, ITourGuideRepo tourguideRepo,ITourGuideDashBoardRepo tourGuideDashBoard, ToursHandler handler, HttpContextAccessor contextAccessor, UserManager<SeetourUser> userManager)
         {
             _tourRepo = tourRepo;
             _tourguideRepo = tourguideRepo;
             _tourGuideDashBoard = tourGuideDashBoard;
             _handler = handler;
             _contextAccessor = contextAccessor;
+            _userManager = userManager;
         }
 
+        public string GetCurrentUserId()
+        {
+            var userId = _contextAccessor?.HttpContext?.User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            return userId ?? "82712fd4-3d4c-4569-bbb7-a29e65de36ec";
+        }
         public TourGuideStatistics GetTStatistics(string id)
         {
             var tourGuide = _tourguideRepo.GetTourGuideLite(id);
@@ -243,5 +250,14 @@ namespace SeetourAPI.BL.TourGuideManager
                 return false;
             }
 		}
-	}
+
+        public ICollection<dynamic> GetAllQuestions()
+        {
+            string id = GetCurrentUserId();
+            var Questions = _tourguideRepo.GetAllQustionss(id);
+            if (Questions == null)
+                return null;
+            return Questions.ToList(); 
+        }
+    }
 }
