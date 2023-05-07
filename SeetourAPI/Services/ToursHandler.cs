@@ -140,6 +140,7 @@ namespace SeetourAPI.Services
                 Capacity: tour.Capacity,
                 DateFrom: tour.DateFrom.Date.ToString(),
                 DateTo: tour.DateTo.Date.ToString(),
+				DateToCancel: tour.LastDateToCancel.Date.ToString(),
                 Title: tour.Title,
                 hasTransportation: tour.HasTransportation,
                 Description:tour.Description,
