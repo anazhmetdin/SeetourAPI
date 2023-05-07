@@ -1,4 +1,5 @@
-﻿using SeetourAPI.Data.Models;
+﻿using SeetourAPI.Data.Enums;
+using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.DAL.DTO
 {
@@ -11,6 +12,6 @@ namespace SeetourAPI.DAL.DTO
         public string? CardHolderName { get; set; } = string.Empty;
         public DateTime? DateTime { get; set; }
         public int bookedTourId { get; set; }
-       
+        public BookedTourStatus Status { get; set; }
     }
 }

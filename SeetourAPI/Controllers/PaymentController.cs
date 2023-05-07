@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Context;
+using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Models.Users;
 using System.Security.Claims;
@@ -43,9 +44,10 @@ namespace SeetourAPI.Controllers
                     ExpirationDate = paymentInfo.ExpDate,
                     CardholderName = paymentInfo.CardHolderName,
                     CreatedAt = DateTime.UtcNow,
-                    BookedTourId = paymentInfo.bookedTourId,
-
+                    BookedTourId = paymentInfo.bookedTourId
                 };
+
+                bookedtour.Status = BookedTourStatus.Booked;
 
                 Context.payments.Add(payment);
                 await Context.SaveChangesAsync();
