@@ -39,6 +39,6 @@ namespace SeetourAPI.DAL.Repos
 		void AddTourLike(string userId, int tourId);
 		void RemoveTourWish(CustomerWishlist tourWishedBefore);
 		void AddTourWish(string userId, int tourId);
-
+		IEnumerable<Tour> GetTrendingPlain();
 	}
 }

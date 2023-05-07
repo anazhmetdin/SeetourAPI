@@ -128,10 +128,7 @@ namespace SeetourAPI.BL.CustomerManager
 
 		public bool ToggleTourLike(string userId, CustomerTourSaveDto tourLike)
 		{
-			var tourLikes = _tourRepo.GetTourLikes(tourLike.tourId);
-			if (tourLikes == null) return false;
-
-			var TourLikedBefore = tourLikes.FirstOrDefault(l => l.CustomerId == userId);
+			var TourLikedBefore = isTourLiked(userId, tourLike.tourId);
 
 			if ((tourLike.isAdded == 1) == (TourLikedBefore != null))
 			{
@@ -152,10 +149,7 @@ namespace SeetourAPI.BL.CustomerManager
 
 		public bool ToggleTourWishlist(string userId, CustomerTourSaveDto tourWish)
 		{
-			var tourWishlists = _tourRepo.GetTourWishlist(tourWish.tourId);
-			if (tourWishlists == null) return false;
-
-			var TourWishedBefore = tourWishlists.FirstOrDefault(l => l.CustomerId == userId);
+			var TourWishedBefore = isTourWished(userId, tourWish.tourId);
 
 			if ((tourWish.isAdded == 1) == (TourWishedBefore != null))
 			{
@@ -172,6 +166,22 @@ namespace SeetourAPI.BL.CustomerManager
 			}
 
 			return _tourRepo.SaveChanges();
+		}
+
+		public CustomerWishlist? isTourWished(string userId, int tourId)
+		{
+			var tourWishlists = _tourRepo.GetTourWishlist(tourId);
+			if (tourWishlists == null) return null;
+
+			return tourWishlists.FirstOrDefault(l => l.CustomerId == userId);
+		}
+
+		public CustomerLikes? isTourLiked(string userId, int tourId)
+		{
+			var tourLikes = _tourRepo.GetTourLikes(tourId);
+			if (tourLikes == null) return null;
+
+			return tourLikes.FirstOrDefault(l => l.CustomerId == userId);
 		}
 	}
 }

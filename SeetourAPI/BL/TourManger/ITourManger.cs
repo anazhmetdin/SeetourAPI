@@ -15,12 +15,13 @@ namespace SeetourAPI.BL.TourManger
         public TourCardDto? DetailsCard(int id);
         public TourDto? DetailsTour(int id);
         public string GetCurrentUserId();
+        public Tour? getSomeDetails(int id);
         public Task<BookTourDto?> BookTourDetailsAsync(int id);
         public string BookTour(int id, int seatsNum, string userId);
         public void EditTourBYAdmin(int id, Tour tour);
         ICollection<TourCardDto> GetAllCards(ToursFilterDto toursFilter);
         ICollection<TourCardDto> GetIsCompletedCards(bool isCompleted, ToursFilterDto toursFilter);
         public void PostPastTourPics(int tourid,ICollection<photoDto> photoDtos);
-
-    }
+		ICollection<TourCardDto> GetIsTrendingCards();
+	}
 }

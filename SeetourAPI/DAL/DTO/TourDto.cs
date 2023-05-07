@@ -4,22 +4,21 @@ namespace SeetourAPI.DAL.DTO
 {
     public record TourDto
     (
-        //int Id,
-        //string[] Photos,
-        //string LocationTo,
-        //decimal Price,
-        //int Likes,
-        //int Bookings,
-        //int Capacity,
-        //string TourGuideId,
-        //string TourGuideName,
-        //string DateFrom,
-        //string DateTo,
-        //string Category,
-        //string Title,
-        TourCardDto TourCard,
+        int Id,
+        string[] Photos,
+        string LocationTo,
+        string LocationFrom,
+        string TourguideId,
+        decimal Price,
+        int Likes,
+        int Bookings,
+        int Capacity,
+        string DateFrom,
+        string DateTo,
+        string Title,
         bool hasTransportation,
         string Description,
-        String[] Reviews
+        string[] Reviews,
+        int[] Rating
     );
 }

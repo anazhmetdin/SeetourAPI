@@ -26,13 +26,16 @@ namespace SeetourAPI.Data.Context
         public DbSet<BookedTour> BookedTours { get; set; }
         public DbSet<CustomerLikes> CustomerLikes { get; set; }
         public DbSet<CustomerWishlist> CustomerWishlists { get; set; }
+        public DbSet<TourBookingPayment> payments { get; set; }
+        public DbSet<Views> Views { get; set; }
         public DbSet<TourGuideRating> TourGuideRatings { get; set; }
         public DbSet<TourBooking> TourBookings { get; set; }
         public DbSet<TourPhoto> TourPhoto { get; set; }
-
+        public DbSet<CustomerFavoriteTourGuide> CustomerFavoriteTourGuides { get; set; }
         public DbSet<EditRequest> EditRequests { get; set; }
+        public DbSet<TrendingTour> TrendingTours { get; set; }
 
-        public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
+		public SeetourContext(DbContextOptions<SeetourContext> options, IWebHostEnvironment env)
         : base(options)
         {
             _env = env;
@@ -80,24 +83,25 @@ namespace SeetourAPI.Data.Context
                 b.HasData(customers);
             });
             #endregion
+  
             #region TourGuide
             builder.Entity<TourGuide>(b =>
-            {
-                b.HasKey(x => x.Id);
+                {
+                    b.HasKey(x => x.Id);
 
-                b.HasMany(tg => tg.Tours)
-                    .WithOne(b => b.TourGuide)
-                    .HasForeignKey(b => b.TourGuideId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    b.HasMany(tg => tg.Tours)
+                        .WithOne(b => b.TourGuide)
+                        .HasForeignKey(b => b.TourGuideId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                b.Navigation(b => b.TourGuideRating)
-                    .AutoInclude(true);
+                    b.Navigation(b => b.TourGuideRating)
+                        .AutoInclude(true);
 
-                //b.Property(tg => tg.Status)
-                //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
+                    //b.Property(tg => tg.Status)
+                    //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
 
-                TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
-                b.HasData(customers);
+                    TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
+                    b.HasData(customers);
             });
             #endregion
             #region Tour
@@ -307,9 +311,23 @@ namespace SeetourAPI.Data.Context
                     .HasForeignKey<TourBooking>(bt => bt.Id);
             });
             #endregion
-        }
+            #region CustomerFavoriteTourGuides
+            builder.Entity<CustomerFavoriteTourGuide>(b =>
+			{
+				b.HasOne(c => c.TourGuide)
+					.WithMany(c => c.Favorites)
+					.HasForeignKey(c => c.TourGuideId)
+                    .OnDelete(DeleteBehavior.Restrict);
 
-        private T[] GetData<T> (string jsonfile)
+				b.HasOne(c => c.Customer)
+					.WithMany(c => c.Favorites)
+					.HasForeignKey(c => c.CustomerId)
+					.OnDelete(DeleteBehavior.Restrict);
+			});
+			#endregion
+		}
+
+		private T[] GetData<T> (string jsonfile)
         {
             // Get the content root path of the application
             string contentRootPath = _env.ContentRootPath;

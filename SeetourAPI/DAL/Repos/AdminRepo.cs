@@ -37,7 +37,7 @@ namespace SeetourAPI.DAL.Repos
 
         public IEnumerable<SeetourUser> GetUsers()
         {
-            var users = _Context.Users.Include(u => u.Customer).Where(c => c.SecurityLevel.ToLower() == "user");
+            var users = _Context.Users.Where(c => c.SecurityLevel.ToLower() == "customer");
             if(users!=null)
             {
                 return users;
@@ -47,7 +47,7 @@ namespace SeetourAPI.DAL.Repos
 
         public IEnumerable<SeetourUser> GetTourGuides()
         {
-            var users = _Context.Users.Include(u => u.TourGuide).Where(c => c.SecurityLevel.ToLower() == "tourguide");
+            var users = _Context.Users.Where(c => c.SecurityLevel.ToLower() == "tourguide");
             if (users != null)
             {
                 return users;

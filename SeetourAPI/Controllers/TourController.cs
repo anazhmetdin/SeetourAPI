@@ -25,21 +25,24 @@ namespace SeetourAPI.Controllers
     //[TypeFilter(typeof(TourGuideFilter))]
     public class TourController : ControllerBase
     {
+        private readonly ITourQuestionManger tourQuestionManger;
         private readonly ITourGuideManager tourGuideManager;
         private readonly ICustomerManager customerManager;
         private readonly UserManager<SeetourUser> manger;
         private readonly IReviewManager _reviewManger;
 
         public ITourManger ITourManger { get; }
-        public TourController(ITourGuideManager tourGuideManager , ICustomerManager customerManager ,ITourManger ITourManger, UserManager<SeetourUser> Manger, IReviewManager reviewManger)
+        public TourController(ITourQuestionManger tourQuestionManger,ITourGuideManager tourGuideManager , ICustomerManager customerManager ,ITourManger ITourManger, UserManager<SeetourUser> Manger, IReviewManager reviewManger)
         {
+            this.tourQuestionManger = tourQuestionManger;
             this.tourGuideManager = tourGuideManager;
             this.customerManager = customerManager;
             this.ITourManger = ITourManger;
             manger = Manger;
             _reviewManger = reviewManger;
         }
-
+        
+        [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPost]
         [Authorize(Policy = Policies.AcceptedTourGuides)]
         public ActionResult CreateTour(AddTourDto addTourDto)
@@ -47,20 +50,21 @@ namespace SeetourAPI.Controllers
             ITourManger.AddTour(addTourDto);
             return Created("", addTourDto);
         }
-
         [HttpPost]
         [Route("AddPics")]
         [Authorize(Policy = Policies.AcceptedTourGuides)]
-        public ActionResult AddPastTourPics(int tourid, ICollection<photoDto> photoDtos)
+        public ActionResult AddPastTourPics([FromBody]ICollection<photoDto> photoDtos)
         {
-            var tour = ITourManger.GetTourById(tourid);
+            //var tourId = int.Parse(tourid);
+            int tourid = photoDtos.First().TourId;
+            var tour = ITourManger.getSomeDetails(tourid);
             string tourguideid = ITourManger.GetCurrentUserId();
-            if (tour.TourGuideId == tourguideid)
+            if (tour?.TourGuideId == tourguideid)
             {
 
                 ITourManger.PostPastTourPics(tourid, photoDtos);
                 return Created("", photoDtos);
-            }
+            } 
             return Unauthorized();
 
         }
@@ -157,22 +161,35 @@ namespace SeetourAPI.Controllers
             }
 
             return Ok(tours);
-        }
+		}
 
-        [HttpGet("Upcoming")]
-        public IActionResult GetUpcomingCards([FromQuery] ToursFilterDto toursFilter)
-        {
-            var tours = ITourManger.GetIsCompletedCards(false, toursFilter);
+		[HttpGet("Upcoming")]
+		public IActionResult GetUpcomingCards([FromQuery] ToursFilterDto toursFilter)
+		{
+			var tours = ITourManger.GetIsCompletedCards(false, toursFilter);
 
-            if (tours == null)
-            {
-                return NotFound();
-            }
+			if (tours == null)
+			{
+				return NotFound();
+			}
 
-            return Ok(tours);
-        }
+			return Ok(tours);
+		}
 
-        [HttpGet("Past")]
+		[HttpGet("Trending")]
+		public IActionResult GetTrendingCards()
+		{
+			var tours = ITourManger.GetIsTrendingCards();
+
+			if (tours == null)
+			{
+				return NotFound();
+			}
+
+			return Ok(tours);
+		}
+
+		[HttpGet("Past")]
         public IActionResult GetPastCards([FromQuery] ToursFilterDto toursFilter)
         {
             var tours = ITourManger.GetIsCompletedCards(true, toursFilter);
@@ -246,6 +263,34 @@ namespace SeetourAPI.Controllers
         public async Task<ActionResult> BookTourDetails(int id)
         {
             return Ok(await ITourManger.BookTourDetailsAsync(id));
+        }
+
+        [Authorize(Policy = Policies.AllowCustomers)]
+        [HttpPost]
+        [Route("AddQuestion")]
+        public ActionResult AddQuestion(QuestionDto questionDto)
+        {
+            if (questionDto != null)
+            {
+                if (tourQuestionManger.AddQuestion(questionDto))
+                {
+                    return Ok();
+                }
+                return BadRequest();
+            }
+            return BadRequest();
+        }
+
+        [HttpGet]
+        [Route("GetQuestWithAns")]
+        public ActionResult GetQuestWithAns(int tourId)
+        {
+            var questions = tourQuestionManger.GetAllWithAnswers(tourId);
+            if(questions == null)
+            {
+                return NotFound();
+            }
+            return Ok(questions);
         }
     }
 }

@@ -87,11 +87,11 @@ namespace SeetourAPI.BL.AdminManger
                 
                 if (tour == null || tour.TourPostingStatus == TourPostingStatus.Accepted) { return false; }
                 
-                tour.TourPostingStatus = status;
+                _tourRepo.UpdatePostingStatus(postRequestDto.TourId, status);
 
                 if (status == TourPostingStatus.EditRequested)
                 {
-                    return adminRepo.EditRequest(postRequestDto) && adminRepo.SaveChanges() && _tourRepo.SaveChanges();
+                    return adminRepo.EditRequest(postRequestDto) && adminRepo.SaveChanges();
                 }
 
                 return _tourRepo.SaveChanges();
