@@ -16,7 +16,7 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    //[Authorize(Policy = Policies.AllowAdmins)]
+    [Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
         private readonly SeetourContext context;
@@ -250,8 +250,7 @@ namespace SeetourAPI.Controllers
         public IActionResult RefundPerformance()
         {
             int Refunded = _context.BookedTours
-            .Where(t => t.Status == BookedTourStatus.Cancelled
-            && t.Tour.LastDateToCancel < DateTime.Now).Count();
+            .Where(t => t.Status == BookedTourStatus.Cancelled && t.Tour.LastDateToCancel < DateTime.Now).Count();
             int completed = _context.BookedTours.Select(a => a.Status == BookedTourStatus.Completed).Count();
 
             decimal refundRate = completed == 0 ? 0 : ((decimal)Refunded / completed) * 100;
