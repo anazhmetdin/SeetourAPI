@@ -27,7 +27,7 @@ namespace SeetourAPI.Controllers
 
 		public AdminController(SeetourContext context, IAdminManger adminManager, ITourGuideManager tourGuideManager, ITourRepo tourRepo)
 		{
-			this.context = context;
+			_context = context;
 			_adminManager = adminManager;
 			_tourGuideManager = tourGuideManager;
 			_tourRepo = tourRepo;
@@ -36,7 +36,7 @@ namespace SeetourAPI.Controllers
 		[HttpGet("allUsers")]
         public ActionResult<IEnumerable<SeetourUser>> GetAllUser()
         {
-            var users = context.Users.ToList();
+            var users = _context.Users.ToList();
             return Ok(users);
         }
 
@@ -139,11 +139,10 @@ namespace SeetourAPI.Controllers
 		{
 			var applicant = _tourGuideManager.GetApplicant(Id);
 
+            if (applicant == null)        
+     			return NotFound();
 
-
-        
-
-			return Ok();
+			return Ok(applicant);
 		}
 
         [HttpPost("incrementviews")]

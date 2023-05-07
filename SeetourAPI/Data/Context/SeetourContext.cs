@@ -84,24 +84,24 @@ namespace SeetourAPI.Data.Context
             });
             #endregion
   
-        #region TourGuide
-        builder.Entity<TourGuide>(b =>
-            {
-                b.HasKey(x => x.Id);
+            #region TourGuide
+            builder.Entity<TourGuide>(b =>
+                {
+                    b.HasKey(x => x.Id);
 
-                b.HasMany(tg => tg.Tours)
-                    .WithOne(b => b.TourGuide)
-                    .HasForeignKey(b => b.TourGuideId)
-                    .OnDelete(DeleteBehavior.Restrict);
+                    b.HasMany(tg => tg.Tours)
+                        .WithOne(b => b.TourGuide)
+                        .HasForeignKey(b => b.TourGuideId)
+                        .OnDelete(DeleteBehavior.Restrict);
 
-                b.Navigation(b => b.TourGuideRating)
-                    .AutoInclude(true);
+                    b.Navigation(b => b.TourGuideRating)
+                        .AutoInclude(true);
 
-                //b.Property(tg => tg.Status)
-                //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
+                    //b.Property(tg => tg.Status)
+                    //    .HasConversion(new EnumToStringConverter<TourGuideStatus>());
 
-                TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
-                b.HasData(customers);
+                    TourGuide[] customers = GetData<TourGuide>("jsons/tourGuides.json");
+                    b.HasData(customers);
             });
             #endregion
             #region Tour
