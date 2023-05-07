@@ -19,14 +19,14 @@ namespace SeetourAPI.Controllers
     [Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
-        private readonly SeetourContext context;
+   
         private readonly IAdminManger _adminManager;
         private readonly ITourGuideManager _tourGuideManager;
         private readonly SeetourContext _context;
 
         public AdminController(SeetourContext context ,IAdminManger adminManager, ITourGuideManager tourGuideManager)
         {
-            this.context = context;
+            _context = context;
             _adminManager = adminManager;
             _tourGuideManager = tourGuideManager;
         }
@@ -34,7 +34,7 @@ namespace SeetourAPI.Controllers
         [HttpGet("allUsers")]
         public ActionResult<IEnumerable<SeetourUser>> GetAllUser()
         {
-            var users = context.Users.ToList();
+            var users = _context.Users.ToList();
             return Ok(users);
         }
 
@@ -254,7 +254,7 @@ namespace SeetourAPI.Controllers
             int completed = _context.BookedTours.Select(a => a.Status == BookedTourStatus.Completed).Count();
 
             decimal refundRate = completed == 0 ? 0 : ((decimal)Refunded / completed) * 100;
-
+            refundRate = Math.Round(refundRate, 2);
             return Ok($"Refund rate: {refundRate}%");
         }
 
