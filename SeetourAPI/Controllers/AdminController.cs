@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.BL.AdminManger;
+using SeetourAPI.BL.TourGuideManager;
+using SeetourAPI.DAL.DTO;
+using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Enums;
 using SeetourAPI.Data.Models;
@@ -18,12 +21,23 @@ namespace SeetourAPI.Controllers
     public class AdminController : ControllerBase
     {
         private readonly IAdminManger _adminManager;
+        private readonly ITourRepo _tourRepo;
+        private readonly ITourGuideManager _tourGuideManager;
         private readonly SeetourContext _context;
 
-        public DashboardController(IAdminManger adminManager,SeetourContext context)
+		public AdminController(SeetourContext context, IAdminManger adminManager, ITourGuideManager tourGuideManager, ITourRepo tourRepo)
+		{
+			this.context = context;
+			_adminManager = adminManager;
+			_tourGuideManager = tourGuideManager;
+			_tourRepo = tourRepo;
+		}
+
+		[HttpGet("allUsers")]
+        public ActionResult<IEnumerable<SeetourUser>> GetAllUser()
         {
-            _adminManager = adminManager;
-            _context = context;
+            var users = context.Users.ToList();
+            return Ok(users);
         }
 
         [HttpGet("all")]
@@ -88,6 +102,42 @@ namespace SeetourAPI.Controllers
             return NoContent();
         }
 
+		[HttpGet("Tour/Request")]
+		public IActionResult GetTourRequests()
+		{
+			return Ok(_adminManager.GetTourRequests());
+		}
+
+		[HttpPost("Tour/Request")]
+		public IActionResult EditPostRequest(AdminTourPostRequestDto postRequestDto)
+		{
+			if (_adminManager.UpdateTourStatus(postRequestDto))
+				return NoContent();
+
+			return BadRequest();
+		}
+
+		[HttpGet("Tour/isPending/{tourId}")]
+		public IActionResult isTourPending(int tourId)
+		{
+            var tour = _tourRepo.GetTourByIdLite(tourId);
+			
+            if (tour == null || tour.TourPostingStatus != TourPostingStatus.Pending)
+				return BadRequest();
+
+			return Ok();
+		}
+
+		[HttpGet("TourGuide/Applicant")]
+		public IActionResult GetApplicants()
+		{
+			return Ok(_tourGuideManager.GetApplicants());
+		}
+
+		[HttpGet("TourGuide/Applicant/{Id}")]
+		public IActionResult GetApplicants(string Id)
+		{
+			var applicant = _tourGuideManager.GetApplicant(Id);
 
 
 

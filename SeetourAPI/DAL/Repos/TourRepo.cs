@@ -225,9 +225,11 @@ namespace SeetourAPI.DAL.Repos
         {
             var tour = _Context.Tours.Find(tourId);
 
-            if (tour == null) { return false; }
+			if (tour == null) { return false; }
 
             tour.TourPostingStatus = status;
+
+            _Context.Update(tour);
 
             return true;
         }
