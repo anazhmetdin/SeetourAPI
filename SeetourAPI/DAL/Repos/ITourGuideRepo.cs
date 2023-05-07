@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using SeetourAPI.Data.Models;
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.Data.Models.Users;
 
 namespace SeetourAPI.DAL.Repos
@@ -9,6 +10,7 @@ namespace SeetourAPI.DAL.Repos
 		IEnumerable<TourGuide> GetAll();
 		public TourGuide? GetTourGuide(string id);
         public TourGuide? GetTourGuideLite(string id);
+       public IEnumerable<dynamic> GetAllQustionss(string id);
 		bool SaveChanges();
 	}
 }

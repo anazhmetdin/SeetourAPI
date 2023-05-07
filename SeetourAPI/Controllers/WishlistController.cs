@@ -47,12 +47,9 @@ namespace SeetourAPI.Controllers
 
         public ActionResult GetWishList()
         {
-           
-
             var wishlist=_wishlistManager.GetCustomerToursInWishliist();
             if (wishlist is null)
                 return NotFound();
-
             return Ok(wishlist);
 
         }
