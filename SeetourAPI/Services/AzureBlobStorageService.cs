@@ -1,6 +1,7 @@
 ﻿using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Microsoft.AspNetCore.Mvc;
+using SeetourAPI.Data.Models;
 using System.Security.Policy;
 
 namespace SeetourAPI.Services
@@ -95,28 +96,66 @@ namespace SeetourAPI.Services
 
             return response.Value.Content;
         }
-        #endregion
+		#endregion
 
 
-        #region UploadingImages
-        public async Task<List<string>> UploadBlobAsyncImgs(ICollection<IFormFile> files)
-        {
-          //  CheckFileAllowed(files);
+		#region UploadingImages
+		public async Task<List<string>> UploadBlobAsyncImgs(ICollection<IFormFile> files)
+		{
+			//  CheckFileAllowed(files);
 
-            var blobUrls = new List<string>();
+			var blobUrls = new List<string>();
 
-            foreach (var file in files)
-            {
-                blobUrls.Add(await UploadBlobAsync(file));
-            }
+			foreach (var file in files)
+			{
+				blobUrls.Add(await UploadBlobAsync(file));
+			}
 
-            return blobUrls;
-        }
-        #endregion
+			return blobUrls;
+		}
+		#endregion
+
+		#region UploadingBinaryImages
+		public async Task<List<string>> UploadBlobAsyncImgs(string[] urls)
+		{
+			//  CheckFileAllowed(files);
+
+			var blobUrls = new List<string>();
+
+			List<IFormFile> files = new List<IFormFile>();
+
+			var headers = new HeaderDictionary()
+			{
+				{"Content-Type", "image/jpeg"}
+			};
+
+			foreach (var url in urls)
+			{
+				var base64Data = url.Split(',')[1];
+
+				// Decode the base64 string to a byte array
+				var imageData = Convert.FromBase64String(base64Data);
+
+                // Create a new MemoryStream object from the byte array
+                using (var memoryStream = new MemoryStream(imageData))
+                {
+                    // Create a new FormFile object from the MemoryStream
+                    var file = new FormFile(memoryStream, 0, memoryStream.Length, "image", "image.jpg")
+                    {
+                        Headers = headers
+                    };
+
+                    blobUrls.Add(await UploadBlobAsync(file));
+                }
+			}
+
+			return blobUrls;
+		}
+		#endregion
 
 
-        #region TestFunctions
-        private static string GetUniqueName(string name)
+		#region TestFunctions
+		private static string GetUniqueName(string name)
         {
             return $"{DateTime.Now.Ticks}_{name}";
         }
