@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using SeetourAPI.BL.TourManger;
+using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Policies;
 
@@ -11,9 +13,11 @@ namespace SeetourAPI.Controllers
     [ApiController]
     public class TourQuestionController : ControllerBase
     {
+        private readonly SeetourContext _Context;
         private readonly ITourQuestionManger ITourQuestionManger;
-        public TourQuestionController(ITourQuestionManger ITourQuestionManger)
+        public TourQuestionController(SeetourContext context ,ITourQuestionManger ITourQuestionManger)
         {
+            this._Context = context;
             this.ITourQuestionManger = ITourQuestionManger;
            
         }
@@ -66,6 +70,22 @@ namespace SeetourAPI.Controllers
             ITourQuestionManger.DeleteQuestion(id);
             return NoContent();
         }
+
+        [HttpGet("questions-and-answers")]
+        public IActionResult GetQuestionsAndAnswers()
+        {
+            var questionsAndAnswers = _Context.TourQuestions
+                .Include(q => q.TourAnswer)
+                .Select(q => new
+                {
+                    Question = q.Question,
+                    Answer = q.TourAnswer != null ? q.TourAnswer.Answer : ""
+                })
+                .ToList();
+
+            return Ok(questionsAndAnswers);
+        }
+
 
     }
 }
