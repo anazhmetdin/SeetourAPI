@@ -117,6 +117,7 @@ namespace SeetourAPI.Controllers
             { return Ok(s); }
             return NotFound();
         }
+
         [HttpPost]
         [Route("AnswerQusetion")]
         //TourGuide/AnswerQusetion
