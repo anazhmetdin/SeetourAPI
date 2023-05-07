@@ -58,7 +58,7 @@ namespace SeetourAPI.Controllers
             {
                 Id = UserToAdd.Id,
                 IsBlocked = false,
-               
+                // add any other properties you want to set for the customer object here
             };
             context.Customers.Add(customerToAdd);
 
