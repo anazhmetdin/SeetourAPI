@@ -13,7 +13,7 @@ namespace SeetourAPI.DAL.Repos
         public IEnumerable<Tour> GetAllPlain();
 		public Tour? GetTourById(int id);
         public Tour? EditTour(int id,Tour tour);
-        public void AddTour(Tour tour);
+        public int AddTour(Tour tour);
         public void DeleteTour(int id);
 
         public void AddPhotos(ICollection<TourPhoto> tourPhotos);

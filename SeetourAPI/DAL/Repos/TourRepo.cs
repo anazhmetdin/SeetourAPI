@@ -14,10 +14,11 @@ namespace SeetourAPI.DAL.Repos
         {
             this._Context = context;
         }
-        public void AddTour(Tour tour)
+        public int AddTour(Tour tour)
         {
             _Context.Tours.Add(tour);
             _Context.SaveChanges();
+            return tour.Id;
         }
         public void AddPhotos(ICollection<TourPhoto> tourPhotos)
         {
