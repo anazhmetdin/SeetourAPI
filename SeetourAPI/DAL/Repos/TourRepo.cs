@@ -14,10 +14,11 @@ namespace SeetourAPI.DAL.Repos
         {
             this._Context = context;
         }
-        public void AddTour(Tour tour)
+        public int AddTour(Tour tour)
         {
             _Context.Tours.Add(tour);
             _Context.SaveChanges();
+            return tour.Id;
         }
         public void AddPhotos(ICollection<TourPhoto> tourPhotos)
         {
@@ -190,12 +191,12 @@ namespace SeetourAPI.DAL.Repos
 
         public bool bookTour(BookedTour bookedTour)
         {
-            var book = _Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId);
+            //var book = _Context.BookedTours.FirstOrDefault(t => t.CustomerId == bookedTour.CustomerId);
             
-            if (book != null && book.Status == BookedTourStatus.Booked)
-            {
-                return false;
-            }
+            //if (book != null && book.Status == BookedTourStatus.Booked)
+            //{
+            //    return false;
+            //}
             _Context.BookedTours.Add(bookedTour);
             //_Context.SaveChanges();
             return SaveChanges();

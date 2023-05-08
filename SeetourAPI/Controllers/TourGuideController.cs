@@ -4,9 +4,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
+using SeetourAPI.BL.TourAnswerManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.DAL.DTO;
+using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Models.Users;
 using SeetourAPI.Data.Policies;
 using System;
@@ -23,13 +25,17 @@ namespace SeetourAPI.Controllers
         private readonly ITourGuideManager _tourGuideManager;
         private readonly IReviewManager _reviewManager;
         private readonly ITourManger _tourManger;
+        private readonly ITourGuideRepo _tourGuideRepo;
+        private readonly ITourAnswerManager _tourAnswerManager;
 
         public TourGuideController(ITourGuideManager tourGuideManager,
-            IReviewManager reviewManager,ITourManger tourManger)
+            IReviewManager reviewManager,ITourManger tourManger, ITourGuideRepo tourGuideRepo, ITourAnswerManager tourAnswerManager)
         {
             _tourGuideManager = tourGuideManager;
             _reviewManager = reviewManager;
             _tourManger = tourManger;
+            _tourGuideRepo = tourGuideRepo;
+            _tourAnswerManager = tourAnswerManager;
         }
 
         [HttpGet("{Id}/UpcomingTours")]
@@ -98,6 +104,34 @@ namespace SeetourAPI.Controllers
             if(s!=null)
             { return Ok(s); } 
             return NotFound();
-         }
+        }
+
+        [HttpGet]
+        [Route("GetAllUnAnsweredQusetions")]
+        [Authorize(policy: Policies.AcceptedTourGuides)]
+        public IActionResult GetAllQusetions()
+        {
+            //string userid = _tourManger.GetCurrentUserId();
+            var s = _tourGuideManager.GetAllQuestions();
+            if (s != null)
+            { return Ok(s); }
+            return NotFound();
+        }
+
+        [HttpPost]
+        [Route("AnswerQusetion")]
+        //TourGuide/AnswerQusetion
+        [Authorize(policy: Policies.AcceptedTourGuides)]
+        public IActionResult AnswerQusetions(AnswerDto answerDto)
+        {
+             
+            var answer = _tourAnswerManager.AddAnswer(answerDto);
+            if (answer != null)
+            {
+                return Ok(answer);
+            }
+            return BadRequest();
+        }
     }
+
 }

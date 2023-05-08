@@ -1,4 +1,5 @@
-﻿using SeetourAPI.DAL.Repos;
+﻿using SeetourAPI.DAL.DTO;
+using SeetourAPI.DAL.Repos;
 using SeetourAPI.Data.Models;
 
 namespace SeetourAPI.BL.TourAnswerManager
@@ -6,14 +7,41 @@ namespace SeetourAPI.BL.TourAnswerManager
     public class TourAnswerManager : ITourAnswerManager
     {
         private readonly ITourAnswerRepo _tourAnswerRepo;
+        private readonly ITourQuestionRepo _tourQuestionRepo;
 
-        public TourAnswerManager(ITourAnswerRepo tourAnswerRepo)
+        public TourAnswerManager(
+            ITourAnswerRepo tourAnswerRepo,
+            ITourQuestionRepo tourQuestionRepo
+
+    
+            )
         {
             _tourAnswerRepo = tourAnswerRepo;
+            _tourQuestionRepo = tourQuestionRepo;
         }
-        public void AddAnswer(TourAnswer tourAnswer)
+        public AnswerDto AddAnswer(AnswerDto tourAnswerDto)
         {
-            _tourAnswerRepo.AddAnswer(tourAnswer);
+            var question = _tourQuestionRepo.GetById(tourAnswerDto.tourQuestionId);
+            if((question.TourAnswerId == null ) && (tourAnswerDto.answer !=null))
+            {
+
+               var answer = new TourAnswer()
+               {
+                TourQuestionId = tourAnswerDto.tourQuestionId,
+                Answer = tourAnswerDto.answer
+
+               };
+               _tourAnswerRepo.AddAnswer(answer);
+
+                // Update TourQuestion with TourAnswer ID
+                question.TourAnswerId = answer.Id;
+                _tourQuestionRepo.UpdateQuestion(answer.TourQuestionId,question);
+
+
+
+                return tourAnswerDto;
+            }
+            return null ;
         }
 
         public void DeleteAnswer(int id)

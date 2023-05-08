@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using SeetourAPI.BL.CustomerManager;
 using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
@@ -47,8 +48,8 @@ namespace SeetourAPI.Controllers
         [Authorize(Policy = Policies.AcceptedTourGuides)]
         public ActionResult CreateTour(AddTourDto addTourDto)
         {
-            ITourManger.AddTour(addTourDto);
-            return Created("", addTourDto);
+            int tourId = ITourManger.AddTour(addTourDto);
+            return Created("", tourId);
         }
         [HttpPost]
         [Route("AddPics")]
@@ -292,5 +293,6 @@ namespace SeetourAPI.Controllers
             }
             return Ok(questions);
         }
+
     }
 }

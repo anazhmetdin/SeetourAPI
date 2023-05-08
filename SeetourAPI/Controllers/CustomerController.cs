@@ -77,11 +77,11 @@ namespace SeetourAPI.Controllers
 		}
 
 		[HttpPost("Tour/Review")]
-		public IActionResult PostReview(ICollection<IFormFile> files, [FromForm]ReviewDto review)
+		public IActionResult PostReview(ReviewDto review)
 		{
 			var UserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "";
 
-			bool posted = _customerManager.PostReview(UserId, files, review);
+			bool posted = _customerManager.PostReview(UserId, review);
 
 			if (!posted)
 			{

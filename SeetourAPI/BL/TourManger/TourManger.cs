@@ -44,12 +44,13 @@ namespace SeetourAPI.BL.TourManger
         }
 
 
-        public void AddTour(AddTourDto AddTourDto)
+        public int AddTour(AddTourDto AddTourDto)
         {
             string id = GetCurrentUserId();
 
             var tour = new Tour
             {
+                Id=0,
                 Description = AddTourDto.Description,
                 DateFrom = AddTourDto.DateFrom,
                 Price = AddTourDto.Price,
@@ -75,8 +76,9 @@ namespace SeetourAPI.BL.TourManger
                 ).ToList(),
                 TourGuideId = id
             };
-
-            TourRepo.AddTour(tour);
+            
+            int tourid= TourRepo.AddTour(tour);
+            return tourid;
         }
 
 

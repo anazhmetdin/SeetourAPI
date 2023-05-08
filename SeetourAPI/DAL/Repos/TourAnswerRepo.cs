@@ -14,6 +14,7 @@ namespace SeetourAPI.DAL.Repos
         public void AddAnswer(TourAnswer tourAnswer)
         {
             _context.TourAnswers.Add(tourAnswer);
+
             _context.SaveChanges();
         }
 

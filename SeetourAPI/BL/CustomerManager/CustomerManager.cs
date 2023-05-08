@@ -91,7 +91,7 @@ namespace SeetourAPI.BL.CustomerManager
             return cust;
         }
 
-		public bool PostReview(string userId, ICollection<IFormFile> files, ReviewDto review)
+		public bool PostReview(string userId, ReviewDto review)
 		{
 			BookedTour? booking = _bookedTourRepo.GetByIdLite(review.bookedTourId);
 
@@ -100,7 +100,7 @@ namespace SeetourAPI.BL.CustomerManager
 			ICollection<string> urls;
 			try
 			{
-				urls = _azureBlobStorageService.UploadBlobAsyncImgs(files).Result;
+				urls = _azureBlobStorageService.UploadBlobAsyncImgs(review.Base64Images).Result;
 			}
 			catch { return false; }
 
