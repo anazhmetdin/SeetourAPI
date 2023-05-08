@@ -17,7 +17,7 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    [Authorize(Policy = Policies.AllowAdmins)]
+    //[Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
         private readonly IAdminManger _adminManager;
@@ -98,8 +98,9 @@ namespace SeetourAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteSeeTourUser(string id)
         {
+            
             _adminManager.DeleteSeeTourUser(id);
-            return NoContent();
+            return Ok(_adminManager.GetSeeTourUserById(id));
         }
 
 		[HttpGet("Tour/Request")]
@@ -210,14 +211,19 @@ namespace SeetourAPI.Controllers
                 .Select(g => g.Key)
                 .FirstOrDefault();
 
-            var tour = _context.Tours.FirstOrDefault(t => t.Id == mostBookedTour);
+            var tour = _context.Tours
+                .Where(t => t.Id == mostBookedTour)
+                .Select(t => new { Title = t.Title })
+                .FirstOrDefault();
+
             if (tour != null)
             {
-                return Ok(tour.Title);
-
+                return Ok(tour);
             }
             else
+            {
                 return Ok("");
+            }
         }
 
 
@@ -252,12 +258,12 @@ namespace SeetourAPI.Controllers
             int completed = _context.BookedTours.Select(a => a.Status == BookedTourStatus.Completed).Count();
 
             decimal refundRate = completed == 0 ? 0 : ((decimal)Refunded / completed) * 100;
-
-            return Ok($"Refund rate: {refundRate}%");
+            refundRate = Math.Round(refundRate, 2);
+            return Ok( refundRate);
         }
 
 
-        [HttpPost("TourGuideName")]
+        [HttpGet("TourGuideName")]
         public IActionResult Search(string Name)
         {
 
