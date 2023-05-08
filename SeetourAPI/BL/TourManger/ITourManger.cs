@@ -9,7 +9,7 @@ namespace SeetourAPI.BL.TourManger
         public IEnumerable<Tour> GetAll();
         public Tour? GetTourById(int id);
         public Tour? EditTour(int id, Tour tour);
-        public void  AddTour( AddTourDto addTourDto);
+        public int  AddTour( AddTourDto addTourDto);
         public void DeleteTour(int id);
         public TourDetailsDto? Details(int id);
         public TourCardDto? DetailsCard(int id);

@@ -9,7 +9,7 @@ namespace SeetourAPI.DAL.DTO
 {
     public class AddTourDto
     {
-       
+        public int id { get; set; }
         public string Description { get; set; } = string.Empty;
         public string Title { get; set; } = string.Empty;
         public DateTime dateTo { get; set; }
