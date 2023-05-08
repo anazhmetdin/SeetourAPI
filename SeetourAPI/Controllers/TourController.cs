@@ -45,9 +45,12 @@ namespace SeetourAPI.Controllers
         
         [Authorize(Policy = Policies.AcceptedTourGuides)]
         [HttpPost]
-        [Authorize(Policy = Policies.AcceptedTourGuides)]
         public ActionResult CreateTour(AddTourDto addTourDto)
         {
+            if (!User.Identity.IsAuthenticated || !User.HasClaim(ClaimTypes.Role, "TourGuide"))
+            {
+                return Unauthorized();
+            }
             int tourId = ITourManger.AddTour(addTourDto);
             return Created("", tourId);
         }
