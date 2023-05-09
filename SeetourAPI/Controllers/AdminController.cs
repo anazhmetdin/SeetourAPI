@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.BL.AdminManger;
+using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
@@ -17,21 +18,23 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    //[Authorize(Policy = Policies.AllowAdmins)]
+    [Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
         private readonly IAdminManger _adminManager;
         private readonly ITourRepo _tourRepo;
+        private readonly IReviewManager _reviewManger;
         private readonly ITourGuideManager _tourGuideManager;
         private readonly SeetourContext _context;
 
-		public AdminController(SeetourContext context, IAdminManger adminManager, ITourGuideManager tourGuideManager, ITourRepo tourRepo)
+		public AdminController(SeetourContext context, IAdminManger adminManager, ITourGuideManager tourGuideManager, ITourRepo tourRepo,IReviewManager reviewManager)
 		{
 			_context = context;
 			_adminManager = adminManager;
 			_tourGuideManager = tourGuideManager;
 			_tourRepo = tourRepo;
-		}
+            _reviewManger = reviewManager;
+        }
 
 		[HttpGet("allUsers")]
         public ActionResult<IEnumerable<SeetourUser>> GetAllUser()
@@ -263,11 +266,12 @@ namespace SeetourAPI.Controllers
         }
 
 
+
         [HttpGet("TourGuideName")]
         public IActionResult Search(string Name)
         {
 
-            var matchedUsers = _context.Users
+            var matchedUsers = _context.Users.Where(s=>s.SecurityLevel.ToLower()=="tourguide")
                  .Where(u => u.FullName.ToLower().Contains(Name.ToLower()))
                  .Select(u => u.FullName)
                  .ToList();
@@ -279,6 +283,14 @@ namespace SeetourAPI.Controllers
             else
                 return Ok("");
 
+        }
+        [HttpDelete("reviewDelete")]
+        
+        [Authorize(Policy = Policies.AllowAdmins)]
+        public ActionResult DeleteReview(int id)
+        {
+            _reviewManger.DeleteReview(id);
+            return NoContent();
         }
     }
 
