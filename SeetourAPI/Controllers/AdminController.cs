@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using SeetourAPI.BL.AdminManger;
+using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.DAL.Repos;
@@ -22,16 +23,18 @@ namespace SeetourAPI.Controllers
     {
         private readonly IAdminManger _adminManager;
         private readonly ITourRepo _tourRepo;
+        private readonly IReviewManager _reviewManger;
         private readonly ITourGuideManager _tourGuideManager;
         private readonly SeetourContext _context;
 
-		public AdminController(SeetourContext context, IAdminManger adminManager, ITourGuideManager tourGuideManager, ITourRepo tourRepo)
+		public AdminController(SeetourContext context, IAdminManger adminManager, ITourGuideManager tourGuideManager, ITourRepo tourRepo,IReviewManager reviewManager)
 		{
 			_context = context;
 			_adminManager = adminManager;
 			_tourGuideManager = tourGuideManager;
 			_tourRepo = tourRepo;
-		}
+            _reviewManger = reviewManager;
+        }
 
 		[HttpGet("allUsers")]
         public ActionResult<IEnumerable<SeetourUser>> GetAllUser()
@@ -98,8 +101,9 @@ namespace SeetourAPI.Controllers
         [HttpDelete("{id}")]
         public ActionResult DeleteSeeTourUser(string id)
         {
+            
             _adminManager.DeleteSeeTourUser(id);
-            return NoContent();
+            return Ok(_adminManager.GetSeeTourUserById(id));
         }
 
 		[HttpGet("Tour/Request")]
@@ -210,14 +214,19 @@ namespace SeetourAPI.Controllers
                 .Select(g => g.Key)
                 .FirstOrDefault();
 
-            var tour = _context.Tours.FirstOrDefault(t => t.Id == mostBookedTour);
+            var tour = _context.Tours
+                .Where(t => t.Id == mostBookedTour)
+                .Select(t => new { Title = t.Title })
+                .FirstOrDefault();
+
             if (tour != null)
             {
-                return Ok(tour.Title);
-
+                return Ok(tour);
             }
             else
+            {
                 return Ok("");
+            }
         }
 
 
@@ -252,16 +261,17 @@ namespace SeetourAPI.Controllers
             int completed = _context.BookedTours.Select(a => a.Status == BookedTourStatus.Completed).Count();
 
             decimal refundRate = completed == 0 ? 0 : ((decimal)Refunded / completed) * 100;
-
-            return Ok($"Refund rate: {refundRate}%");
+            refundRate = Math.Round(refundRate, 2);
+            return Ok( refundRate);
         }
 
 
-        [HttpPost("TourGuideName")]
+
+        [HttpGet("TourGuideName")]
         public IActionResult Search(string Name)
         {
 
-            var matchedUsers = _context.Users
+            var matchedUsers = _context.Users.Where(s=>s.SecurityLevel.ToLower()=="tourguide")
                  .Where(u => u.FullName.ToLower().Contains(Name.ToLower()))
                  .Select(u => u.FullName)
                  .ToList();
@@ -273,6 +283,14 @@ namespace SeetourAPI.Controllers
             else
                 return Ok("");
 
+        }
+        [HttpDelete("reviewDelete")]
+        
+        [Authorize(Policy = Policies.AllowAdmins)]
+        public ActionResult DeleteReview(int id)
+        {
+            _reviewManger.DeleteReview(id);
+            return NoContent();
         }
     }
 
