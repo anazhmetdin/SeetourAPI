@@ -18,7 +18,7 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    [Authorize(Policy = Policies.AllowAdmins)]
+    //[Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
         private readonly IAdminManger _adminManager;
@@ -292,6 +292,141 @@ namespace SeetourAPI.Controllers
             _reviewManger.DeleteReview(id);
             return NoContent();
         }
+
+
+
+
+        [HttpPost("tourguidesBlock")]
+      
+        public IActionResult BlockTourGuide(string id)
+        {
+            // Call the service method to block the tour guide with the given id
+            var tourguide = _context.TourGuides.FirstOrDefault(i=>i.Id==id);
+            if (tourguide != null)
+            {
+                tourguide.Status = TourGuideStatus.Blocked;
+                _context.SaveChanges();
+                return Ok(new { message = "Blocked" });
+            }
+            else
+                return BadRequest("userNotFound");
+
+          
+        }
+
+        [HttpPost("tourguidesUnblock")]
+        public IActionResult UnblockTourGuide(string id)
+        {
+            // Call the service method to block the tour guide with the given id
+            var tourguide = _context.TourGuides.FirstOrDefault(i=>i.Id==id);
+            if (tourguide != null)
+            {
+                tourguide.Status = TourGuideStatus.Accepted;
+                _context.SaveChanges();
+                return Ok(new { message = "UnBlocked" });
+            }
+            else
+                return BadRequest("userNotFound");
+
+        }
+
+
+        [HttpPost("CustomersBlock")]
+        public  IActionResult BlockCustomer(string id)
+        {
+            var customer =  _context.Customers.FirstOrDefault(u => u.Id == id);
+            if (customer != null)
+            {
+                customer.IsBlocked = true;
+                _context.SaveChanges();
+                return Ok(new { message = "Blocked" });
+
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+
+        [HttpPost("CustomersUnblock")]
+        public IActionResult UnBlockCustomer(string id)
+        {
+            // Call the service method to block the tour guide with the given id
+            var customer = _context.Customers.FirstOrDefault(i=>i.Id==id);
+            if (customer != null)
+            {
+                customer.IsBlocked = false;
+                _context.SaveChanges();
+                return Ok(customer);
+            }
+            else
+                return BadRequest("userNotFound");
+
+
+        }
+
+
+
+
+
+
+
+        [HttpGet("GettingAllBlockedCustomers")]
+        public IActionResult GettingBlockedCustomers ()
+        {
+            var Customers = _context.Users.Where(c => c.Customer.IsBlocked == true);
+            if (Customers != null)
+            {
+                return Ok(Customers);
+            }
+            else
+                return BadRequest("NoUsers");
+        }
+
+
+        [HttpGet("GettingAllUnblockedCustomers")]
+        public IActionResult GettingUnBlockedCustomers()
+        {
+            var Customers = _context.Users.Where(c => c.Customer.IsBlocked == false);
+            if (Customers != null)
+            {
+                return Ok(Customers);
+            }
+            else
+                return BadRequest("NoUsers");
+        }
+
+
+        [HttpGet("GettingBlockedTourGuides")]
+        public IActionResult GettingBlockedTourGuides()
+        {
+            var TourGuides = _context.Users.Where(c => c.TourGuide.Status==TourGuideStatus.Blocked);
+            if (TourGuides != null)
+            {
+                return Ok(TourGuides);
+            }
+            else
+                return BadRequest("NoUsers");
+        }
+
+
+        [HttpGet("GettingAllUnblockedTourGuides")]
+        public IActionResult GettingAllUnblockedTourGuides()
+        {
+            var TourGuides = _context.Users.Where(c => c.TourGuide.Status == TourGuideStatus.Accepted);
+            if (TourGuides != null)
+            {
+                return Ok(TourGuides);
+            }
+            else
+                return BadRequest("NoUsers");
+        }
+
+
+
+
+
     }
 
 }
