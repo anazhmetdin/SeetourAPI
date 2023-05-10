@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Models;
@@ -9,6 +10,8 @@ using SeetourAPI.Data.Policies;
 
 namespace SeetourAPI.Controllers
 {
+    [TypeFilter(typeof(TourGuideFilter))]
+    [TypeFilter(typeof(CustomerFilter))]
     [Route("api/[controller]")]
     [ApiController]
     public class TourQuestionController : ControllerBase

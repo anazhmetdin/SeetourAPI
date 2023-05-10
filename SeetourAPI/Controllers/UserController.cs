@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Claims;
 using SeetourAPI.Data.Context;
@@ -15,6 +16,8 @@ using System.Text;
 
 namespace SeetourAPI.Controllers
 {
+    [TypeFilter(typeof(TourGuideFilter))]
+    [TypeFilter(typeof(CustomerFilter))]
     [Route("api/[controller]")]
     [ApiController]
     public class UserController : ControllerBase

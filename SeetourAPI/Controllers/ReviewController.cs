@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourManger;
 using SeetourAPI.Data.Context;
@@ -12,6 +13,8 @@ namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(TourGuideFilter))]
+    [TypeFilter(typeof(CustomerFilter))]
     public class ReviewController : ControllerBase
     {
         private readonly SeetourContext _Context;

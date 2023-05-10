@@ -16,6 +16,7 @@ namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [TypeFilter(typeof(TourGuideFilter))]
 
     //[Authorize(Policy = Policies.AcceptedTourGuides)]
     public class TourGuideController : ControllerBase

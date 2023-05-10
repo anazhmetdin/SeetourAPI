@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.DAL.DTO;
 using SeetourAPI.Data.Context;
 using SeetourAPI.Data.Enums;
@@ -13,6 +14,8 @@ namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+   
+    [TypeFilter(typeof(CustomerFilter))]
     public class PaymentController : ControllerBase
     {
         private readonly UserManager<SeetourUser> manager;

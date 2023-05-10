@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.CustomerManager;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.BL.TourGuideManager;
 using SeetourAPI.DAL.DTO;
@@ -12,7 +13,9 @@ using System.Text.Json;
 
 namespace SeetourAPI.Controllers
 {
-	[Route("api/[controller]")]
+    [TypeFilter(typeof(TourGuideFilter))]
+    [TypeFilter(typeof(CustomerFilter))]
+    [Route("api/[controller]")]
 	[ApiController]
 	[Authorize(policy:Policies.AllowCustomers)]
 	public class CustomerController : ControllerBase

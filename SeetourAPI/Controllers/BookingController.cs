@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SeetourAPI.BL.BookingManager;
 using SeetourAPI.BL.CustomerManager;
+using SeetourAPI.BL.Filters;
 using SeetourAPI.BL.ReviewManager;
 using SeetourAPI.Data.Models;
 using SeetourAPI.Data.Policies;
@@ -10,7 +11,9 @@ using System.Security.Claims;
 
 namespace SeetourAPI.Controllers
 {
-	[Route("api/[controller]")]
+    [TypeFilter(typeof(TourGuideFilter))]
+    [TypeFilter(typeof(CustomerFilter))]
+    [Route("api/[controller]")]
 	[ApiController]
 	[Authorize(policy: Policies.AllowCustomers)]
 	public class BookingController : ControllerBase

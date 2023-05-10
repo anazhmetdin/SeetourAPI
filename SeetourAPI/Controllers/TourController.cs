@@ -22,7 +22,9 @@ namespace SeetourAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    //[TypeFilter(typeof(TourGuideFilter))]
+    [TypeFilter(typeof(TourGuideFilter))]
+    [TypeFilter(typeof(CustomerFilter))]
+
     public class TourController : ControllerBase
     {
         private readonly ITourQuestionManger tourQuestionManger;

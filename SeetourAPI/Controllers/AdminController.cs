@@ -18,7 +18,7 @@ namespace SeetourAPI.Controllers
     [Route("api/[controller]")]
     [ApiController]
 
-    //[Authorize(Policy = Policies.AllowAdmins)]
+    [Authorize(Policy = Policies.AllowAdmins)]
     public class AdminController : ControllerBase
     {
         private readonly IAdminManger _adminManager;
