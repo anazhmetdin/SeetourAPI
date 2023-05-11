@@ -67,7 +67,7 @@ namespace SeetourAPI.Controllers
             return Ok(t);
         }
 
-        [HttpGet]
+        [HttpGet("GetAll")]
         public ActionResult<IEnumerable<object>> GetAllReviews()
         {
             var result = _Context.Reviews

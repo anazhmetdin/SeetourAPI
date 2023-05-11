@@ -61,9 +61,7 @@ namespace SeetourAPI.BL.TourManger
         private QuestionAnswerDto QuestionAns (TourQuestion questionAnswer){
             return new QuestionAnswerDto
             (
-                QuestionId : questionAnswer.Id,
                 Question : questionAnswer.Question,
-                AnswerId: questionAnswer.TourAnswerId,
                 Answer : questionAnswer.TourAnswer?.Answer??""
             );
         }

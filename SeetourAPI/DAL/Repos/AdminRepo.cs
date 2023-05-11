@@ -57,13 +57,17 @@ namespace SeetourAPI.DAL.Repos
 
         public SeetourUser GetSeeTourUserById(string id)
         {
-            var user = _Context.Users.Select(u => u.Id == id);
-            if(user!=null)
+            var user = _Context.Users.SingleOrDefault(u => u.Id == id);
+            if (user != null)
             {
-                return (SeetourUser)user;
+                return user;
             }
-            else return new SeetourUser();
+            else
+            {
+                return new SeetourUser();
+            }
         }
+
 
         public void EditCustomer(string id, SeetourUser seetourUser)
         {
